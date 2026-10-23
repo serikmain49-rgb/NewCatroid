@@ -1,0 +1,14 @@
+{
+  "name": "newcatroid-cloudflare-bridge",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --check newcatroid-worker.js",
+    "test": "node test.mjs",
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "engines": { "node": ">=22" },
+  "devDependencies": { "wrangler": "4.152.0" }
+}

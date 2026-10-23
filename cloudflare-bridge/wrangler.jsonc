@@ -1,0 +1,11 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "newcatroid-bridge",
+  "main": "newcatroid-worker.js",
+  "compatibility_date": "2025-10-24",
+  "workers_dev": true,
+  "preview_urls": false,
+  "keep_vars": true,
+  "observability": { "enabled": false },
+  "d1_databases": [{ "binding": "DB" }]
+}
