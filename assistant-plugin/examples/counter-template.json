@@ -1,0 +1,52 @@
+{
+  "format": 1,
+  "id": "example-counter",
+  "title": "Счётчик для текущего проекта",
+  "project": "COPY_FROM_PROJECT_JSON",
+  "base_sha256": "COPY_FROM_PROJECT_JSON",
+  "operations": [
+    {
+      "op": "variable.create",
+      "scene": "COPY_SCENE",
+      "sprite": "COPY_SPRITE",
+      "name": "Очки",
+      "value": 0
+    },
+    {
+      "op": "script.add",
+      "scene": "COPY_SCENE",
+      "sprite": "COPY_SPRITE",
+      "script": {
+        "event": "start",
+        "bricks": [
+          {
+            "class": "ShowTextBrick",
+            "variable": "Очки",
+            "formulas": {
+              "X_POSITION": 0,
+              "Y_POSITION": 0
+            }
+          },
+          {
+            "class": "ForeverBrick",
+            "children": [
+              {
+                "class": "ChangeVariableBrick",
+                "variable": "Очки",
+                "formulas": {
+                  "VARIABLE_CHANGE": 1
+                }
+              },
+              {
+                "class": "WaitBrick",
+                "formulas": {
+                  "TIME_TO_WAIT_IN_SECONDS": 1
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

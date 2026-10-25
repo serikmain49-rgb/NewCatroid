@@ -1,0 +1,883 @@
+[
+  {
+    "class_name": "AddItemToUserListBrick",
+    "property_names": [],
+    "field_labels": {
+      "LIST_ADD_ITEM": "brick_add_item_to_userlist_edit_text"
+    }
+  },
+  {
+    "class_name": "Apply3dForceBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_apply_3d_force_object_id",
+      "VALUE_2": "brick_apply_3d_force_x",
+      "VALUE_3": "brick_apply_3d_force_y",
+      "VALUE_4": "brick_apply_3d_force_z"
+    }
+  },
+  {
+    "class_name": "Apply3dTorqueBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_apply_3d_torque_edit_id",
+      "VALUE_2": "brick_apply_3d_torque_edit_x",
+      "VALUE_3": "brick_apply_3d_torque_edit_y",
+      "VALUE_4": "brick_apply_3d_torque_edit_z"
+    }
+  },
+  {
+    "class_name": "ApplyForceBrick",
+    "property_names": [],
+    "field_labels": {
+      "FORCE_X": "brick_force_x_edit_text",
+      "FORCE_Y": "brick_force_y_edit_text"
+    }
+  },
+  {
+    "class_name": "ApplyImpulseBrick",
+    "property_names": [],
+    "field_labels": {
+      "IMPULSE_X": "brick_impulse_x_edit_text",
+      "IMPULSE_Y": "brick_impulse_y_edit_text"
+    }
+  },
+  {
+    "class_name": "AttachToCameraBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_attach_camera_object_name"
+    }
+  },
+  {
+    "class_name": "BroadcastBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "BroadcastWaitBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "CameraTouchControlBrick",
+    "property_names": [],
+    "field_labels": {
+      "ENABLED": "cam_enabled",
+      "SENSITIVITY": "cam_sens",
+      "X": "cam_area_x",
+      "Y": "cam_area_y",
+      "WIDTH": "cam_area_w",
+      "HEIGHT": "cam_area_h"
+    }
+  },
+  {
+    "class_name": "CameraTrackingBrick",
+    "property_names": [
+      "trackMode"
+    ],
+    "field_labels": {
+      "NAME": "brick_camera_track_id",
+      "X_POSITION": "brick_camera_track_px",
+      "Y_POSITION": "brick_camera_track_py",
+      "Z_POSITION": "brick_camera_track_pz",
+      "YAW": "brick_camera_track_ry",
+      "PITCH": "brick_camera_track_rp",
+      "ROLL": "brick_camera_track_rr"
+    }
+  },
+  {
+    "class_name": "CastRayBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_cast_ray_name",
+      "VALUE_2": "brick_cast_ray_from_x",
+      "VALUE_3": "brick_cast_ray_from_y",
+      "VALUE_4": "brick_cast_ray_from_z",
+      "VALUE_5": "brick_cast_ray_dir_x",
+      "VALUE_6": "brick_cast_ray_dir_y",
+      "VALUE_7": "brick_cast_ray_dir_z"
+    }
+  },
+  {
+    "class_name": "ChangeSizeByNBrick",
+    "property_names": [],
+    "field_labels": {
+      "SIZE_CHANGE": "brick_change_size_by_edit_text"
+    }
+  },
+  {
+    "class_name": "ChangeVariableBrick",
+    "property_names": [],
+    "field_labels": {
+      "VARIABLE_CHANGE": "brick_change_variable_edit_text"
+    }
+  },
+  {
+    "class_name": "ChangeXByNBrick",
+    "property_names": [],
+    "field_labels": {
+      "X_POSITION_CHANGE": "brick_change_x_edit_text"
+    }
+  },
+  {
+    "class_name": "ChangeYByNBrick",
+    "property_names": [],
+    "field_labels": {
+      "Y_POSITION_CHANGE": "brick_change_y_edit_text"
+    }
+  },
+  {
+    "class_name": "CloneBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "ConfigureLightBrick",
+    "property_names": [
+      "configTypeSelection"
+    ],
+    "field_labels": {
+      "VALUE_1": "brick_http_configure_light_id_field",
+      "VALUE_2": "brick_http_configure_light_value_field"
+    }
+  },
+  {
+    "class_name": "Create3dObjectBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_create_3d_object_id",
+      "VALUE_2": "brick_create_3d_object_model_path"
+    }
+  },
+  {
+    "class_name": "CreateCubeBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_create_cube_id"
+    }
+  },
+  {
+    "class_name": "CreateSphereBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_create_sphere_id"
+    }
+  },
+  {
+    "class_name": "DeleteItemOfUserListBrick",
+    "property_names": [],
+    "field_labels": {
+      "LIST_DELETE_ITEM": "brick_delete_item_of_userlist_edit_text"
+    }
+  },
+  {
+    "class_name": "DeleteThisCloneBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "Fast2DApplyForceBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_force_id",
+      "X_POSITION": "brick_fast2d_force_x",
+      "Y_POSITION": "brick_fast2d_force_y"
+    }
+  },
+  {
+    "class_name": "Fast2DApplyImpulseBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_impulse_id",
+      "X_POSITION": "brick_fast2d_impulse_x",
+      "Y_POSITION": "brick_fast2d_impulse_y"
+    }
+  },
+  {
+    "class_name": "Fast2DCreateBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_create_edit_id"
+    }
+  },
+  {
+    "class_name": "Fast2DDeleteBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_delete_id"
+    }
+  },
+  {
+    "class_name": "Fast2DMakePhysicsBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_phys_id",
+      "X_POSITION": "brick_fast2d_phys_dyn",
+      "STRING": "brick_fast2d_phys_shape",
+      "Y_POSITION": "brick_fast2d_phys_den",
+      "ROTATION": "brick_fast2d_phys_fric",
+      "SIZE": "brick_fast2d_phys_bounce"
+    }
+  },
+  {
+    "class_name": "Fast2DSetAngularVelocityBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_ang_vel_id",
+      "ROTATION": "brick_fast2d_ang_vel_v"
+    }
+  },
+  {
+    "class_name": "Fast2DSetCameraBrick",
+    "property_names": [],
+    "field_labels": {
+      "X_POSITION": "brick_fast2d_cam_edit_x",
+      "Y_POSITION": "brick_fast2d_cam_edit_y",
+      "SIZE": "brick_fast2d_cam_edit_zoom"
+    }
+  },
+  {
+    "class_name": "Fast2DSetCollisionFilterBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_col_filter_id",
+      "X_POSITION": "brick_fast2d_col_filter_sensor",
+      "Y_POSITION": "brick_fast2d_col_filter_group"
+    }
+  },
+  {
+    "class_name": "Fast2DSetColorBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_color_id",
+      "X_POSITION": "brick_fast2d_color_r",
+      "Y_POSITION": "brick_fast2d_color_g",
+      "ROTATION": "brick_fast2d_color_b",
+      "SIZE": "brick_fast2d_color_a"
+    }
+  },
+  {
+    "class_name": "Fast2DSetGravityBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_fast2d_set_gravity_x",
+      "VALUE_2": "brick_fast2d_set_gravity_y"
+    }
+  },
+  {
+    "class_name": "Fast2DSetPhysicsVelocityBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_phys_vel_id",
+      "X_POSITION": "brick_fast2d_phys_vel_x",
+      "Y_POSITION": "brick_fast2d_phys_vel_y"
+    }
+  },
+  {
+    "class_name": "Fast2DSetPositionBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_set_pos_edit_id",
+      "X_POSITION": "brick_fast2d_set_pos_edit_x",
+      "Y_POSITION": "brick_fast2d_set_pos_edit_y"
+    }
+  },
+  {
+    "class_name": "Fast2DSetRotationBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_set_rotation_id",
+      "ROTATION": "brick_fast2d_set_rotation_angle"
+    }
+  },
+  {
+    "class_name": "Fast2DSetScaleBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_set_scale_id",
+      "X_SCALE": "brick_fast2d_set_scale_x",
+      "Y_SCALE": "brick_fast2d_set_scale_y"
+    }
+  },
+  {
+    "class_name": "Fast2DSetTextureBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_set_texture_id",
+      "STRING": "brick_fast2d_set_texture_file"
+    }
+  },
+  {
+    "class_name": "Fast2DSetVelocityBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_vel_id",
+      "X_POSITION": "brick_fast2d_vel_x",
+      "Y_POSITION": "brick_fast2d_vel_y"
+    }
+  },
+  {
+    "class_name": "Fast2DSetZIndexBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_fast2d_set_z_id",
+      "VIBRATE_DURATION": "brick_fast2d_set_z_value"
+    }
+  },
+  {
+    "class_name": "ForeverBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "GlideToBrick",
+    "property_names": [],
+    "field_labels": {
+      "X_DESTINATION": "brick_glide_to_edit_text_x",
+      "Y_DESTINATION": "brick_glide_to_edit_text_y",
+      "DURATION_IN_SECONDS": "brick_glide_to_edit_text_duration"
+    }
+  },
+  {
+    "class_name": "HideBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "HideText3Brick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_hide_text_edit_text"
+    }
+  },
+  {
+    "class_name": "HideTextBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "IfLogicBeginBrick",
+    "property_names": [],
+    "field_labels": {
+      "IF_CONDITION": "brick_if_begin_edit_text"
+    }
+  },
+  {
+    "class_name": "IfOnEdgeBounceBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "IfThenLogicBeginBrick",
+    "property_names": [],
+    "field_labels": {
+      "IF_CONDITION": "brick_if_begin_edit_text"
+    }
+  },
+  {
+    "class_name": "InsertItemIntoUserListBrick",
+    "property_names": [],
+    "field_labels": {
+      "INSERT_ITEM_INTO_USERLIST_VALUE": "brick_insert_item_into_userlist_value_edit_text",
+      "INSERT_ITEM_INTO_USERLIST_INDEX": "brick_insert_item_into_userlist_at_index_edit_text"
+    }
+  },
+  {
+    "class_name": "LoadFromInternalStorageBrick",
+    "property_names": [],
+    "field_labels": {
+      "FILE_NAME": "brick_load_from_internal_path"
+    }
+  },
+  {
+    "class_name": "LoadSceneAdditiveBrick",
+    "property_names": [],
+    "field_labels": {
+      "TEXT": "brick_load_scene_additive_edit_text"
+    }
+  },
+  {
+    "class_name": "LoadSceneBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_load_scene_edit_text"
+    }
+  },
+  {
+    "class_name": "MoveNStepsBrick",
+    "property_names": [],
+    "field_labels": {
+      "STEPS": "brick_move_n_steps_edit_text"
+    }
+  },
+  {
+    "class_name": "PlaceAtBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "PlaySoundAndWaitBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "PlaySoundBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "PointInDirectionBrick",
+    "property_names": [],
+    "field_labels": {
+      "DEGREES": "brick_point_in_direction_edit_text"
+    }
+  },
+  {
+    "class_name": "PromoteLightBrick",
+    "property_names": [],
+    "field_labels": {
+      "NAME": "brick_promote_light_id_val"
+    }
+  },
+  {
+    "class_name": "ReadFromFilesBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_read_files_edit_text"
+    }
+  },
+  {
+    "class_name": "ReadListFromDeviceBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "ReadVariableFromDeviceBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "ReadVariableFromFileBrick",
+    "property_names": [],
+    "field_labels": {
+      "READ_FILENAME": "brick_read_variable_from_file_edit_text"
+    }
+  },
+  {
+    "class_name": "Remove3dObjectBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_remove_3d_object_id"
+    }
+  },
+  {
+    "class_name": "RemovePbrLightBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_remove_pbr_light_id_value"
+    }
+  },
+  {
+    "class_name": "RepeatBrick",
+    "property_names": [],
+    "field_labels": {
+      "TIMES_TO_REPEAT": "brick_repeat_edit_text"
+    }
+  },
+  {
+    "class_name": "RepeatUntilBrick",
+    "property_names": [],
+    "field_labels": {
+      "REPEAT_UNTIL_CONDITION": "brick_repeat_until_edit_text"
+    }
+  },
+  {
+    "class_name": "ReplaceItemInUserListBrick",
+    "property_names": [],
+    "field_labels": {
+      "REPLACE_ITEM_IN_USERLIST_VALUE": "brick_replace_item_in_userlist_value_edit_text",
+      "REPLACE_ITEM_IN_USERLIST_INDEX": "brick_replace_item_in_userlist_at_index_edit_text"
+    }
+  },
+  {
+    "class_name": "RotateCameraByBrick",
+    "property_names": [],
+    "field_labels": {
+      "PITCH": "rotate_pitch_edit",
+      "YAW": "rotate_yaw_edit",
+      "ROLL": "rotate_roll_edit"
+    }
+  },
+  {
+    "class_name": "SaveToInternalStorageBrick",
+    "property_names": [],
+    "field_labels": {
+      "PROJECT_FILE_NAME": "brick_save_to_internal_project_file",
+      "FILE_NAME": "brick_save_to_internal_path"
+    }
+  },
+  {
+    "class_name": "SceneStartBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "SceneTransitionBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "Set3dFrictionBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_friction_id",
+      "VALUE_2": "brick_set_friction_value"
+    }
+  },
+  {
+    "class_name": "Set3dGravityBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_2": "brick_set_3d_gravity_x",
+      "VALUE_3": "brick_set_3d_gravity_y",
+      "VALUE_4": "brick_set_3d_gravity_z"
+    }
+  },
+  {
+    "class_name": "Set3dPositionBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_3d_position_object_id",
+      "VALUE_2": "brick_set_3d_position_x",
+      "VALUE_3": "brick_set_3d_position_y",
+      "VALUE_4": "brick_set_3d_position_z"
+    }
+  },
+  {
+    "class_name": "Set3dRotationBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_3d_rotation_object_id",
+      "VALUE_2": "brick_set_3d_rotation_yaw",
+      "VALUE_3": "brick_set_3d_rotation_pitch",
+      "VALUE_4": "brick_set_3d_rotation_roll"
+    }
+  },
+  {
+    "class_name": "Set3dScaleBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_3d_scale_object_id",
+      "VALUE_2": "brick_set_3d_scale_x",
+      "VALUE_3": "brick_set_3d_scale_y",
+      "VALUE_4": "brick_set_3d_scale_z"
+    }
+  },
+  {
+    "class_name": "Set3dVelocityBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_3d_velocity_object_id",
+      "VALUE_2": "brick_set_3d_velocity_x",
+      "VALUE_3": "brick_set_3d_velocity_y",
+      "VALUE_4": "brick_set_3d_velocity_z"
+    }
+  },
+  {
+    "class_name": "SetAmbientLightBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_ambient_light_r",
+      "VALUE_2": "brick_set_ambient_light_g",
+      "VALUE_3": "brick_set_ambient_light_b"
+    }
+  },
+  {
+    "class_name": "SetBackgroundLightBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_background_light_intensity_value"
+    }
+  },
+  {
+    "class_name": "SetCameraPositionBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_set_camera_position_x",
+      "VALUE_2": "brick_set_camera_position_y",
+      "VALUE_3": "brick_set_camera_position_z"
+    }
+  },
+  {
+    "class_name": "SetCameraRangeBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_camera_range_near_value",
+      "VALUE_2": "brick_set_camera_range_far_value"
+    }
+  },
+  {
+    "class_name": "SetCameraRotationBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_camera_rotation_yaw",
+      "VALUE_2": "brick_set_camera_rotation_pitch",
+      "VALUE_3": "brick_set_camera_rotation_roll"
+    }
+  },
+  {
+    "class_name": "SetDirectionalLight2Brick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_directional_light_dir_x_value",
+      "VALUE_2": "brick_set_directional_light_dir_y_value",
+      "VALUE_3": "brick_set_directional_light_dir_z_value",
+      "VALUE_4": "brick_set_directional_light_intensity_value"
+    }
+  },
+  {
+    "class_name": "SetDirectionalLightBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_directional_light_id",
+      "VALUE_2": "brick_set_directional_light_r",
+      "VALUE_3": "brick_set_directional_light_g",
+      "VALUE_4": "brick_set_directional_light_b",
+      "VALUE_5": "brick_set_directional_light_x",
+      "VALUE_6": "brick_set_directional_light_y",
+      "VALUE_7": "brick_set_directional_light_z"
+    }
+  },
+  {
+    "class_name": "SetFrictionBrick",
+    "property_names": [],
+    "field_labels": {
+      "PHYSICS_FRICTION": "brick_set_friction_edit_text"
+    }
+  },
+  {
+    "class_name": "SetGravityBrick",
+    "property_names": [],
+    "field_labels": {
+      "PHYSICS_GRAVITY_X": "brick_set_gravity_edit_text_x",
+      "PHYSICS_GRAVITY_Y": "brick_set_gravity_edit_text_y"
+    }
+  },
+  {
+    "class_name": "SetLookBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "SetLookByIndexBrick",
+    "property_names": [],
+    "field_labels": {
+      "LOOK_INDEX": "brick_set_look_by_index_edit_text"
+    }
+  },
+  {
+    "class_name": "SetMaxPointLightsBrick",
+    "property_names": [],
+    "field_labels": {
+      "MAX_LIGHTS": "brick_max_lights_val"
+    }
+  },
+  {
+    "class_name": "SetObjectColorBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_object_color_id",
+      "VALUE_2": "brick_set_object_color_r",
+      "VALUE_3": "brick_set_object_color_g",
+      "VALUE_4": "brick_set_object_color_b"
+    }
+  },
+  {
+    "class_name": "SetObjectTextureBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_object_texture_id",
+      "VALUE_2": "brick_object_texture_file"
+    }
+  },
+  {
+    "class_name": "SetPhysicsObjectTypeBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "SetPhysicsStateBrick",
+    "property_names": [
+      "shapeSelection",
+      "stateSelection"
+    ],
+    "field_labels": {
+      "VALUE_1": "brick_set_physics_state_id",
+      "VALUE_2": "brick_set_physics_state_mass_value"
+    }
+  },
+  {
+    "class_name": "SetPointLightBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_point_light_id_value",
+      "VALUE_2": "brick_set_point_light_pos_x_value",
+      "VALUE_3": "brick_set_point_light_pos_y_value",
+      "VALUE_4": "brick_set_point_light_pos_z_value",
+      "VALUE_5": "brick_set_point_light_color_r_value",
+      "VALUE_6": "brick_set_point_light_color_g_value",
+      "VALUE_7": "brick_set_point_light_color_b_value",
+      "VALUE_8": "brick_set_point_light_intensity_value",
+      "VALUE_9": "brick_set_point_light_range_value"
+    }
+  },
+  {
+    "class_name": "SetRestitutionBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_restitution_id",
+      "VALUE_2": "brick_set_restitution_value"
+    }
+  },
+  {
+    "class_name": "SetSizeToBrick",
+    "property_names": [],
+    "field_labels": {
+      "SIZE": "brick_set_size_to_edit_text"
+    }
+  },
+  {
+    "class_name": "SetSpotLightBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE_1": "brick_set_spot_light_id_value",
+      "VALUE_2": "brick_set_spot_light_pos_x_value",
+      "VALUE_3": "brick_set_spot_light_pos_y_value",
+      "VALUE_4": "brick_set_spot_light_pos_z_value",
+      "VALUE_5": "brick_set_spot_light_dir_x_value",
+      "VALUE_6": "brick_set_spot_light_dir_y_value",
+      "VALUE_7": "brick_set_spot_light_dir_z_value",
+      "VALUE_8": "brick_set_spot_light_color_r_value",
+      "VALUE_9": "brick_set_spot_light_color_g_value",
+      "VALUE_10": "brick_set_spot_light_color_b_value",
+      "VALUE_11": "brick_set_spot_light_intensity_value",
+      "VALUE_12": "brick_set_spot_light_angle_value",
+      "VALUE_13": "brick_set_spot_light_exponent_value",
+      "VALUE_14": "brick_set_spot_light_range_value"
+    }
+  },
+  {
+    "class_name": "SetVariableBrick",
+    "property_names": [],
+    "field_labels": {
+      "VARIABLE": "brick_set_variable_edit_text"
+    }
+  },
+  {
+    "class_name": "SetVelocityBrick",
+    "property_names": [],
+    "field_labels": {
+      "PHYSICS_VELOCITY_X": "brick_set_velocity_edit_text_x",
+      "PHYSICS_VELOCITY_Y": "brick_set_velocity_edit_text_y"
+    }
+  },
+  {
+    "class_name": "SetXBrick",
+    "property_names": [],
+    "field_labels": {
+      "X_POSITION": "brick_set_x_edit_text"
+    }
+  },
+  {
+    "class_name": "SetYBrick",
+    "property_names": [],
+    "field_labels": {
+      "Y_POSITION": "brick_set_y_edit_text"
+    }
+  },
+  {
+    "class_name": "ShowBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "ShowText3Brick",
+    "property_names": [
+      "alignmentStyle"
+    ],
+    "field_labels": {
+      "TEXT": "brick_show_text_edit_text",
+      "NAME": "brick_show_text_edit_name",
+      "X_POSITION": "brick_show_text_edit_x",
+      "Y_POSITION": "brick_show_text_edit_y",
+      "SIZE": "brick_show_text_edit_size",
+      "COLOR": "brick_show_text_edit_color"
+    }
+  },
+  {
+    "class_name": "ShowTextBrick",
+    "property_names": [],
+    "field_labels": {
+      "X_POSITION": "brick_show_variable_edit_text_x",
+      "Y_POSITION": "brick_show_variable_edit_text_y"
+    }
+  },
+  {
+    "class_name": "StopAllSoundsBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "TurnLeftBrick",
+    "property_names": [],
+    "field_labels": {
+      "TURN_LEFT_DEGREES": "brick_turn_left_edit_text"
+    }
+  },
+  {
+    "class_name": "TurnRightBrick",
+    "property_names": [],
+    "field_labels": {
+      "TURN_RIGHT_DEGREES": "brick_turn_right_edit_text"
+    }
+  },
+  {
+    "class_name": "WaitBrick",
+    "property_names": [],
+    "field_labels": {
+      "TIME_TO_WAIT_IN_SECONDS": "brick_wait_edit_text"
+    }
+  },
+  {
+    "class_name": "WaitUntilBrick",
+    "property_names": [],
+    "field_labels": {
+      "IF_CONDITION": "brick_wait_until_edit_text"
+    }
+  },
+  {
+    "class_name": "WriteListOnDeviceBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "WriteToFilesBrick",
+    "property_names": [],
+    "field_labels": {
+      "VALUE": "brick_write_files_edit_text"
+    }
+  },
+  {
+    "class_name": "WriteVariableOnDeviceBrick",
+    "property_names": [],
+    "field_labels": {}
+  },
+  {
+    "class_name": "WriteVariableToFileBrick",
+    "property_names": [],
+    "field_labels": {
+      "WRITE_FILENAME": "brick_write_variable_to_file_edit_text"
+    }
+  }
+]

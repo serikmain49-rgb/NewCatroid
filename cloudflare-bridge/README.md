@@ -1,3 +1,7 @@
+# Обновление 0.5.0
+
+См. [UPGRADE-0.5.md](UPGRADE-0.5.md): квитанции экспорта, статусы применения и защита ID. Сохранены прежние DB, секреты и маршруты.
+
 # NewCatroid Bridge — Cloudflare Workers + D1
 
 Мост между Android-плагином NewCatroid Assistant 0.2/0.3 и ChatGPT.

@@ -1,0 +1,562 @@
+[
+  {
+    "class": "AddItemToUserListBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Apply3dForceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Apply3dTorqueBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ApplyForceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ApplyImpulseBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "AttachToCameraBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "BroadcastBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "BroadcastWaitBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "CameraTouchControlBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "CameraTrackingBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "CastRayBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ChangeSizeByNBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ChangeVariableBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ChangeXByNBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ChangeYByNBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "CloneBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ConfigureLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Create3dObjectBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "CreateCubeBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "CreateSphereBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "DeleteItemOfUserListBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "DeleteThisCloneBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DApplyForceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DApplyImpulseBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DCreateBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DDeleteBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DMakePhysicsBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetAngularVelocityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetCameraBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetCollisionFilterBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetColorBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetGravityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetPhysicsVelocityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetPositionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetRotationBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetScaleBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetTextureBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetVelocityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Fast2DSetZIndexBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ForeverBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "GlideToBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "HideBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "HideText3Brick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "HideTextBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "IfLogicBeginBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "IfOnEdgeBounceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "IfThenLogicBeginBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "InsertItemIntoUserListBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "LoadFromInternalStorageBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "LoadSceneAdditiveBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "LoadSceneBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "MoveNStepsBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "PlaceAtBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "PlaySoundAndWaitBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "PlaySoundBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "PointInDirectionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "PromoteLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ReadFromFilesBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ReadListFromDeviceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ReadVariableFromDeviceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ReadVariableFromFileBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Remove3dObjectBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "RemovePbrLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "RepeatBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "RepeatUntilBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ReplaceItemInUserListBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "RotateCameraByBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SaveToInternalStorageBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SceneStartBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SceneTransitionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Set3dFrictionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Set3dGravityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Set3dPositionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Set3dRotationBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Set3dScaleBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "Set3dVelocityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetAmbientLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetBackgroundLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetCameraPositionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetCameraRangeBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetCameraRotationBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetDirectionalLight2Brick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetDirectionalLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetFrictionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetGravityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetLookBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetLookByIndexBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetMaxPointLightsBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetObjectColorBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetObjectTextureBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetPhysicsObjectTypeBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetPhysicsStateBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetPointLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetRestitutionBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetSizeToBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetSpotLightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetVariableBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetVelocityBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetXBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "SetYBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ShowBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ShowText3Brick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "ShowTextBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "StopAllSoundsBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "TurnLeftBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "TurnRightBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "WaitBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "WaitUntilBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "WriteListOnDeviceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "WriteToFilesBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "WriteVariableOnDeviceBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "WriteVariableToFileBrick",
+    "available": false,
+    "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  }
+]

@@ -44,12 +44,42 @@ try {
  const endpoint='/mcp/'+env.MCP_LINK_SECRET;
  const init=await req(endpoint,{jsonrpc:'2.0',id:1,method:'initialize'},null);
  assert.equal(init.data.result.protocolVersion,'2025-03-26');ok();
- assert.equal((await req(endpoint,{jsonrpc:'2.0',id:2,method:'tools/list'},null)).data.result.tools.length,4);ok();
+ assert.equal((await req(endpoint,{jsonrpc:'2.0',id:2,method:'tools/list'},null)).data.result.tools.length,5);ok();
  assert.equal((await req('/mcp/wrong',{jsonrpc:'2.0',id:3,method:'ping'},null)).status,401);ok();
  assert.equal((await req(endpoint,{jsonrpc:'2.0',method:'notifications/initialized'},null)).status,202);ok();
  const call=await req(endpoint,{jsonrpc:'2.0',id:4,method:'tools/call',params:{name:'read_project_file',arguments:{file:'code.xml',limit:10}}},null);
  assert.equal(call.data.result.isError,false);ok();
  const bad=await req(endpoint,{jsonrpc:'2.0',id:5,method:'tools/call',params:{name:'read_project_file',arguments:{file:'unknown'}}},null);
  assert.equal(bad.data.result.isError,true);ok();
+ // Modern protocol: request receipt, lifecycle, persistent replay protection.
+ const fresh=(await req('/api/request',{})).data;
+ snapshot={...snapshot,project:{...snapshot.project,capabilities:{strict_request_id:true},request_id:fresh.request_id},request_id:fresh.request_id};
+ await req('/api/device/state',snapshot,env.DEVICE_TOKEN);
+ const modern={...patch,id:'modern',request_id:fresh.request_id,base_sha256:snapshot.project.base_sha256};
+ const staleReceipt=await req('/api/patch',{patch:{...modern,request_id:'wrong'}});assert.equal(staleReceipt.data.code,'STALE_EXPORT');ok();
+ assert.equal((await req('/api/patch',{patch:modern})).data.status,'queued');ok();
+ assert.equal((await req('/api/patch',{patch:modern})).data.code,'DUPLICATE_PATCH');ok();
+ const event={patch_id:modern.id,project:modern.project,base_sha256:modern.base_sha256,request_id:modern.request_id,status:'preview',details:'Review opened',event_id:'preview-1'};
+ assert.equal((await req('/api/device/result',event,env.ASSISTANT_TOKEN)).status,401);ok();
+ assert.equal((await req('/api/device/result',event,env.DEVICE_TOKEN)).data.status,'preview');
+ assert.equal((await req('/api/device/result',event,env.DEVICE_TOKEN)).data.duplicate,true);ok();
+ assert.equal((await req('/api/patch/status',{id:'modern'})).data.result.status,'preview');ok();
+ await req('/api/device/result',{...event,event_id:'apply-1',status:'applied',after_sha256:'after',details:'Verified saved'},env.DEVICE_TOKEN);
+ assert.equal((await req('/api/status')).data.patch_result.status,'applied');assert.equal((await req('/api/device/patch',undefined,env.DEVICE_TOKEN)).data.patch,null);ok();
+ await req('/api/device/result',{...event,event_id:'late-preview'},env.DEVICE_TOKEN);
+ assert.equal((await req('/api/patch/status',{id:'modern'})).data.result.status,'applied');ok();
+ assert.equal((await req('/api/patch',{patch:modern})).data.code,'DUPLICATE_PATCH');ok();
+ for(const status of ['rejected','error']){
+   const id='terminal-'+status;await req('/api/patch',{patch:{...modern,id}});
+   assert.equal((await req('/api/device/result',{...event,patch_id:id,event_id:id,status,details:status},env.DEVICE_TOKEN)).data.status,status);
+   assert.equal((await req('/api/patch/status',{id})).data.result.status,status);ok();
+ }
+ const racing={...modern,id:'racing'};
+ const race=await Promise.all([req('/api/patch',{patch:racing}),req('/api/patch',{patch:racing})]);assert.equal(race.filter(r=>r.status===200).length,1);ok();
+ await req('/api/device/result',{...event,patch_id:'racing',event_id:'race-end',status:'rejected'},env.DEVICE_TOKEN);
+ const pendingNew=(await req('/api/request',{})).data;
+ assert.equal((await req('/api/patch',{patch:{...modern,id:'while-pending'}})).data.code,'STALE_EXPORT');ok();
+ await req('/api/device/state',{...snapshot,request_id:pendingNew.request_id,project:{...snapshot.project,request_id:pendingNew.request_id}},env.DEVICE_TOKEN);
+ assert.equal((await req('/api/patch',{patch:{...modern,id:'old-receipt'}})).data.code,'STALE_EXPORT');ok();
  console.log('PASS: '+passed+' checks, SQLite-backed D1 adapter, auth, snapshots, Unicode chunks, stale patch invalidation, pending requests, MCP.');
 }finally{rmSync(dir,{recursive:true,force:true})}

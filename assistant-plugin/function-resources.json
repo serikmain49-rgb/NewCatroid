@@ -1,0 +1,734 @@
+{
+  "HTTP_RESPONSE_TEXT": {
+    "resource_class": "string",
+    "resource_name": "formula_http_response_text"
+  },
+  "HTTP_RESPONSE_CODE": {
+    "resource_class": "string",
+    "resource_name": "formula_http_response_code"
+  },
+  "HTTP_RESPONSE_HEADER": {
+    "resource_class": "string",
+    "resource_name": "formula_http_response_header"
+  },
+  "SIN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_sin"
+  },
+  "COS": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_cos"
+  },
+  "TAN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_tan"
+  },
+  "LN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_ln"
+  },
+  "LOG": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_log"
+  },
+  "PI": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_pi"
+  },
+  "SQRT": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_sqrt"
+  },
+  "RAND": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_rand"
+  },
+  "ABS": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_abs"
+  },
+  "ROUND": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_round"
+  },
+  "ROUNDTO": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_roundto"
+  },
+  "MOD": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_mod"
+  },
+  "ARCSIN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_arcsin"
+  },
+  "ARCCOS": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_arccos"
+  },
+  "ARCTAN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_arctan"
+  },
+  "ARCTAN2": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_arctan2"
+  },
+  "EXP": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_exp"
+  },
+  "POWER": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_power"
+  },
+  "FLOOR": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_floor"
+  },
+  "CEIL": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_ceil"
+  },
+  "MAX": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_max"
+  },
+  "TOUCHES_OBJECT_BY_NAME": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_touches_object_by_name"
+  },
+  "MIN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_min"
+  },
+  "IF_THEN_ELSE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_if_then_else"
+  },
+  "TRUE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_true"
+  },
+  "FALSE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_false"
+  },
+  "LETTER": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_letter"
+  },
+  "SUBTEXT": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_subtext"
+  },
+  "FILE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_file"
+  },
+  "FILES_PATH": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_files_path"
+  },
+  "ALL_FILES": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_all_files"
+  },
+  "FILE_SIZE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_file_size"
+  },
+  "LUA": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_lua"
+  },
+  "TO_HEX": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_to_hex"
+  },
+  "TO_DEC": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_to_dec"
+  },
+  "RANDOM_STR": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_random_str"
+  },
+  "REPEAT": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_repeat"
+  },
+  "REPLACE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_replace"
+  },
+  "CONTAINS_STR": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_contains_str"
+  },
+  "DISTAN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_distan"
+  },
+  "CLAMP": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_clamp"
+  },
+  "UPPER": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_upper"
+  },
+  "LOWER": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_lower"
+  },
+  "REVERSE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_reverse"
+  },
+  "VAR": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_var"
+  },
+  "VARNAME": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_var_name"
+  },
+  "VARVALUE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_var_value"
+  },
+  "TABLE_X": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_table_x"
+  },
+  "VIEW_X": {
+    "resource_class": "string",
+    "resource_name": "view_x"
+  },
+  "VIEW_Y": {
+    "resource_class": "string",
+    "resource_name": "view_y"
+  },
+  "VIEW_WIDTH": {
+    "resource_class": "string",
+    "resource_name": "view_width"
+  },
+  "VIEW_HEIGHT": {
+    "resource_class": "string",
+    "resource_name": "view_height"
+  },
+  "VIDEO_PLAYING": {
+    "resource_class": "string",
+    "resource_name": "is_video_playing"
+  },
+  "VIDEO_TIME": {
+    "resource_class": "string",
+    "resource_name": "video_time"
+  },
+  "GET_3D_POSITION_X": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_pos_x"
+  },
+  "PT_TOTALSIZE": {
+    "resource_class": "string",
+    "resource_name": "formula_pt_totalsize"
+  },
+  "PT_SHAPE": {
+    "resource_class": "string",
+    "resource_name": "formula_pt_shape"
+  },
+  "PT_DUMP": {
+    "resource_class": "string",
+    "resource_name": "formula_pt_dump"
+  },
+  "PT_ARGMAX": {
+    "resource_class": "string",
+    "resource_name": "formula_pt_argmax"
+  },
+  "F2D_IS_TOUCHED": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_is_touched"
+  },
+  "F2D_IS_TOUCHED_INDEX": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_is_touched_index"
+  },
+  "F2D_X": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_x"
+  },
+  "F2D_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_y"
+  },
+  "F2D_ROTATION": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_rotation"
+  },
+  "F2D_SCALE_X": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_scale_x"
+  },
+  "F2D_SCALE_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_scale_y"
+  },
+  "F2D_COLOR_R": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_r"
+  },
+  "F2D_COLOR_G": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_g"
+  },
+  "F2D_COLOR_B": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_b"
+  },
+  "F2D_ALPHA": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_alpha"
+  },
+  "F2D_TEXTURE": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_texture"
+  },
+  "F2D_CAM_X": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_cam_x"
+  },
+  "F2D_CAM_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_cam_y"
+  },
+  "F2D_CAM_ZOOM": {
+    "resource_class": "string",
+    "resource_name": "formula_f2d_cam_zoom"
+  },
+  "PT_VALUE": {
+    "resource_class": "string",
+    "resource_name": "formula_pt_value"
+  },
+  "PT_VALUEND": {
+    "resource_class": "string",
+    "resource_name": "formula_pt_valuend"
+  },
+  "COLLISION_LIST": {
+    "resource_class": "string",
+    "resource_name": "formula_collision_list"
+  },
+  "INTERSECT_LIST": {
+    "resource_class": "string",
+    "resource_name": "formula_intersect_list"
+  },
+  "DELTA": {
+    "resource_class": "string",
+    "resource_name": "formula_delta"
+  },
+  "OBJECT_TOUCHES_OBJECT": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_touches"
+  },
+  "OBJECT_INTERSECTS_OBJECT": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_intersects"
+  },
+  "GET_3D_VELOCITY_X": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_velo_x"
+  },
+  "GET_3D_VELOCITY_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_velo_y"
+  },
+  "GET_3D_VELOCITY_Z": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_velo_z"
+  },
+  "GET_3D_POSITION_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_pos_y"
+  },
+  "GET_3D_POSITION_Z": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_pos_z"
+  },
+  "GET_3D_ROTATION_YAW": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_rot_yaw"
+  },
+  "GET_3D_ROTATION_PITCH": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_rot_pitch"
+  },
+  "GET_3D_ROTATION_ROLL": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_rot_roll"
+  },
+  "GET_3D_SCALE_X": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_scale_x"
+  },
+  "GET_3D_SCALE_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_scale_y"
+  },
+  "GET_3D_SCALE_Z": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_scale_z"
+  },
+  "GET_3D_DISTANCE": {
+    "resource_class": "string",
+    "resource_name": "formula_3d_distance"
+  },
+  "GET_DIRECTION_X": {
+    "resource_class": "string",
+    "resource_name": "formula_vector_dir_x"
+  },
+  "GET_DIRECTION_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_vector_dir_y"
+  },
+  "GET_ANGLE": {
+    "resource_class": "string",
+    "resource_name": "formula_vector_angle"
+  },
+  "GET_RAY_DISTANCE": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_distance"
+  },
+  "GET_RAY_HIT_OBJECT": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_object"
+  },
+  "RAY_DID_HIT": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_did_hit"
+  },
+  "GET_RAY_HIT_X": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_x"
+  },
+  "GET_RAY_HIT_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_y"
+  },
+  "GET_RAY_HIT_Z": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_z"
+  },
+  "GET_RAY_HIT_NORMAL_X": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_normal_x"
+  },
+  "GET_RAY_HIT_NORMAL_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_normal_y"
+  },
+  "GET_RAY_HIT_NORMAL_Z": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_normal_z"
+  },
+  "GET_CAMERA_POS_X": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_pos_x"
+  },
+  "GET_CAMERA_POS_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_pos_y"
+  },
+  "GET_CAMERA_POS_Z": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_pos_z"
+  },
+  "GET_CAMERA_DIR_X": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_dir_x"
+  },
+  "GET_CAMERA_DIR_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_dir_y"
+  },
+  "GET_CAMERA_DIR_Z": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_dir_z"
+  },
+  "GET_CAMERA_ROTATION_PITCH": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_rot_pitch"
+  },
+  "GET_CAMERA_ROTATION_YAW": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_rot_yaw"
+  },
+  "GET_CAMERA_ROTATION_ROLL": {
+    "resource_class": "string",
+    "resource_name": "formula_cam_rot_roll"
+  },
+  "TABLE_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_table_y"
+  },
+  "FLOATARRAY": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_floatarray"
+  },
+  "TABLE_ELEMENT": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_table_element"
+  },
+  "TABLE_JOIN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_table_join"
+  },
+  "LENGTH": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_length"
+  },
+  "NUMBER_OF_ITEMS": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_number_of_items"
+  },
+  "JOIN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_join"
+  },
+  "JOIN3": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_join3"
+  },
+  "DISTANCE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_distance"
+  },
+  "JOINNUMBER": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_joinnumber"
+  },
+  "REGEX": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_regex"
+  },
+  "LIST_ITEM": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_list_item"
+  },
+  "CAMERA_X": {
+    "resource_class": "string",
+    "resource_name": "formula_camera_x"
+  },
+  "CAMERA_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_camera_y"
+  },
+  "CAMERA_ROTATION": {
+    "resource_class": "string",
+    "resource_name": "formula_camera_rotation"
+  },
+  "CAMERA_ZOOM": {
+    "resource_class": "string",
+    "resource_name": "formula_camera_zoom"
+  },
+  "VOXEL_GET_ID": {
+    "resource_class": "string",
+    "resource_name": "formula_voxel_get_id"
+  },
+  "VOXEL_GET_DATA": {
+    "resource_class": "string",
+    "resource_name": "formula_voxel_get_data"
+  },
+  "CONTAINS": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_contains"
+  },
+  "INDEX_OF_ITEM": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_index_of_item"
+  },
+  "PT_SAMPLE": {
+    "resource_class": "string",
+    "resource_name": "formula_pt_sample"
+  },
+  "JSON_GET": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_json_get"
+  },
+  "JSON_SET": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_json_set"
+  },
+  "JSON_IS_VALID": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_json_is_valid"
+  },
+  "RAY_DID_HIT2": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_did_hit2"
+  },
+  "RAY_HIT_SPRITE_NAME": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_sprite_name"
+  },
+  "RAY_HIT_X": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_x2"
+  },
+  "RAY_HIT_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_y2"
+  },
+  "RAY_HIT_DISTANCE": {
+    "resource_class": "string",
+    "resource_name": "formula_ray_hit_distance"
+  },
+  "FLATTEN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_flatten"
+  },
+  "CONNECT": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_connect"
+  },
+  "FIND": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_find"
+  },
+  "ARDUINODIGITAL": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_arduino_read_pin_value_digital"
+  },
+  "ARDUINOANALOG": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_arduino_read_pin_value_analog"
+  },
+  "RASPIDIGITAL": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_raspi_read_pin_value_digital"
+  },
+  "MULTI_FINGER_X": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_multi_finger_x"
+  },
+  "MULTI_FINGER_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_multi_finger_y"
+  },
+  "MULTI_FINGER_TOUCHED": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_is_multi_finger_touching"
+  },
+  "INDEX_CURRENT_TOUCH": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_index_of_current_touch"
+  },
+  "COLOR_AT_XY": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_sensor_color_at_x_y"
+  },
+  "COLOR_EQUALS_COLOR": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_sensor_color_equals_color"
+  },
+  "IS_MOUSE_BUTTON_DOWN": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_is_mouse_button_down"
+  },
+  "READ_FILE": {
+    "resource_class": "string",
+    "resource_name": "formula_read_file"
+  },
+  "MEDIA_DURATION": {
+    "resource_class": "string",
+    "resource_name": "formula_media_duration"
+  },
+  "IMAGE_WIDTH": {
+    "resource_class": "string",
+    "resource_name": "formula_image_width"
+  },
+  "IMAGE_HEIGHT": {
+    "resource_class": "string",
+    "resource_name": "formula_image_height"
+  },
+  "FILE_LAST_MODIFIED": {
+    "resource_class": "string",
+    "resource_name": "formula_file_last_modified"
+  },
+  "NOTIFICATION_REPLY": {
+    "resource_class": "string",
+    "resource_name": "formula_notification_reply"
+  },
+  "FILE_TO_BASE64": {
+    "resource_class": "string",
+    "resource_name": "formula_file_to_base64"
+  },
+  "MD5": {
+    "resource_class": "string",
+    "resource_name": "formula_md5"
+  },
+  "SHA256": {
+    "resource_class": "string",
+    "resource_name": "formula_sha256"
+  },
+  "FILE_MD5": {
+    "resource_class": "string",
+    "resource_name": "formula_file_md5"
+  },
+  "FILE_SHA256": {
+    "resource_class": "string",
+    "resource_name": "formula_file_sha256"
+  },
+  "TEXT_BLOCK_X": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_text_block_x"
+  },
+  "TEXT_BLOCK_Y": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_text_block_y"
+  },
+  "TEXT_BLOCK_SIZE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_text_block_size"
+  },
+  "MQTT_MESSAGE": {
+    "resource_class": "string",
+    "resource_name": "formula_mqtt_message"
+  },
+  "TEXT_BLOCK_FROM_CAMERA": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_text_block_from_camera"
+  },
+  "TEXT_BLOCK_LANGUAGE_FROM_CAMERA": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_text_block_language_from_camera"
+  },
+  "COLLIDES_WITH_COLOR": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_collides_with_color"
+  },
+  "COLOR_TOUCHES_COLOR": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_color_touches_color"
+  },
+  "CHAR_TO_UNICODE": {
+    "resource_class": "string",
+    "resource_name": "formula_char_to_unicode"
+  },
+  "UNICODE_TO_CHAR": {
+    "resource_class": "string",
+    "resource_name": "formula_unicode_to_char"
+  },
+  "UNESCAPE_UTF": {
+    "resource_class": "string",
+    "resource_name": "formula_unescape_utf"
+  },
+  "ID_OF_DETECTED_OBJECT": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_get_id_of_detected_object"
+  },
+  "OBJECT_WITH_ID_VISIBLE": {
+    "resource_class": "string",
+    "resource_name": "formula_editor_function_object_with_id_visible"
+  }
+}
