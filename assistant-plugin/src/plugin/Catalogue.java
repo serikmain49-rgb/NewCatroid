@@ -20,7 +20,7 @@ final class Catalogue {
     static JSONArray enumNames(String cls)throws Exception {JSONArray a=new JSONArray();for(Object x:Reflect.type(cls).getEnumConstants())a.put(((Enum<?>)x).name());return a;}
     Catalogue(File folder,String packageName,String version)throws Exception {this(folder,packageName,version,new String[0]);}
     Catalogue(File folder,String packageName,String version,String[] apks)throws Exception {
-        host.put("package",packageName).put("version",version).put("catalogue_version",2).put("plugin","0.5.0").put("availability","probed_installed_host").put("scope","supported adapters; unknown opaque blocks are excluded");
+        host.put("package",packageName).put("version",version).put("catalogue_version",2).put("plugin","0.6.0").put("availability","probed_installed_host").put("scope","supported adapters; unknown opaque blocks are excluded");
         JSONArray seeds=new JSONArray(Main.read(new File(folder,"catalogue-seeds.json"),2*1024*1024));
         Set<String> seeded=new HashSet<String>();for(int i=0;i<seeds.length();i++)seeded.add(seeds.getJSONObject(i).getString("class_name"));
         // Discover lighting additions in the installed APK. Only plain FormulaBrick adapters are accepted below.

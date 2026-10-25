@@ -1,13 +1,13 @@
 {
-  "version": "0.5.0",
-  "java_compile": "PASS --release 8; Android API; actual PluginEntry",
-  "model_and_catalogue_checks": 54,
+  "version": "0.6.0",
+  "java_compile": "PASS --release 8, Android API, actual PluginEntry",
+  "model_catalogue_sync_checks": 59,
+  "worker_checks": 51,
+  "python_tests": 20,
   "host_storage_checks": 2,
-  "cloudflare_sqlite_adapter_checks": 35,
-  "python_http_mcp_tests": 15,
-  "worker_dry_run": "PASS, 27.32 KiB",
+  "cross_language_fixture": "Java exporter -> Worker/Python; exact XML hash",
+  "synthetic_full_bytes": 653329,
+  "synthetic_delta_bytes": 2465,
   "android_runtime": "NOT RUN",
-  "live_cloudflare_d1": "NOT RUN",
-  "host_source_commit": "39db5865d04ee74b08503f0b7ef35158436e6b98",
-  "real_project_modified": false
+  "project_modified": false
 }

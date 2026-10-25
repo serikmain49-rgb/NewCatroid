@@ -1,7 +1,7 @@
 import worker from './newcatroid-worker.js';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
-import {mkdtempSync,rmSync} from 'node:fs';
+import {mkdtempSync,rmSync,readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -88,5 +88,39 @@ try {
  assert.equal(rejected.status,400);assert.equal((await req('/api/status')).data.last_error.message,'Snapshot hash mismatch');ok();
  const oversized=await req('/api/device/state',{pad:'x'.repeat(8*1024*1024)},env.DEVICE_TOKEN);
  assert.equal(oversized.data.code,'SNAPSHOT_TOO_LARGE');assert.equal((await req('/api/status')).data.last_error.code,'SNAPSHOT_TOO_LARGE');ok();
+ // Partial exports and project identity. Optional fixture is emitted by the Java exporter tests.
+ let fixtures;
+ if(process.argv[2])fixtures=JSON.parse(readFileSync(process.argv[2],'utf8'));
+ else{
+  const pid=await hash('project-A'),huge='<program><scenes><scene><script>'+('x'.repeat(100000))+'</script>',tail='</scene></scenes></program>';
+  const make=async(value,rid,base='')=>{const xml=huge+value+tail,meta={format:1,project:'Same name',project_id:pid,request_id:rid,base_sha256:await hash(xml),scenes:[{name:'One'}],capabilities:{strict_request_id:true,project_identity:true}},files={},changed={};
+   for(const [file,texts] of Object.entries({'project.json':[JSON.stringify(meta)],'code.xml':[huge,value,tail],'PROTOCOL.md':['protocol'],'supported-blocks.json':['[]']})){
+    files[file]=[];for(const text of texts){const key=await hash(text);files[file].push({sha256:key,kind:file==='code.xml'&&text===value?'script':'scene',scene_id:'one',script_id:text===value?'small-script':''});changed[key]=text;}}
+   return {sync_version:1,mode:base?'delta':'full',project_id:pid,project:'Same name',request_id:rid,base_sha256:base,target_sha256:meta.base_sha256,files,changed};};
+  const full=await make('1','r1'),delta=await make('2','r2',full.target_sha256);for(const key of Object.keys(delta.changed))if(Object.hasOwn(full.changed,key))delete delta.changed[key];fixtures={full,delta};
+ }
+ const full=fixtures.full,delta=structuredClone(fixtures.delta);
+ assert.equal((await req('/api/device/sync',full,env.DEVICE_TOKEN)).data.ok,true);ok();
+ assert.equal((await req('/api/status')).data.project_id,full.project_id);ok();
+ const syncRequest=(await req('/api/request',{})).data;assert.equal(syncRequest.expected_project_id,full.project_id);ok();
+ assert.equal((await req('/api/device/sync',{...delta,request_id:syncRequest.request_id,project_id:'b'.repeat(64)},env.DEVICE_TOKEN)).data.code,'WRONG_PROJECT');ok();
+ // Echo the fresh request in the project metadata fragment as well as in the envelope.
+ const oldMeta=delta.files['project.json'][0].sha256,projectMeta=JSON.parse(delta.changed[oldMeta]);projectMeta.request_id=syncRequest.request_id;
+ const metaText=JSON.stringify(projectMeta),metaHash=await hash(metaText);delete delta.changed[oldMeta];delta.changed[metaHash]=metaText;delta.files['project.json']=[{sha256:metaHash,kind:'project',scene_id:'',script_id:''}];delta.request_id=syncRequest.request_id;
+ const deltaReply=(await req('/api/device/sync',delta,env.DEVICE_TOKEN)).data;
+ assert.equal(deltaReply.ok,true);assert.equal(deltaReply.mode,'delta');assert.ok(deltaReply.parts_sent<Object.keys(full.changed).length);ok();
+ let rebuilt='',nextOffset=0;do{const r=(await req('/api/read',{file:'code.xml',offset:nextOffset,limit:60000})).data;rebuilt+=r.text;nextOffset=r.next_offset;assert.equal(r.project_id,delta.project_id);}while(nextOffset!==null);
+ assert.equal(await hash(rebuilt),delta.target_sha256);ok();
+ const readProject=(await req('/api/read',{file:'project.json',limit:60000})).data;
+ assert.equal(JSON.parse(readProject.text).request_id,delta.request_id);ok();
+ assert.equal((await req('/api/device/sync',{...delta,base_sha256:'wrong'},env.DEVICE_TOKEN)).data.code,'FULL_EXPORT_REQUIRED');ok();
+ const noChange={...delta,base_sha256:delta.target_sha256,changed:{}};
+ assert.equal((await req('/api/device/sync',noChange,env.DEVICE_TOKEN)).data.parts_sent,0);ok();
+ const corrupt=structuredClone(noChange);corrupt.changed[metaHash]='corrupted';assert.equal((await req('/api/device/sync',corrupt,env.DEVICE_TOKEN)).data.code,'FRAGMENT_HASH_MISMATCH');ok();
+ const identityPatch={format:1,id:'identity-check',title:'Identity',project:delta.project,project_id:'f'.repeat(64),base_sha256:delta.target_sha256,request_id:delta.request_id,operations:[{op:'sprite.create',scene:'One',sprite:'Hero'}]};
+ assert.equal((await req('/api/patch',{patch:identityPatch})).data.code,'WRONG_PROJECT');ok();
+ identityPatch.project_id=delta.project_id;assert.equal((await req('/api/patch',{patch:identityPatch})).data.queued,true);ok();
+ await req('/api/device/result',{patch_id:identityPatch.id,project_id:delta.project_id,project:delta.project,base_sha256:delta.target_sha256,request_id:delta.request_id,event_id:'id-end',status:'rejected',details:'test done'},env.DEVICE_TOKEN);
+ assert.equal((await req('/api/device/state',snapshot,env.DEVICE_TOKEN)).data.ok,true);assert.equal((await req('/api/read',{file:'code.xml',limit:10})).data.text,Array.from(snapshot.code_xml).slice(0,10).join(''));ok();
  console.log('PASS: '+passed+' checks, SQLite-backed D1 adapter, auth, snapshots, Unicode chunks, stale patch invalidation, pending requests, MCP.');
 }finally{rmSync(dir,{recursive:true,force:true})}

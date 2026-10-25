@@ -41,7 +41,7 @@ final class Bridge {
     static final class Plan {
         final Object project;
         final String beforeSha,title;
-        String id,requestId;
+        String id,requestId,projectId;
         final List<ModelOps.ValueEdit> values=new ArrayList<ModelOps.ValueEdit>();
         final Set<Object> removed=Collections.newSetFromMap(new IdentityHashMap<Object,Boolean>()),moved=Collections.newSetFromMap(new IdentityHashMap<Object,Boolean>());
         final FileEdits files=new FileEdits();
@@ -85,11 +85,12 @@ final class Bridge {
     Plan prepare(JSONObject patch)throws Exception {
         if(patch.getInt("format")!=1)throw new Exception("Нужен формат 1");
         if(patch.toString().getBytes("UTF-8").length>1024*1024)throw new Exception("PATCH_TOO_LARGE: JSON больше 1 МиБ");
+        if(patch.has("project_id")&&!PatchJournal.identity(project).equals(required(patch,"project_id")))throw new Exception("WRONG_PROJECT: это другой проект, даже если название совпадает");
         String current=sha(Reflect.xml(project));
         if(!required(patch,"project").equals(name(project)))throw new Exception("Патч для другого проекта");
         if(!required(patch,"base_sha256").equals(current))throw new Exception("Патч устарел. Снова отправь состояние проекта в чат.");
         required(patch,"id");
-        Plan plan=new Plan(project,current,required(patch,"title"));plan.id=required(patch,"id");plan.requestId=patch.optString("request_id","");formulaPlan=plan;
+        Plan plan=new Plan(project,current,required(patch,"title"));plan.projectId=PatchJournal.identity(project);plan.id=required(patch,"id");plan.requestId=patch.optString("request_id","");formulaPlan=plan;
         JSONArray ops=patch.getJSONArray("operations");
         if(ops.length()<1||ops.length()>200)throw new Exception("Допустимо 1–200 операций");
         for(int i=0;i<ops.length();i++){
@@ -275,8 +276,8 @@ final class Bridge {
     static JSONArray lists(Object owner)throws Exception {JSONArray a=new JSONArray();for(Object x:Reflect.list(owner,"getUserLists")){JSONArray values=new JSONArray();for(Object v:(List<?>)Reflect.call(x,"getValue"))values.put(v);a.put(new JSONObject().put("name",name(x)).put("value",values));}return a;}
 
     JSONObject context(String xml)throws Exception {
-        JSONObject out=new JSONObject();out.put("format",1);out.put("plugin","NewCatroid Assistant 0.5.0");
-        out.put("project",name(project));out.put("base_sha256",sha(xml));
+        JSONObject out=new JSONObject();out.put("format",1);out.put("plugin","NewCatroid Assistant 0.6.0");
+        out.put("project",name(project));out.put("project_id",PatchJournal.identity(project));out.put("base_sha256",sha(xml));
         JSONArray scenes=new JSONArray();out.put("scenes",scenes);
         for(Object scene:Reflect.list(project,"getSceneList")){
             JSONObject sc=new JSONObject();sc.put("name",name(scene));Object sceneId=ModelOps.field(scene,"sceneId").get(scene);sc.put("id",sceneId==null?JSONObject.NULL:sceneId.toString());scenes.put(sc);JSONArray sprites=new JSONArray();sc.put("sprites",sprites);
@@ -290,7 +291,7 @@ final class Bridge {
                 }
             }
         }
-        out.put("variables",variables(project));out.put("lists",lists(project));out.put("capabilities",new JSONObject().put("strict_request_id",true).put("patch_results",true).put("catalogue_version",2));out.put("instructions","Read code.xml for complete block trees. Read PROTOCOL.md and supported-blocks.json before generating a patch. Use exact project, scene names, script IDs and base_sha256. Return JSON format 1. No direct connection to ChatGPT is provided.");
+        out.put("variables",variables(project));out.put("lists",lists(project));out.put("capabilities",new JSONObject().put("project_identity",true).put("partial_export",1).put("strict_request_id",true).put("patch_results",true).put("catalogue_version",2));out.put("instructions","Read code.xml for complete block trees. Read PROTOCOL.md and supported-blocks.json before generating a patch. Use exact project, scene names, script IDs and base_sha256. Return JSON format 1. No direct connection to ChatGPT is provided.");
         return out;
     }
     static JSONArray names(List<Object> list)throws Exception {JSONArray a=new JSONArray();for(Object x:list)a.put(name(x));return a;}

@@ -157,6 +157,27 @@ public class BridgeTest {
   check(liveCatalogue.arities.get("RAND")==2,"function arguments derived from installed keyboard tokens");
   org.catrobat.catroid.formulaeditor.InternFormulaKeyboardAdapter.count=3;Catalogue changedHost=new Catalogue(new java.io.File(args[0]),"host","fixture-version");
   check(changedHost.arities.get("RAND")==3,"catalogue follows host argument-layout changes instead of hardcoded arity");
+  String filler=new String(new char[900000]).replace('\0','x');
+  String prefix="<program><header><programName>Game</programName></header><scenes><scene sceneId='one'><name>One</name><objectList><object><scriptList>";
+  String unchangedScript="<script><brickList><brick><value>"+filler+"🟦</value></brick></brickList><scriptId>big-script</scriptId></script>";
+  String changedScript="<script><brickList><brick><value>1</value></brick></brickList><scriptId>small-script</scriptId></script>";
+  String suffix="</scriptList></object></objectList></scene><scene sceneId='two'><name>Two</name><objectList/></scene></scenes></program>";
+  String xml1=prefix+unchangedScript+changedScript+suffix,xml2=prefix+unchangedScript+changedScript.replace("<value>1</value>","<value>2</value>")+suffix;
+  String pid=Bridge.sha("fixture-project-identity");
+  JSONObject meta=new JSONObject().put("format",1).put("project","Game").put("project_id",pid).put("request_id","r1").put("base_sha256",Bridge.sha(xml1)).put("scenes",new JSONArray().put(new JSONObject().put("name","One"))).put("capabilities",new JSONObject().put("strict_request_id",true).put("project_identity",true));
+  JSONObject payload=new JSONObject().put("project",meta).put("request_id","r1").put("code_xml",xml1).put("protocol","protocol").put("supported_blocks",new JSONArray());
+  SyncExport export1=new SyncExport(payload);JSONObject full=export1.payload(null,false);
+  check(full.getString("mode").equals("full"),"first sync sends full export");
+  meta=new JSONObject(meta.toString()).put("request_id","r2").put("base_sha256",Bridge.sha(xml2));payload.put("project",meta).put("request_id","r2").put("code_xml",xml2);
+  SyncExport export2=new SyncExport(payload);JSONObject delta=export2.payload(export1.baseline(),false);
+  check(delta.getString("mode").equals("delta")&&delta.toString().getBytes("UTF-8").length<full.toString().getBytes("UTF-8").length/20,"editing one script sends less than 5 percent of full bytes");
+  StringBuilder rebuilt=new StringBuilder();JSONArray parts=delta.getJSONObject("files").getJSONArray("code.xml");
+  for(int n=0;n<parts.length();n++){JSONObject part=parts.getJSONObject(n);String key=part.getString("sha256");rebuilt.append(delta.getJSONObject("changed").has(key)?delta.getJSONObject("changed").getString(key):full.getJSONObject("changed").getString(key));}
+  check(rebuilt.toString().equals(xml2),"partial XML reconstruction is exact including Unicode");
+  check(export2.payload(null,true).getString("mode").equals("full"),"missing server base can trigger full retry");
+  JSONObject badIdentity=patch(p2,new JSONArray().put(op("sprite.create").put("sprite","New"))).put("project_id",Bridge.sha("different-folder"));
+  check(fails(p2,badIdentity),"same project name with different identity rejected before edits");
+  if(args.length>1)java.nio.file.Files.write(new java.io.File(args[1]).toPath(),new JSONObject().put("full",full).put("delta",delta).toString().getBytes("UTF-8"));
   System.out.println("PASS: "+tests+" transaction checks");
  }
 }'''
@@ -165,6 +186,6 @@ with tempfile.TemporaryDirectory(prefix='nc-bridge-test-') as tmp:
  d=pathlib.Path(tmp)
  for name,text in fixtures.items():
   f=d/name;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(text)
- sources=list(d.rglob('*.java'))+[root/'src/plugin/Reflect.java',root/'src/plugin/Bridge.java',root/'src/plugin/ImageAsset.java',root/'src/plugin/ModelOps.java',root/'src/plugin/FileEdits.java',root/'src/plugin/ReferenceCheck.java',root/'src/plugin/Catalogue.java',root/'src/plugin/PatchJournal.java']
+ sources=list(d.rglob('*.java'))+[root/'src/plugin/Reflect.java',root/'src/plugin/Bridge.java',root/'src/plugin/ImageAsset.java',root/'src/plugin/ModelOps.java',root/'src/plugin/FileEdits.java',root/'src/plugin/ReferenceCheck.java',root/'src/plugin/Catalogue.java',root/'src/plugin/PatchJournal.java',root/'src/plugin/SyncExport.java']
  subprocess.run(['java','com.sun.tools.javac.Main','--release','8','-encoding','UTF-8','-cp',str(jar),'-d',str(d/'classes')]+list(map(str,sources)),check=True)
- subprocess.run(['java','-cp',str(d/'classes')+':'+str(jar),'plugin.BridgeTest',str(root)],check=True)
+ subprocess.run(['java','-cp',str(d/'classes')+':'+str(jar),'plugin.BridgeTest',str(root)]+([str(pathlib.Path(sys.argv[2]).resolve())] if len(sys.argv)>2 else []),check=True)

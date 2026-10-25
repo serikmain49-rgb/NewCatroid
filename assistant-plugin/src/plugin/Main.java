@@ -72,11 +72,11 @@ public class Main implements PluginEntry,Application.ActivityLifecycleCallbacks 
     private Object project()throws Exception {
         Object listener=Reflect.call(Reflect.type("org.catrobat.catroid.stage.StageActivity"),"getActiveStageListener");
         if(listener!=null&&!Boolean.TRUE.equals(Reflect.call(listener,"isFinished")))throw new Exception("Сначала полностью останови запущенный проект и вернись в редактор");
-        Object p=Reflect.call(Reflect.manager(),"getCurrentProject");if(p==null)throw new Exception("Сначала открой проект в редакторе");return p;
+        Object p=Reflect.call(Reflect.manager(),"getCurrentProject");if(p==null)throw new Exception("NO_PROJECT_OPEN: сначала открой проект в редакторе");if(!Reflect.type("org.catrobat.catroid.content.Project").isInstance(p)||Reflect.list(p,"getSceneList").isEmpty())throw new Exception("NOT_A_PROJECT: не найден настоящий проект NewCatroid со сценами");return p;
     }
     private void panel(final Activity a){
         if(busy){toast("Дождись завершения операции");return;}
-        String title="Помощник 0.5";try{title+=" · "+Bridge.name(project());}catch(Exception ignore){}
+        String title="Помощник 0.6";try{title+=" · "+Bridge.name(project());}catch(Exception ignore){}
         new AlertDialog.Builder(a).setTitle(title)
             .setItems(new String[]{"1. Отправить проект в чат","2. Вставить изменения","3. Открыть JSON-файл изменений","4. Отменить последнее применение","Проверка: добавить счётчик","Резервные копии кода","Как это работает","Bridge: настройки","Отправить состояние на сервер","Проверить изменения на сервере"},new DialogInterface.OnClickListener(){
                 public void onClick(DialogInterface d,int item){
@@ -140,10 +140,10 @@ public class Main implements PluginEntry,Application.ActivityLifecycleCallbacks 
         catch(Exception e){reportRaw(patch,"error",message(e));throw e;}
     }
     private void report(Bridge.Plan p,String status,String details){
-        try{reportRaw(new JSONObject().put("id",p.id).put("project",Bridge.name(p.project)).put("base_sha256",p.beforeSha).put("request_id",p.requestId).put("after_sha256",p.afterSha==null?"":p.afterSha),status,details);}catch(Exception e){toast("Отчёт не сохранён: "+message(e));}
+        try{reportRaw(new JSONObject().put("id",p.id).put("project_id",p.projectId).put("project",Bridge.name(p.project)).put("base_sha256",p.beforeSha).put("request_id",p.requestId).put("after_sha256",p.afterSha==null?"":p.afterSha),status,details);}catch(Exception e){toast("Отчёт не сохранён: "+message(e));}
     }
     private void reportRaw(JSONObject patch,String status,String details){
-        try{if(patch.optString("id").isEmpty()||patch.optString("project").isEmpty())return;JSONObject event=new JSONObject().put("event_id",UUID.randomUUID().toString()).put("patch_id",patch.optString("id")).put("project",patch.optString("project")).put("base_sha256",patch.optString("base_sha256")).put("request_id",patch.optString("request_id")).put("status",status).put("details",details.substring(0,Math.min(4000,details.length()))).put("after_sha256",patch.optString("after_sha256"));journal.event(event);}catch(Exception e){toast("Не удалось сохранить отчёт bridge: "+message(e));}
+        try{if(patch.optString("id").isEmpty()||patch.optString("project").isEmpty())return;JSONObject event=new JSONObject().put("event_id",UUID.randomUUID().toString()).put("patch_id",patch.optString("id")).put("project_id",patch.optString("project_id")).put("project",patch.optString("project")).put("base_sha256",patch.optString("base_sha256")).put("request_id",patch.optString("request_id")).put("status",status).put("details",details.substring(0,Math.min(4000,details.length()))).put("after_sha256",patch.optString("after_sha256"));journal.event(event);}catch(Exception e){toast("Не удалось сохранить отчёт bridge: "+message(e));}
     }
     private void flushReports(String base,String token)throws Exception {
         for(int i=0;i<20;i++){JSONObject event=journal.peek();if(event==null)return;try{Remote.call(base,token,"POST","/api/device/result",event);}catch(Exception e){if(message(e).contains("HTTP 404"))return;if(message(e).contains("HTTP 400")||message(e).contains("HTTP 409")){journal.failedEvent(event.getString("event_id"),message(e));continue;}throw e;}journal.ack(event.getString("event_id"));}
@@ -245,7 +245,7 @@ public class Main implements PluginEntry,Application.ActivityLifecycleCallbacks 
                     if(generation!=remoteGeneration||!prefs.getBoolean("enabled",false))return;
                     remoteStatus="Сервер доступен";
                     String request=result.optString("request_id","");
-                    if(!request.isEmpty())sendSnapshot(null,request);
+                    if(!request.isEmpty())sendSnapshot(null,request,result.optString("expected_project_id",""));
                 }});
             }catch(final Exception e){handler.post(new Runnable(){public void run(){remoteBusy=false;remoteStatus=message(e);}});}}},"NCAssistantPoll").start();
         }
@@ -264,13 +264,14 @@ public class Main implements PluginEntry,Application.ActivityLifecycleCallbacks 
         }catch(Exception e){info(a,"Настройки не сохранены",message(e));}}}).setNegativeButton("Отмена",null).show();
     }
     private void uploadRemote(Activity a){sendSnapshot(a,"");}
-    private void sendSnapshot(final Activity a,final String request){
+    private void sendSnapshot(final Activity a,final String request){sendSnapshot(a,request,"");}
+    private void sendSnapshot(final Activity a,final String request,final String expectedProject){
         if(busy){if(a!=null)toast("Дождись завершения применения");return;}
         if(remoteBusy){if(a!=null)toast("Соединение занято, повтори через несколько секунд");return;}
         if(!prefs.getBoolean("enabled",false)){if(a!=null)remoteSettings(a);return;}
         final JSONObject payload=new JSONObject();
         try{
-            Object p=project();String xml=Reflect.xml(p);String rid=request.isEmpty()?UUID.randomUUID().toString():request;journal.receipt(p,rid,Bridge.sha(xml));
+            Object p=project();if(!expectedProject.isEmpty()&&!PatchJournal.identity(p).equals(expectedProject))throw new Exception("WRONG_PROJECT: открыт другой проект. Нужен проект, для которого запрошен экспорт.");String xml=Reflect.xml(p);String rid=request.isEmpty()?UUID.randomUUID().toString():request;journal.receipt(p,rid,Bridge.sha(xml));
             payload.put("project",new Bridge(p,catalogue).context(xml).put("request_id",rid)).put("code_xml",xml)
                 .put("protocol",read(new File(pluginDir,"PROTOCOL.md"),2*1024*1024))
                 .put("supported_blocks",catalogue.blocks)
@@ -278,8 +279,20 @@ public class Main implements PluginEntry,Application.ActivityLifecycleCallbacks 
         }catch(Exception e){try{payload.put("request_id",request).put("error",message(e));}catch(Exception ignored){}}
         final String base=prefs.getString("url",""),token=prefs.getString("token","");remoteBusy=true;
         new Thread(new Runnable(){public void run(){try{
-            flushReports(base,token);Remote.call(base,token,"POST","/api/device/state",payload);
-            handler.post(new Runnable(){public void run(){remoteBusy=false;remoteStatus=payload.has("error")?payload.optString("error"):"Состояние отправлено";if(a!=null)info(a,"Сервер",remoteStatus);}});
+            flushReports(base,token);String detail="Состояние отправлено";
+            if(payload.has("error"))Remote.call(base,token,"POST","/api/device/state",payload);
+            else{
+                SyncExport export=new SyncExport(payload);File cacheDir=new File(app.getFilesDir(),"newcatroid-assistant-sync");JSONObject baseline=SyncExport.cached(cacheDir,base,export.projectId);JSONObject wire=export.payload(baseline,false),result;
+                try{
+                    result=Remote.call(base,token,"POST","/api/device/sync",wire);
+                    if(!result.optBoolean("ok")&&result.optString("code").equals("FULL_EXPORT_REQUIRED")){wire=export.payload(null,true);result=Remote.call(base,token,"POST","/api/device/sync",wire);}
+                    if(!result.optBoolean("ok"))throw new IOException(result.optString("code")+": "+result.optString("message"));
+                    if(!export.hash.equals(result.optString("base_sha256"))||!export.projectId.equals(result.optString("project_id"))||!export.requestId.equals(result.optString("request_id")))throw new IOException("Квитанция сервера не совпадает с отправленным проектом");
+                    export.save(cacheDir,base);detail=(wire.getString("mode").equals("delta")?"Частичный экспорт":"Полный экспорт")+": "+result.optInt("parts_sent")+" частей, "+result.optInt("bytes_received")+" байт";
+                }catch(Remote.Failure unsupported){if(unsupported.status!=404)throw unsupported;Remote.call(base,token,"POST","/api/device/state",payload);detail="Полный экспорт: старый сервер без частичной синхронизации";}
+            }
+            final String sentDetail=detail;
+            handler.post(new Runnable(){public void run(){remoteBusy=false;remoteStatus=payload.has("error")?payload.optString("error"):sentDetail;if(a!=null)info(a,"Сервер",remoteStatus);}});
         }catch(final Exception e){handler.post(new Runnable(){public void run(){remoteBusy=false;remoteStatus=message(e);if(a!=null)info(a,"Ошибка соединения",remoteStatus);}});}}} ,"NCAssistantUpload").start();
     }
     private void fetchRemote(final Activity a){

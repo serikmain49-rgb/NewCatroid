@@ -10,9 +10,15 @@ final class PatchJournal {
         File tmp=new File(file.getPath()+".tmp");Main.write(tmp,data.toString());if(!tmp.renameTo(file))throw new IOException("Не удалось сохранить журнал патчей");
     }
     static String projectKey(Object project)throws Exception{return Bridge.sha(((File)Reflect.call(project,"getDirectory")).getCanonicalPath());}
+    static String identity(Object project)throws Exception {
+        String path=((File)Reflect.call(project,"getDirectory")).getCanonicalPath();String firstScene="";
+        java.util.List<Object> scenes=Reflect.list(project,"getSceneList");if(!scenes.isEmpty())try{Object id=ModelOps.field(scenes.get(0),"sceneId").get(scenes.get(0));if(id!=null)firstScene=id.toString();}catch(NoSuchFieldException ignored){}catch(Exception ignored){}
+        return Bridge.sha(path+"\n"+firstScene);
+    }
     String key(Object p,String id)throws Exception{return projectKey(p)+":"+id;}
     synchronized void receipt(Object p,String rid,String sha)throws Exception{data.put("snapshot:"+projectKey(p),new JSONObject().put("request_id",rid).put("base_sha256",sha));persist();}
     synchronized void check(Object p,JSONObject patch)throws Exception{
+        if(patch.has("project_id")&&!identity(p).equals(patch.getString("project_id")))throw new Exception("WRONG_PROJECT: ID открытого проекта не совпадает");
         String id=Bridge.required(patch,"id");JSONObject record=data.optJSONObject(key(p,id));
         if(record!=null&&(record.optString("status").equals("applied")||record.optString("status").equals("applying")))throw new Exception("DUPLICATE_PATCH: ID уже применён или применение было прервано: "+id);
         checkReceipt(p,patch.optString("request_id",""),patch.optString("base_sha256"));
