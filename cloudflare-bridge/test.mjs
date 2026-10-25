@@ -81,5 +81,12 @@ try {
  assert.equal((await req('/api/patch',{patch:{...modern,id:'while-pending'}})).data.code,'STALE_EXPORT');ok();
  await req('/api/device/state',{...snapshot,request_id:pendingNew.request_id,project:{...snapshot.project,request_id:pendingNew.request_id}},env.DEVICE_TOKEN);
  assert.equal((await req('/api/patch',{patch:{...modern,id:'old-receipt'}})).data.code,'STALE_EXPORT');ok();
+ // Uploads larger than the old 4 MiB cap, and useful device rejection diagnostics.
+ const expanded='x'.repeat(4500000);const expandedSnapshot={...snapshot,code_xml:expanded,project:{...snapshot.project,base_sha256:await hash(expanded)}};
+ assert.equal((await req('/api/device/state',expandedSnapshot,env.DEVICE_TOKEN)).data.ok,true);ok();
+ const rejected=await req('/api/device/state',{...expandedSnapshot,project:{...expandedSnapshot.project,base_sha256:'wrong'}},env.DEVICE_TOKEN);
+ assert.equal(rejected.status,400);assert.equal((await req('/api/status')).data.last_error.message,'Snapshot hash mismatch');ok();
+ const oversized=await req('/api/device/state',{pad:'x'.repeat(8*1024*1024)},env.DEVICE_TOKEN);
+ assert.equal(oversized.data.code,'SNAPSHOT_TOO_LARGE');assert.equal((await req('/api/status')).data.last_error.code,'SNAPSHOT_TOO_LARGE');ok();
  console.log('PASS: '+passed+' checks, SQLite-backed D1 adapter, auth, snapshots, Unicode chunks, stale patch invalidation, pending requests, MCP.');
 }finally{rmSync(dir,{recursive:true,force:true})}
