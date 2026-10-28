@@ -96,6 +96,7 @@ public final class StageLifeCycleController {
 		stageActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		stageActivity.stageListener = new StageListener();
+        stageActivity.stageListener.setRuntimeAudioSession(stageActivity.runtimeAudio);
 		stageActivity.stageDialog = new StageDialog(stageActivity, stageActivity.stageListener, R.style.StageDialog);
 		stageActivity.brickDialogManager = new BrickDialogManager(stageActivity);
 		stageActivity.calculateScreenSizes();

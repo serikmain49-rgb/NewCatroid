@@ -1,0 +1,20 @@
+{
+  "store_archive_checks": {
+    "passed": 30,
+    "decoder": "fixture"
+  },
+  "session_checks": {
+    "passed": 33,
+    "android_player": "test doubles"
+  },
+  "audio_adapter_checks": {
+    "passed": 21
+  },
+  "existing_assistant_transaction_checks": {
+    "passed": 59
+  },
+  "new_runtime_api_compile": "Android API34 + GDX, host model signatures fixture",
+  "plugin_java_compile": "passed",
+  "android_device_tests": "added, not run",
+  "apk_assemble": "pending final build; see BUILD-RESULT.json in release bundle"
+}

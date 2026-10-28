@@ -1580,6 +1580,11 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 		}
 
 
+        // SAF audio selection needs no blanket file permission. Keep legacy storage
+        // requests only for project blocks which actually declare that resource.
+        Project permissionProject = ProjectManager.getInstance().getCurrentProject();
+        Brick.ResourcesSet required = permissionProject == null ? new Brick.ResourcesSet() : permissionProject.getRequiredResources();
+        if (required.contains(Brick.STORAGE_READ) || required.contains(Brick.STORAGE_WRITE)) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_IMAGES) != PackageManager.PERMISSION_GRANTED) {
 				permissionsNeeded.add(Manifest.permission.READ_MEDIA_IMAGES);
@@ -1591,6 +1596,7 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 			}
 		}
 
+        }
 
 		if (!permissionsNeeded.isEmpty()) {
 			ActivityCompat.requestPermissions(this, permissionsNeeded.toArray(new String[0]), 100);

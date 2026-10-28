@@ -2191,13 +2191,17 @@ public class StageListener implements ApplicationListener {
 		}
 	}
 
-	private void cancelRuntimeAudioScene() {
-        StageActivity a = StageActivity.activeStageActivity == null ? null : StageActivity.activeStageActivity.get();
-        if (a != null && a.runtimeAudio != null) a.runtimeAudio.cancelScene();
+	private org.catrobat.catroid.audio.RuntimeAudioSession runtimeAudioSession;
+
+    void setRuntimeAudioSession(org.catrobat.catroid.audio.RuntimeAudioSession session) {
+        runtimeAudioSession = session;
+    }
+
+    private void cancelRuntimeAudioScene() {
+        if (runtimeAudioSession != null) runtimeAudioSession.cancelScene();
     }
     public void finish() {
-        StageActivity a = StageActivity.activeStageActivity == null ? null : StageActivity.activeStageActivity.get();
-        if (a != null && a.runtimeAudio != null) a.runtimeAudio.close();
+        if (runtimeAudioSession != null) runtimeAudioSession.close();
 		finished = true;
 	}
 

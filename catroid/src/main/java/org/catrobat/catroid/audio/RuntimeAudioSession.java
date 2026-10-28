@@ -114,7 +114,7 @@ public final class RuntimeAudioSession {
                 InputStream in=activity.getContentResolver().openInputStream(uri);if(in==null)throw new IOException("CANNOT_READ_SELECTION");
                 String id=store.importAudio(in,title,new AndroidAudioValidator(),job);finish(job,id);
             }catch(Exception e){if(!job.get())fail(job,errorCode(e));}
-            finally{main.post(()->{if(!closed&&state.equals("importing"))state="stopped";});}
+            finally{main.post(()->{if(!closed&&state.equals("importing"))state=player==null?"stopped":(wantPlay?(foreground?"playing":"paused_background"):"paused");});}
         });
     }
     private void play(Job job,String id)throws Exception{
