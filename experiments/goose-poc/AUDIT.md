@@ -47,3 +47,12 @@ test app showing `PASS: Goose JNI returned 42 and 1` and
 The isolated Goose movement arithmetic now matches a C reference in 100,000
 deterministic finite host cases; it is not integrated into Fast2D. No baseline
 profile or speedup is established.
+
+Second user screenshot (2026-10-29): all three checks passed, including the
+single Android comparison of Goose movement arithmetic against Java. No device
+model or ABI was independently established. A newer batch prototype and test
+have been added: JNI transfers one seven-float record per object, the C bridge
+iterates and calls the scalar Goose functions. On Linux, 512 objects over 120
+frames matched Java bit-for-bit, with malformed input and empty-array tests;
+the newer Android test has been compiled but not run on a device. This remains
+unintegrated and unbenchmarked.

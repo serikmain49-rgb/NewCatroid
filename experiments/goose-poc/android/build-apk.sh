@@ -8,7 +8,7 @@ build_tools="$ANDROID_HOME/build-tools/34.0.0"
 android_jar="$ANDROID_HOME/platforms/android-34/android.jar"
 mkdir -p "$out/classes" "$out/dex"
 "$build_tools/aapt2" link -I "$android_jar" --manifest "$root/AndroidManifest.xml" -o "$out/base.apk"
-javac --release 8 -classpath "$android_jar" -d "$out/classes" "$root"/src/org/catrobat/catroid/goosepoc/*.java
+javac --release 8 -classpath "$android_jar" -d "$out/classes" "$root"/src/org/catrobat/catroid/goosepoc/*.java "$root"/../tests/MovementBatchTest.java
 "$build_tools/d8" --min-api 26 --lib "$android_jar" --output "$out/dex" "$out/classes"/org/catrobat/catroid/goosepoc/*.class
 python3 - "$out" "$GOOSE_RESULTS" <<'PY'
 import pathlib, shutil, sys, zipfile

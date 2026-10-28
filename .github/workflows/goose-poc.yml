@@ -34,6 +34,7 @@ jobs:
         run: |
           experiments/goose-poc/build.sh
           "$OUT_DIR/smoke"
+          experiments/goose-poc/tests/run-jvm-test.sh
       - name: Install Android NDK
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true

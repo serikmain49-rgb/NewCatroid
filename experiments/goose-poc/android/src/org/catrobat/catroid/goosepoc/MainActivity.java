@@ -26,6 +26,7 @@ public final class MainActivity extends Activity {
                 if (Float.floatToIntBits(expected[i]) != Float.floatToIntBits(actual[i]))
                     throw new AssertionError("Movement mismatch at " + i + ": " + actual[i] + " != " + expected[i]);
             }
+            MovementBatchTest.run();
             Thread wrongThread = new Thread(() -> {
                 String result;
                 try {
@@ -37,7 +38,7 @@ public final class MainActivity extends Activity {
                     result = "FAIL: " + error;
                 }
                 final String message = result;
-                runOnUiThread(() -> text.setText("PASS: Goose JNI returned 42 and 1\nPASS: Fast2D movement matches Java\n" + message));
+                runOnUiThread(() -> text.setText("PASS: Goose JNI returned 42 and 1\nPASS: Fast2D movement matches Java\nPASS: 512 objects, 120 frames\n" + message));
             });
             wrongThread.start();
         } catch (Throwable error) {

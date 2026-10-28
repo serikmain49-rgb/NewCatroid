@@ -44,3 +44,35 @@ Java_org_catrobat_catroid_goosepoc_GooseProbe_movement(JNIEnv *env, jclass type,
     if (result) (*env)->SetFloatArrayRegion(env, result, 0, 4, values);
     return result;
 }
+
+/* Seven floats per entity: x, y, rotation, vx, vy, gravity, angular velocity. */
+JNIEXPORT void JNICALL
+Java_org_catrobat_catroid_goosepoc_GooseProbe_movementBatch(JNIEnv *env, jclass type,
+    jfloatArray data, jfloat dt) {
+    (void)type;
+    if (!data) {
+        jclass error = (*env)->FindClass(env, "java/lang/IllegalArgumentException");
+        if (error) (*env)->ThrowNew(env, error, "Movement data is null");
+        return;
+    }
+    jsize length = (*env)->GetArrayLength(env, data);
+    if (length % 7 != 0) {
+        jclass error = (*env)->FindClass(env, "java/lang/IllegalArgumentException");
+        if (error) (*env)->ThrowNew(env, error, "Movement data must contain seven values per entity");
+        return;
+    }
+    if (!enter_goose(env)) return;
+    jfloat *values = (*env)->GetFloatArrayElements(env, data, NULL);
+    if (!values) {
+        pthread_mutex_unlock(&mutex);
+        return;
+    }
+    for (jsize i = 0; i < length; i += 7) {
+        values[i + 4] = newcatroid_velocity_y(values[i + 4], values[i + 5], dt);
+        values[i] = newcatroid_integrate(values[i], values[i + 3], dt);
+        values[i + 1] = newcatroid_integrate(values[i + 1], values[i + 4], dt);
+        values[i + 2] = newcatroid_integrate(values[i + 2], values[i + 6], dt);
+    }
+    (*env)->ReleaseFloatArrayElements(env, data, values, 0);
+    pthread_mutex_unlock(&mutex);
+}
