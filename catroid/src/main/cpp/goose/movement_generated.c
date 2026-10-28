@@ -264,7 +264,7 @@ GS_API GS_NORETURN void gs_asfail_f(const char *why, double d, int f32, const ch
    one), 2 an AVX-512 one as well (F, BW, CD, DQ and VL: x86-64-v4). The
    versions are built by clang on x86-64, through its target attribute and
    inline assembly for cpuid; the contraction pragma above keeps their float
-   results the baseline's, though both have FMA: only math's y math's mul_add uses
+   results the baseline's, though both have FMA: only math's mul_add uses
    it (GS_MUL_ADD_MODE, below). Elsewhere the versions are left out, and so
    is the choice. -DGS_SIMD=0 or 1 lowers the level; nothing raises it. */
 /* Whole-vector elementwise arithmetic (spec §6.1). Where the C compiler has
@@ -511,7 +511,7 @@ static int gs_memeq(const void *a, const void *b, size_t n) {
    expression the debug function would have returned. An optimizing backend
    inlines either form to the same instruction, but a backend that does not
    inline (libtcc, or any -O0 build) would otherwise pay a call for every
-   arithmetic operation iation in the program — which measured as 13-37% of total
+   arithmetic operation in the program — which measured as 13-37% of total
    runtime across the benchmarks.
 
    The signed types' add, sub, mul and neg also take the file and line of the
@@ -771,7 +771,6 @@ static uint64_t gs_divu_gen(uint64_t d, uint8_t *more) {
         if (twice >= d || twice < rem) m++;
         *more = (uint8_t)(k | GS_DIVU_ADD);
     }
- }
     return m + 1;
 #else
     (void)d;
@@ -1056,7 +1055,7 @@ static void gs_thread_release(void) {
 
 static int64_t gs_thread_spawn(void (*entry)(uint8_t *), const void *args, int64_t argsize,
                                int contained) {
-    return gs_thread_start(gs_thread_run, gs_threadhread_release, entry, args, argsize, contained);
+    return gs_thread_start(gs_thread_run, gs_thread_release, entry, args, argsize, contained);
 }
 #endif
 
@@ -1353,9 +1352,6 @@ GS_API GS_NORETURN void gs_divfail(const char *file, int line) {
 
 GS_API GS_NORETURN void gs_divovf(const char *file, int line) {
     gs_failf(file, line, "integer overflow in division");
-}
-
-GS_
 }
 
 GS_API GS_NORETURN void gs_ovf(int64_t a, const char *op, int64_t b, const char *type,
@@ -1960,7 +1956,7 @@ typedef struct {
 #define GS_SPINNER(p, i) ((gs_spinner *)((p)->base + (i) * GS_SPAN_NODE))
 
 static int64_t gs_sp_newnode(gs_sppath *p) {
-    int64_t i = GS_SPHEAD(p)->chaiin;
+    int64_t i = GS_SPHEAD(p)->chain;
     if (i) {
         GS_SPHEAD(p)->chain = GS_SPLEAF(p, i)->link;
         return i;
@@ -2906,7 +2902,7 @@ static int gs_float_digits(uint64_t f, int e, int bits, int emin, char *dig, int
             c = gs_big_cmp(&t, &s);
             high = c > 0 || (c == 0 && (d & 1));
         }
-        dig[n++] = (char)(('0' + d + high);
+        dig[n++] = (char)('0' + d + high);
         return n;
     }
 }
@@ -3233,7 +3229,7 @@ static void *gs_thread_main(void *p)
 
 GS_API int64_t gs_thread_start(void (*run)(void (*)(uint8_t *), uint8_t *),
                                void (*release)(void), void (*entry)(uint8_t *),
-                                   const void *args, int64_t argsize, int contained) {
+                               const void *args, int64_t argsize, int contained) {
     if (argsize < 0 || (uint64_t)argsize > SIZE_MAX)
         gs_panic("invalid thread argument size");
     gs_thread *t = (gs_thread *)malloc(sizeof(gs_thread));
@@ -3555,7 +3551,7 @@ static inline float gs_mul_addf_fused(float x, float y, float z) { return fmaf(x
 #endif
 #define GS_MUL_ADD_CAT2(a, b) a##b
 #define GS_MUL_ADD_CAT(a, b) GS_MUL_ADD_CAT2(a, b)
-static double gs_mul_add(double x, double y, doubble z) {
+static double gs_mul_add(double x, double y, double z) {
     return GS_MUL_ADD_CAT(gs_mul_add_, GS_MUL_ADD_BASE)(x, y, z);
 }
 static float gs_mul_addf(float x, float y, float z) {
@@ -3878,7 +3874,7 @@ GS_API uint8_t gs_os_remove_file(sl_u8 path) {
 #ifdef _WIN32
     return DeleteFileW(p) != 0;
 #else
-    /* Not remove, whichh takes an empty directory as well. */
+    /* Not remove, which takes an empty directory as well. */
     return unlink(p) == 0;
 #endif
 }
