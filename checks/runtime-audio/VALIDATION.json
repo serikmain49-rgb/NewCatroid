@@ -16,5 +16,5 @@
   "new_runtime_api_compile": "Android API34 + GDX, host model signatures fixture",
   "plugin_java_compile": "passed",
   "android_device_tests": "added, not run",
-  "apk_assemble": "pending final build; see BUILD-RESULT.json in release bundle"
+  "apk_assemble": "PASS DanvexDebug ARM64; version 2.2.0-audio.1 (133), signature verified"
 }

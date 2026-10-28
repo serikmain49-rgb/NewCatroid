@@ -1,13 +1,15 @@
 {
-  "version": "0.6.0",
-  "java_compile": "PASS --release 8, Android API, actual PluginEntry",
+  "version": "0.7.0",
+  "java_compile": "PASS --release 8; Android API34; actual PluginEntry",
   "model_catalogue_sync_checks": 59,
-  "worker_checks": 51,
-  "python_tests": 20,
-  "host_storage_checks": 2,
-  "cross_language_fixture": "Java exporter -> Worker/Python; exact XML hash",
-  "synthetic_full_bytes": 653329,
-  "synthetic_delta_bytes": 2465,
+  "audio_patch_adapter_checks": 21,
+  "persistent_store_archive_checks": 30,
+  "session_checks": 33,
+  "session_environment": "deterministic Android/MediaPlayer doubles, not device playback",
   "android_runtime": "NOT RUN",
-  "project_modified": false
+  "device_test_source": "RuntimeAudioDeviceTest and ANDROID-CHECKLIST.md provided",
+  "project_modified": false,
+  "bridge_server_modified": false,
+  "plugin_package_identity_preserved": true,
+  "apk_assemble": "PASS DanvexDebug ARM64; version 2.2.0-audio.1 (133), signature verified"
 }
