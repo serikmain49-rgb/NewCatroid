@@ -38,3 +38,12 @@ both the executable and JNI library for ARM64 and ARMv7. This tests only a
 scalar addition and native linking; it is not an Android runtime test. The
 existing project formats, 3D/2D rendering, block behavior, Assistant, and
 performance have not been tested by this experiment.
+
+Device update (2026-10-29): the user supplied a screenshot of the original
+test app showing `PASS: Goose JNI returned 42 and 1` and
+`PASS: wrong-thread call rejected`. Device model, ABI, Android version and
+32-bit behavior have not been independently identified.
+
+The isolated Goose movement arithmetic now matches a C reference in 100,000
+deterministic finite host cases; it is not integrated into Fast2D. No baseline
+profile or speedup is established.

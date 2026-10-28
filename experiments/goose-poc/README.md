@@ -3,7 +3,7 @@
 This isolated experiment exports an integer operation from Goose to C and builds
 an Android JNI library plus a command-line smoke test. It does not replace an
 engine component, package an APK, establish performance, or establish project
-compatibility. No Android device run has been recorded.
+compatibility. The initial scalar JNI test was run on a user-provided Android phone; see the device result below.
 
 The workflow pins Goose to cce94b919d27458856ae2685974049eac78debcf and
 cross-compiles for API 26 ARM64 and ARMv7 with NDK 27.2.12479018. The generated
@@ -40,9 +40,7 @@ Cross-compilation verification (2026-10-29): Android NDK r27c, API 26,
 compiled the generated C and JNI wrapper for both `aarch64-linux-android26`
 and `armv7a-linux-androideabi26`. `file` identified the resulting executables
 and shared objects as AArch64 and ARM EABI5 respectively; `llvm-readelf`
-confirmed the ARM64 JNI export and Android libc dependencies. Neither binary
-has been executed on Android, and the ARMv7 runtime's large default stack
-reservation remains unverified.
+confirmed the ARM64 JNI export and Android libc dependencies. These command-line binaries were not executed on Android. The ARMv7 runtime's large default stack reservation remains unverified.
 
 ## Standalone Android test APK
 
@@ -59,6 +57,16 @@ To build, set `ANDROID_HOME`, set `GOOSE_RESULTS` to a directory containing
 keys differ across builds and are not intended for production releases.
 
 On 2026-10-29 the standalone APK was built and its v2/v3 signatures verified;
-its two JNI libraries were inspected in the archive. No Android device was
-connected, so installation, native loading, and the displayed test results have
-not yet been verified. GitHub Actions has not yet been confirmed to run.
+its two JNI libraries were inspected in the archive. The original test APK was installed on a user-provided Android phone. A screenshot showed both scalar JNI and wrong-thread checks passing. The device model, ABI and Android version were not supplied in the screenshot; no ARMv7 or 32-bit runtime conclusion is possible. GitHub Actions has not yet been confirmed to run.
+
+## Fast2D movement experiment
+
+`math.goose` implements the gravity-first arithmetic in
+`Fast2DMovementSystem.process`, without changing the engine. A C host test
+compares 100,000 deterministic finite input cases bit-for-bit, with floating
+point contraction disabled. NDK r27c cross-compiled both ABI variants. The
+Android test app adds one JNI comparison against the original Java formulas;
+this new version still needs to be run on a device. It allocates a result
+array and is not an optimized engine integration or a performance measurement.
+Physics, edge cases, multi-frame behavior and overall project compatibility
+remain unverified.
