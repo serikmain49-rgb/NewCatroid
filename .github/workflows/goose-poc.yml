@@ -37,7 +37,7 @@ jobs:
       - name: Install Android NDK
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
-          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'ndk;27.2.12479018'
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'ndk;27.2.12479018' 'platforms;android-34' 'build-tools;34.0.0'
       - name: Cross compile Android probes
         env:
           GOOSE: ${{ github.workspace }}/goose-compiler/build/goose
@@ -48,10 +48,17 @@ jobs:
             export BUILD_JNI=1
             experiments/goose-poc/build.sh
           done
+      - name: Build standalone Android JNI test APK
+        env:
+          GOOSE_RESULTS: ${{ github.workspace }}/goose-results
+          APK_OUT_DIR: ${{ github.workspace }}/goose-apk
+        run: experiments/goose-poc/android/build-apk.sh
       - name: Upload generated C and binaries
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: goose-poc-results
-          path: goose-results/
+          path: |
+            goose-results/
+            goose-apk/goose-jni-test.apk
           if-no-files-found: warn

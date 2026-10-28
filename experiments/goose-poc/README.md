@@ -43,3 +43,22 @@ and shared objects as AArch64 and ARM EABI5 respectively; `llvm-readelf`
 confirmed the ARM64 JNI export and Android libc dependencies. Neither binary
 has been executed on Android, and the ARMv7 runtime's large default stack
 reservation remains unverified.
+
+## Standalone Android test APK
+
+`android/build-apk.sh` builds a small separately installed test app (Android 8+
+API 26+, ARM64 or ARMv7), using SDK platform 34, build-tools 34.0.0, JDK 17,
+and the two cross-compiled JNI libraries. It does not contain NewCatroid. The
+screen checks two Goose additions on the UI thread, then checks that a JNI call
+from another thread is rejected. It requires no network or permissions.
+
+To build, set `ANDROID_HOME`, set `GOOSE_RESULTS` to a directory containing
+`aarch64-linux-android26/libgoose_poc.so` and
+`armv7a-linux-androideabi26/libgoose_poc.so`, and run
+`android/build-apk.sh`. The script generates a local debug signing key; such
+keys differ across builds and are not intended for production releases.
+
+On 2026-10-29 the standalone APK was built and its v2/v3 signatures verified;
+its two JNI libraries were inspected in the archive. No Android device was
+connected, so installation, native loading, and the displayed test results have
+not yet been verified. GitHub Actions has not yet been confirmed to run.
