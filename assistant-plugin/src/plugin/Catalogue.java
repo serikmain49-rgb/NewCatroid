@@ -20,7 +20,7 @@ final class Catalogue {
     static JSONArray enumNames(String cls)throws Exception {JSONArray a=new JSONArray();for(Object x:Reflect.type(cls).getEnumConstants())a.put(((Enum<?>)x).name());return a;}
     Catalogue(File folder,String packageName,String version)throws Exception {this(folder,packageName,version,new String[0]);}
     Catalogue(File folder,String packageName,String version,String[] apks)throws Exception {
-        host.put("package",packageName).put("version",version).put("catalogue_version",2).put("plugin","0.6.0").put("availability","probed_installed_host").put("scope","supported adapters; unknown opaque blocks are excluded");
+        host.put("package",packageName).put("version",version).put("catalogue_version",2).put("plugin","0.7.0").put("availability","probed_installed_host").put("scope","supported adapters; unknown opaque blocks are excluded");
         JSONArray seeds=new JSONArray(Main.read(new File(folder,"catalogue-seeds.json"),2*1024*1024));
         Set<String> seeded=new HashSet<String>();for(int i=0;i<seeds.length();i++)seeded.add(seeds.getJSONObject(i).getString("class_name"));
         // Discover lighting additions in the installed APK. Only plain FormulaBrick adapters are accepted below.
@@ -56,6 +56,9 @@ final class Catalogue {
                     if(t.isEnum()){JSONArray values=new JSONArray();for(Object e:t.getEnumConstants())values.put(((Enum<?>)e).name());prop.put("enum",values);}
                     Object value=f.get(brick);prop.put("default",value==null?JSONObject.NULL:value.toString());properties.put(prop);
                 }
+                if(name.equals("RuntimeAudioBrick"))entry.put("required_properties",new JSONArray().put("command")).put("required_formulas",new JSONArray().put("VALUE"))
+                    .put("semantics",new JSONObject().put("waits",true).put("result","PICK=selection:UUID|cancelled|error:CODE; IMPORT=audio:UUID|error:CODE; controls=ok|error:CODE")
+                    .put("storage","project/files/imported-audio-v1; no audio bytes sent to bridge").put("units",new JSONObject().put("SEEK","seconds").put("VOLUME","0..100")));
                 entry.put("properties",properties).put("variable_required",method(brick,"setUserVariable")).put("list_required",method(brick,"setUserList"));
                 entry.put("look_reference",method(brick,"setLook")).put("sound_reference",method(brick,"setSound")).put("sprite_reference",name.equals("CloneBrick")&&method(brick,"onItemSelected"));
                 entry.put("children",method(brick,"getNestedBricks")).put("else",method(brick,"getSecondaryNestedBricks"));
@@ -80,6 +83,14 @@ final class Catalogue {
                 }
                 if(seen){int arity=params?commas+1:0;arities.put(name,arity);JSONArray layout=new JSONArray();if(arity>0)layout.put("left");if(arity>1)layout.put("right");for(int n=2;n<arity;n++)layout.put("additional["+(n-2)+"]");f.put("supported",true).put("arity",arity).put("arguments",layout);}
             }catch(Exception ignored){f.put("reason","Installed enum; parameter layout not verifiable with this adapter");}
+            if(name.startsWith("AUDIO_")&&f.optBoolean("supported")) {
+                boolean text=name.equals("AUDIO_NAME")||name.equals("AUDIO_ERROR")||name.equals("AUDIO_STATE");
+                f.put("return_type",text?"string":"number");
+                if(name.equals("AUDIO_DURATION")||name.equals("AUDIO_POSITION"))f.put("unit","seconds");
+                if(name.equals("AUDIO_EXISTS"))f.put("values",new JSONArray().put(0).put(1));
+                JSONArray signature=new JSONArray();if(arities.get(name)>0)signature.put(new JSONObject().put("name","id").put("type","string").put("format","audio:UUID").put("position","left"));
+                f.put("parameters",signature);
+            }
             functions.put(f);
         }
         JSONArray ops=enumNames(Bridge.F+"Operators"),ss=enumNames(Bridge.F+"Sensors");for(int i=0;i<ops.length();i++)operators.add(ops.getString(i));for(int i=0;i<ss.length();i++)sensors.add(ss.getString(i));

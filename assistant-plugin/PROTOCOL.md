@@ -93,3 +93,51 @@ Missing/stale base or absent parts returns `{ok:false,code:"FULL_EXPORT_REQUIRED
 Limits: total reconstructed four-file text <=8 MiB, each part <=250000 UTF-16 units without breaking surrogate pairs, <=1000 manifest parts. Extremely many scripts use coarse XML chunks instead of per-script slicing; these remain lossless but may resend larger changed regions. The wire request must also fit the server's 8 MiB body cap. Project resources are still not exported.
 
 Worker sync writes the pointer, fragments and cleanup atomically using a compare-and-set and grouped inserts. Python protects updates with its store lock; a crash between state and cache persistence causes a full-resync fallback, never an unchecked merge. After successful full/delta sync, all four read routes refer to the same verified snapshot. bridge_status includes project_id and sync statistics: mode, parts_sent, total_parts, bytes_received, reconstructed_bytes, changed_scripts. Results and modern queued patches must match project_id. Legacy manual files without an identity retain name/hash checks and cannot distinguish identical copies; use modern patches for strict identity.
+
+## Runtime audio API 1 — Assistant 0.7.0
+
+Requires the NewCatroid host changes on branch `runtime-audio-import`. A plugin alone cannot add serialized host bricks, formula enum members, SAF callbacks or reliable stage lifecycle handling: the existing PluginEntry only supplies `onLoad(Context)`. On an old host `RuntimeAudioBrick` and AUDIO_* functions are unavailable. Never infer availability from the packaged seed catalogue; use the freshly exported runtime catalogue.
+
+One `RuntimeAudioBrick` implements eight commands. Required fields: `properties.command` (enum below), `formulas.VALUE` (even when ignored), `variable` (existing local or project variable receiving the result). The block waits for its job, including the picker, import, player preparation and seek. No waiting or copying blocks the render/UI thread.
+
+| command | VALUE | Result in variable |
+| --- | --- | --- |
+| PICK | empty string, ignored | `selection:UUID`, `cancelled`, `error:CODE` |
+| IMPORT | selection token from PICK | permanent `audio:UUID`, `error:CODE` or `cancelled` |
+| PLAY | permanent audio ID | `ok` after preparation/start, or `error:CODE` |
+| PAUSE | empty string, ignored | `ok` or `error:NOT_PLAYING` |
+| RESUME | empty string, ignored | `ok` or `error:NOT_PLAYING` |
+| STOP | empty string, ignored | `ok` |
+| SEEK | seconds, finite and >= 0 | `ok` after seek, or `error:CODE`; clamped to duration |
+| VOLUME | finite number 0..100 | `ok` or `error:INVALID_VOLUME`; applies to next PLAY too |
+
+Exact JSON shape (inside a script's `bricks`):
+
+```json
+{"class":"RuntimeAudioBrick","properties":{"command":"PICK"},"formulas":{"VALUE":""},"variable":"AudioResult"}
+```
+
+Then guard against cancellation/error before IMPORT. Pass its token through a USER_VARIABLE formula, not a literal URI. After IMPORT, save the returned `audio:UUID` with the level using the existing on-device variable/list/file saving blocks. The audio file persists automatically; level/variable persistence remains explicit in game scripts. Never store `selection:UUID` as a level's music ID.
+
+Function enum signatures, exported only after installed-host keyboard probes verify them:
+
+| function | arity / formula-tree arguments | return |
+| --- | --- | --- |
+| AUDIO_NAME(id) | 1 / left | string; empty if missing |
+| AUDIO_DURATION(id) | 1 / left | seconds; 0 if missing |
+| AUDIO_POSITION(id) | 1 / left | seconds; 0 unless this ID is loaded |
+| AUDIO_EXISTS(id) | 1 / left | 1 or 0 |
+| AUDIO_ERROR() | 0 / none | latest error code; empty on last successful command; NO_SESSION outside runtime |
+| AUDIO_STATE() | 0 / none | stopped, importing, preparing, playing, paused, paused_background, completed, error |
+
+Position is sampled approximately every 100 ms. One player and one outstanding job per stage; additional requests return `error:BUSY`. Only one system picker may be outstanding, including after a cancelled scene until its late Activity result has been consumed. A selection token is single use and scoped to this running stage. No persistable URI permissions or broad storage permissions are requested. Process death invalidates selections; run PICK again. A completed import survives it.
+
+On application background/picker opening, playback pauses; foreground resumes it only if it had not been explicitly paused/stopped. Every scene switch cancels outstanding work and stops/releases this music, independently of older `stopSounds` settings. A new scene explicitly PLAYs an ID if needed. Project finish/activity destruction closes the session and releases the player. MediaPlayer asynchronous errors set AUDIO_ERROR even after PLAY has returned `ok`.
+
+Storage: `project/files/imported-audio-v1/<UUID>/track` and `metadata.properties`. UUID is random, no filename/path/URI dependency. Atomic directory rename publishes a fully copied/validated asset. Input is closed and unfinished staging removed on failure. File limit 64 MiB. MP3 and OGG (Vorbis/Opus when the installed Android player supports it) are checked from bytes, extractor, metadata and player preparation on a background worker. Decoder-detected corruption returns INVALID_AUDIO or PLAYBACK_ERROR. This is not a guarantee of detecting every damaged sample before playback.
+
+Errors include BUSY, NOT_FOREGROUND, PICKER_UNAVAILABLE, INVALID_SELECTION, CANNOT_READ_SELECTION, UNSUPPORTED_AUDIO, INVALID_AUDIO, FILE_TOO_LARGE, IMPORT_TIMEOUT, STORAGE_UNAVAILABLE, INVALID_ID, MISSING_AUDIO, INVALID_METADATA, NOT_PLAYING, INVALID_POSITION, INVALID_VOLUME, PLAYER_TIMEOUT, PLAYBACK_ERROR, AUDIO_IO_ERROR and NO_SESSION. Cancellation is `cancelled`, not a permanent ID.
+
+Full project copy and `.catrobat` export retain `files/`, all completed imported music and the same IDs. ZIP export excludes unfinished `.pending-audio-*` directories. Multiple levels can reference one ID; no automatic garbage collection removes tracks. Sharing only level JSON/ID does **not** transfer audio. Receiving game scripts must check AUDIO_EXISTS and display missing music; PLAY explicitly returns `error:MISSING_AUDIO`. Export the full project to transfer the audio too. No opaque level-bundle import/export API is invented here.
+
+`project.json` optionally adds `runtime_audio_api:1` and `imported_audio:[{id,name,duration_seconds,mime,exists}]`. These are descriptors only. Existing four-file/partial exports, request_id/SHA checks and patch format 1 remain unchanged. The bridge receives no audio bytes, Base64, provider URIs or new upload endpoint. Literal PLAY IDs must already exist on the device; literal seek/volume ranges and command enums are validated before applying. Dynamic IDs and numeric formula results are verified at runtime. Existing untouched blocks remain unchanged.

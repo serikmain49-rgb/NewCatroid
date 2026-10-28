@@ -32,3 +32,7 @@ Java-компиляция с Android API; 59 проверок плагина/к�
 - python assistant-plugin/server/test_server.py
 
 Полный протокол и ограничения — в PROTOCOL.md внутри .nplug.
+
+## 0.7.0 — музыка во время игры
+
+Новый адаптер RuntimeAudioBrick и шесть AUDIO_* функций требуют NewCatroid с RuntimeAudio API. На прежней версии хоста они не объявляются доступными. Проверяются команда, обязательный аргумент/переменная результата, диапазоны и существующие постоянные ID. Аудио не отправляется на bridge; метаданные включаются в project.json. См. PROTOCOL.md и AUDIO-UPDATE-RU.md в исходниках.

@@ -4,6 +4,7 @@ root=pathlib.Path(__file__).resolve().parents[1];base=root.parent;host=base/'New
 old=json.loads((root/'supported-blocks.json').read_text())
 names={e['class'] for e in old}
 names.update(p.stem for p in (repo/'content/bricks').glob('*Light*Brick.java') if not p.stem.startswith('Phiro'))
+names.add('RuntimeAudioBrick')
 names.update('SceneTransitionBrick SceneStartBrick WriteVariableOnDeviceBrick ReadVariableFromDeviceBrick WriteListOnDeviceBrick ReadListFromDeviceBrick WriteToFilesBrick ReadFromFilesBrick WriteVariableToFileBrick ReadVariableFromFileBrick WriteListToFileBrick ReadListFromFileBrick SaveToInternalStorageBrick LoadFromInternalStorageBrick AddItemToUserListBrick DeleteItemOfUserListBrick ReplaceItemInUserListBrick InsertItemIntoUserListBrick'.split())
 # Match inheritance declarations, formula labels and primitive selectors in reviewed source.
 cache={}
@@ -24,6 +25,7 @@ for name in sorted(names):
  for t in texts:
   for typ,key in re.findall(r'(?:private|protected)\s+(int|float|double|boolean|String)\s+(\w+)\s*(?:=|;)',t):
    if key not in {'commentedOut','parent','phantom','name','broadcastMessage','sceneToStart','sceneForTransition'}:props.append(key)
+ if name == 'RuntimeAudioBrick': props.append('command')
  rows.append(dict(class_name=name,property_names=sorted(set(props)),field_labels=fields))
 (root/'catalogue-seeds.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2))
 # Runtime keyboard generates parameter token lists for these resource IDs, so arity comes from installed code.

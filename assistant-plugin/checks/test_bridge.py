@@ -186,6 +186,6 @@ with tempfile.TemporaryDirectory(prefix='nc-bridge-test-') as tmp:
  d=pathlib.Path(tmp)
  for name,text in fixtures.items():
   f=d/name;f.parent.mkdir(parents=True,exist_ok=True);f.write_text(text)
- sources=list(d.rglob('*.java'))+[root/'src/plugin/Reflect.java',root/'src/plugin/Bridge.java',root/'src/plugin/ImageAsset.java',root/'src/plugin/ModelOps.java',root/'src/plugin/FileEdits.java',root/'src/plugin/ReferenceCheck.java',root/'src/plugin/Catalogue.java',root/'src/plugin/PatchJournal.java',root/'src/plugin/SyncExport.java']
+ sources=list(d.rglob('*.java'))+[root/'src/plugin/Reflect.java',root/'src/plugin/Bridge.java',root/'src/plugin/ImageAsset.java',root/'src/plugin/ModelOps.java',root/'src/plugin/FileEdits.java',root/'src/plugin/ReferenceCheck.java',root/'src/plugin/Catalogue.java',root/'src/plugin/PatchJournal.java',root/'src/plugin/SyncExport.java',root/'src/plugin/AudioSupport.java']
  subprocess.run(['java','com.sun.tools.javac.Main','--release','8','-encoding','UTF-8','-cp',str(jar),'-d',str(d/'classes')]+list(map(str,sources)),check=True)
  subprocess.run(['java','-cp',str(d/'classes')+':'+str(jar),'plugin.BridgeTest',str(root)]+([str(pathlib.Path(sys.argv[2]).resolve())] if len(sys.argv)>2 else []),check=True)

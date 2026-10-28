@@ -226,13 +226,14 @@ final class Bridge {
             else throw new Exception("Неверный тип свойства "+key);
             field.setAccessible(true);field.set(brick,converted);
         }}
+        if(cls.equals("RuntimeAudioBrick"))AudioSupport.validate(project,spec);
         String parentLocation=location;
         JSONArray children=spec.optJSONArray("children");
         if(children!=null){List<Object> list=Reflect.list(brick,"getNestedBricks");for(int i=0;i<children.length();i++){location=parentLocation+".children["+i+"]";list.add(brick(children.getJSONObject(i),sprite,plan,depth+1));}}
         JSONArray other=spec.optJSONArray("else");
         if(other!=null){List<Object> list=Reflect.list(brick,"getSecondaryNestedBricks");if(list==null)throw new Exception(cls+": нет ветки иначе");for(int i=0;i<other.length();i++){location=parentLocation+".else["+i+"]";list.add(brick(other.getJSONObject(i),sprite,plan,depth+1));}}
         // Reject unbound selector bricks instead of silently creating broken scripts.
-        if(Reflect.type(B+"UserVariableBrick").isInstance(brick)&&!spec.has("variable"))throw new Exception(cls+": требуется variable");
+        if(Catalogue.method(brick,"setUserVariable")&&!spec.has("variable"))throw new Exception(cls+": требуется variable");
         location=parentLocation;return brick;
     }
 
@@ -276,7 +277,7 @@ final class Bridge {
     static JSONArray lists(Object owner)throws Exception {JSONArray a=new JSONArray();for(Object x:Reflect.list(owner,"getUserLists")){JSONArray values=new JSONArray();for(Object v:(List<?>)Reflect.call(x,"getValue"))values.put(v);a.put(new JSONObject().put("name",name(x)).put("value",values));}return a;}
 
     JSONObject context(String xml)throws Exception {
-        JSONObject out=new JSONObject();out.put("format",1);out.put("plugin","NewCatroid Assistant 0.6.0");
+        JSONObject out=new JSONObject();out.put("format",1);out.put("plugin","NewCatroid Assistant 0.7.0");
         out.put("project",name(project));out.put("project_id",PatchJournal.identity(project));out.put("base_sha256",sha(xml));
         JSONArray scenes=new JSONArray();out.put("scenes",scenes);
         for(Object scene:Reflect.list(project,"getSceneList")){
@@ -291,6 +292,7 @@ final class Bridge {
                 }
             }
         }
+        AudioSupport.export(project,out);
         out.put("variables",variables(project));out.put("lists",lists(project));out.put("capabilities",new JSONObject().put("project_identity",true).put("partial_export",1).put("strict_request_id",true).put("patch_results",true).put("catalogue_version",2));out.put("instructions","Read code.xml for complete block trees. Read PROTOCOL.md and supported-blocks.json before generating a patch. Use exact project, scene names, script IDs and base_sha256. Return JSON format 1. No direct connection to ChatGPT is provided.");
         return out;
     }

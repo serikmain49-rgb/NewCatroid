@@ -57,7 +57,7 @@ public final class RuntimeAudioSession {
     public synchronized Job submit(Command command,String value){
         Job job=new Job();
         if(closed){job.result="error:NO_SESSION";return job;}
-        if(active!=null&&active.result==null){job.result="error:BUSY";return job;}
+        if(active!=null&&active.result==null){if(command==Command.STOP){active.cancel();clearSelection();if(picker!=null)picker.cancel();}else{job.result="error:BUSY";return job;}}
         active=job;main.post(()->execute(job,command,value));return job;
     }
     private void execute(Job job,Command command,String value){

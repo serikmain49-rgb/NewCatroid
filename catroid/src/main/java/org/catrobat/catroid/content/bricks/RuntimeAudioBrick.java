@@ -28,6 +28,6 @@ public final class RuntimeAudioBrick extends UserVariableBrickWithFormula {
         });return view;
     }
     @Override public void addActionToSequence(Sprite sprite,ScriptSequenceAction sequence){
-        sequence.addAction(new RuntimeAudioAction(new Scope(ProjectManager.getInstance().getCurrentProject(),sprite,sequence),command,getFormulaWithBrickField(BrickField.VALUE),userVariable));
+        sequence.addAction(sprite.getActionFactory().createRuntimeAudioAction(sprite,sequence,command,getFormulaWithBrickField(BrickField.VALUE),userVariable));
     }
 }

@@ -730,5 +730,29 @@
   "OBJECT_WITH_ID_VISIBLE": {
     "resource_class": "string",
     "resource_name": "formula_editor_function_object_with_id_visible"
+  },
+  "AUDIO_NAME": {
+    "resource_class": "string",
+    "resource_name": "formula_audio_name"
+  },
+  "AUDIO_DURATION": {
+    "resource_class": "string",
+    "resource_name": "formula_audio_duration"
+  },
+  "AUDIO_POSITION": {
+    "resource_class": "string",
+    "resource_name": "formula_audio_position"
+  },
+  "AUDIO_EXISTS": {
+    "resource_class": "string",
+    "resource_name": "formula_audio_exists"
+  },
+  "AUDIO_ERROR": {
+    "resource_class": "string",
+    "resource_name": "formula_audio_error"
+  },
+  "AUDIO_STATE": {
+    "resource_class": "string",
+    "resource_name": "formula_audio_state"
   }
 }

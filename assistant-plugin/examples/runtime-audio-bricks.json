@@ -1,0 +1,8 @@
+{
+  "note": "Fragments, not a complete patch. Create result/ID variables first. Guard cancelled/error results; save AudioId with the level only after a successful IMPORT.",
+  "pick": {"class":"RuntimeAudioBrick","properties":{"command":"PICK"},"formulas":{"VALUE":""},"variable":"AudioSelection"},
+  "import": {"class":"RuntimeAudioBrick","properties":{"command":"IMPORT"},"formulas":{"VALUE":{"type":"USER_VARIABLE","value":"AudioSelection"}},"variable":"AudioId"},
+  "play": {"class":"RuntimeAudioBrick","properties":{"command":"PLAY"},"formulas":{"VALUE":{"type":"USER_VARIABLE","value":"AudioId"}},"variable":"AudioResult"},
+  "seek": {"class":"RuntimeAudioBrick","properties":{"command":"SEEK"},"formulas":{"VALUE":1.25},"variable":"AudioResult"},
+  "volume": {"class":"RuntimeAudioBrick","properties":{"command":"VOLUME"},"formulas":{"VALUE":28},"variable":"AudioResult"}
+}

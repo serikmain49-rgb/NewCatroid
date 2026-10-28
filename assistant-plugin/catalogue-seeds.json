@@ -879,5 +879,14 @@
     "field_labels": {
       "WRITE_FILENAME": "brick_write_variable_to_file_edit_text"
     }
+  },
+  {
+    "class_name": "RuntimeAudioBrick",
+    "property_names": [
+      "command"
+    ],
+    "field_labels": {
+      "VALUE": "runtime_audio_value"
+    }
   }
 ]

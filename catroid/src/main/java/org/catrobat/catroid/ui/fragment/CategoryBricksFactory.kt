@@ -57,6 +57,7 @@ import org.catrobat.catroid.content.bricks.ApplyShaderToImageBrick
 import org.catrobat.catroid.content.bricks.ApplyTorqueBrick
 import org.catrobat.catroid.content.bricks.ArduinoSendDigitalValueBrick
 import org.catrobat.catroid.content.bricks.ArduinoSendPWMValueBrick
+import org.catrobat.catroid.content.bricks.RuntimeAudioBrick
 import org.catrobat.catroid.content.bricks.AskBrick
 import org.catrobat.catroid.content.bricks.AskGPTBrick
 import org.catrobat.catroid.content.bricks.AskGemini2Brick

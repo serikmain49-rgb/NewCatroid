@@ -558,5 +558,29 @@
     "class": "WriteVariableToFileBrick",
     "available": false,
     "reason": "Runtime probe required; actual supported-blocks.json is generated on device during export."
+  },
+  {
+    "class": "RuntimeAudioBrick",
+    "available": false,
+    "reason": "Requires updated NewCatroid runtime audio API; probed on device.",
+    "formulas": [
+      "VALUE"
+    ],
+    "properties": [
+      {
+        "name": "command",
+        "enum": [
+          "PICK",
+          "IMPORT",
+          "PLAY",
+          "PAUSE",
+          "RESUME",
+          "STOP",
+          "SEEK",
+          "VOLUME"
+        ]
+      }
+    ],
+    "variable_required": true
   }
 ]
