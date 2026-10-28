@@ -30,3 +30,11 @@ add regression fixtures for block ordering, persistence, physics and plugins,
 and select an actually measured hotspot. Record FPS distributions, frame CPU
 and GPU times, memory, load times, draw calls, thermal and power methodology;
 no baseline measurements have been collected yet.
+
+Experiment update: Goose cce94b919d27458856ae2685974049eac78debcf built on
+Linux; its generated standalone C passed the host smoke test after correcting
+an undefined `gs_i32` in the generated header. NDK r27c/API 26 cross-compiled
+both the executable and JNI library for ARM64 and ARMv7. This tests only a
+scalar addition and native linking; it is not an Android runtime test. The
+existing project formats, 3D/2D rendering, block behavior, Assistant, and
+performance have not been tested by this experiment.

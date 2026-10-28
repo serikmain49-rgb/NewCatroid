@@ -35,3 +35,11 @@ small integer test cases. The generated public header used `gs_i32` without
 a definition, so the build script replaces that token with `int32_t` for this
 one scalar-only experiment. This workaround must be revisited if the exported
 ABI changes; it is not a general Goose header repair.
+
+Cross-compilation verification (2026-10-29): Android NDK r27c, API 26,
+compiled the generated C and JNI wrapper for both `aarch64-linux-android26`
+and `armv7a-linux-androideabi26`. `file` identified the resulting executables
+and shared objects as AArch64 and ARM EABI5 respectively; `llvm-readelf`
+confirmed the ARM64 JNI export and Android libc dependencies. Neither binary
+has been executed on Android, and the ARMv7 runtime's large default stack
+reservation remains unverified.
