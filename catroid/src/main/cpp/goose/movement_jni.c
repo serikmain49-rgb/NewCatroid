@@ -1,0 +1,33 @@
+#include <jni.h>
+#include <pthread.h>
+#include "movement_generated.h"
+
+/* Goose exports must be used on the thread that initialized its runtime. */
+static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+static pthread_t owner;
+static int initialized;
+
+JNIEXPORT jboolean JNICALL
+Java_org_catrobat_catroid_fast2d_GooseMovement_step(JNIEnv *env, jclass type,
+        jfloat x, jfloat y, jfloat rotation, jfloat vx, jfloat vy,
+        jfloat gravity, jfloat angularVelocity, jfloat delta, jfloatArray out) {
+    (void)type;
+    if (!out || (*env)->GetArrayLength(env, out) < 4) return JNI_FALSE;
+    pthread_mutex_lock(&lock);
+    if (!initialized) {
+        goose_init(0, NULL);
+        owner = pthread_self();
+        initialized = 1;
+    } else if (!pthread_equal(owner, pthread_self())) {
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    jfloat result[4];
+    result[0] = newcatroid_velocity_y(vy, gravity, delta);
+    result[1] = newcatroid_integrate(x, vx, delta);
+    result[2] = newcatroid_integrate(y, result[0], delta);
+    result[3] = newcatroid_integrate(rotation, angularVelocity, delta);
+    pthread_mutex_unlock(&lock);
+    (*env)->SetFloatArrayRegion(env, out, 0, 4, result);
+    return (*env)->ExceptionCheck(env) ? JNI_FALSE : JNI_TRUE;
+}

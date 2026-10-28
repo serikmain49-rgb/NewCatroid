@@ -35,6 +35,7 @@ jobs:
           experiments/goose-poc/build.sh
           "$OUT_DIR/smoke"
           experiments/goose-poc/tests/run-jvm-test.sh
+          experiments/goose-poc/tests/run-engine-bridge-test.sh
       - name: Install Android NDK
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
@@ -48,6 +49,7 @@ jobs:
             export OUT_DIR="$GITHUB_WORKSPACE/goose-results/$target"
             export BUILD_JNI=1
             experiments/goose-poc/build.sh
+            "$CC" -std=c11 -O2 -ffp-contract=off -fPIC -shared catroid/src/main/cpp/goose/movement_generated.c catroid/src/main/cpp/goose/movement_jni.c -o "$OUT_DIR/libgoose_movement.so" -lm -ldl
           done
       - name: Build standalone Android JNI test APK
         env:

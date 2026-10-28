@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+: "${JAVA_HOME:?Set JAVA_HOME to a JDK}"
+: "${OUT_DIR:?Set OUT_DIR to a writable directory}"
+root=$(cd "$(dirname "$0")/../../.." && pwd)
+native="$root/catroid/src/main/cpp/goose"
+mkdir -p "$OUT_DIR/classes"
+"${CC:-gcc}" -std=c11 -O2 -ffp-contract=off -shared -fPIC -I "$JAVA_HOME/include" -I "$JAVA_HOME/include/linux" "$native/movement_generated.c" "$native/movement_jni.c" -o "$OUT_DIR/libgoose_movement.so" -lm -ldl -pthread
+"$JAVA_HOME/bin/javac" -d "$OUT_DIR/classes" "$root/experiments/goose-poc/tests/integration/org/catrobat/catroid/BuildConfig.java" "$root/catroid/src/main/java/org/catrobat/catroid/fast2d/GooseMovement.java" "$root/experiments/goose-poc/tests/integration/TestIntegration.java"
+"$JAVA_HOME/bin/java" -Djava.library.path="$OUT_DIR" -cp "$OUT_DIR/classes" TestIntegration

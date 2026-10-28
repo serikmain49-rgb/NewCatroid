@@ -49,3 +49,21 @@ No baseline profile, FPS result, overall compatibility, physics behavior, or
 performance gain has been established. Render and lifecycle ordering, plugins,
 Assistant, project serialization, and production thread ownership remain to be
 verified before any integration.
+
+## Experimental Fast2D integration
+
+The app now includes a generated Goose C runtime and JNI wrapper. The movement
+system can use it with `./gradlew :catroid:assembleDanvexDebug
+-PgooseFast2D=true`; without that property, Java remains active. If the native
+library cannot load or a call occurs on a different thread, the Java path is
+used. The generated file is reproducible with `generate-engine-c.sh` using the
+pinned compiler; the source is `math.goose`. This first integration makes one
+JNI call per entity, and is not claimed to be faster. It has not been tested in
+the actual app or on a device. In particular, Android lifecycle and thread
+ownership, float edge cases, project loading, interactions with Box2D and app
+build compatibility need validation before it can be enabled by default.
+
+The application JNI bridge passed a Linux JVM smoke test and both native ABIs
+cross-compiled. The full Gradle build was attempted in the development environment
+but failed before configuration because the Gradle 8.7 distribution could not
+be downloaded (`Network is unreachable`). No application APK was produced.
