@@ -6,6 +6,8 @@ root=$(cd "$(dirname "$0")" && pwd)
 out=${OUT_DIR:-"$root/out"}
 mkdir -p "$out"
 "$GOOSE" --standalone --header "$out/goose_poc.h" -o "$out/math.c" "$root/math.goose"
+# Pinned compiler emits gs_i32 in the public header without defining it.
+sed -i "s/\bgs_i32\b/int32_t/g" "$out/goose_poc.h"
 "$CC" -std=c11 -O2 -I "$out" "$out/math.c" "$root/smoke.c" -o "$out/smoke" -lm -ldl
 # JNI headers are provided by the NDK compiler sysroot. Android only.
 if [[ ${BUILD_JNI:-0} == 1 ]]; then

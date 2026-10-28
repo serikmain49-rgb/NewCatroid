@@ -28,3 +28,10 @@ this code yet. Beware signed overflow: the smoke test uses small values only.
 
 Goose reserves large virtual data stacks by default. This requires measurement
 and likely configuration for 32-bit Android before any production integration.
+
+Host verification: the pinned compiler was built on Linux x86-64 with GCC 13;
+`build.sh` generated C, compiled it with GCC and the executable passed both
+small integer test cases. The generated public header used `gs_i32` without
+a definition, so the build script replaces that token with `int32_t` for this
+one scalar-only experiment. This workaround must be revisited if the exported
+ABI changes; it is not a general Goose header repair.
