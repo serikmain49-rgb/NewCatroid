@@ -591,6 +591,8 @@ public class CategoryListFragment extends Fragment implements CategoryListRVAdap
 			R.string.formula_editor_sensor_gamepad_left_pressed,
 			R.string.formula_editor_sensor_gamepad_right_pressed);
 
+    private static final List<Integer> AUDIO_FUNCTIONS = asList(R.string.formula_audio_name, R.string.formula_audio_duration, R.string.formula_audio_position, R.string.formula_audio_exists, R.string.formula_audio_error, R.string.formula_audio_state);
+    private static final List<Integer> AUDIO_PARAMS = asList(R.string.formula_audio_id_parameter, R.string.formula_audio_id_parameter, R.string.formula_audio_id_parameter, R.string.formula_audio_id_parameter, R.string.formula_editor_function_no_parameter, R.string.formula_editor_function_no_parameter);
     private static final List<Integer> FILE_FUNCTIONS = asList(
             R.string.formula_editor_function_file,
             R.string.formula_editor_function_all_files,
@@ -1176,6 +1178,7 @@ public class CategoryListFragment extends Fragment implements CategoryListRVAdap
                 getString(R.string.tables_and_vars)));
         result.addAll(addHeader(toCategoryListItems(VIEW_FUNCTIONS, VIEW_PARAMS),
                 getString(R.string.native_views)));
+        result.addAll(addHeader(toCategoryListItems(AUDIO_FUNCTIONS, AUDIO_PARAMS), getString(R.string.runtime_audio_title)));
         result.addAll(addHeader(toCategoryListItems(FILE_FUNCTIONS, FILE_PARAMS),
                 getString(R.string.category_file)));
         result.addAll(addHeader(toCategoryListItems(TWOD_FUNCTIONS, TWOD_PARAMS),

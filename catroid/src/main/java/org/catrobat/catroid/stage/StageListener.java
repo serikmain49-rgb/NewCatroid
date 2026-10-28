@@ -1107,6 +1107,7 @@ public class StageListener implements ApplicationListener {
 		stageBackupMap.put(scene.getName(), saveToBackup());
 		pause();
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1135,6 +1136,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1165,6 +1167,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1197,6 +1200,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1238,6 +1242,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1275,6 +1280,7 @@ public class StageListener implements ApplicationListener {
 		stageBackupMap.put(scene.getName(), saveToBackup());
 		pause();
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1311,6 +1317,7 @@ public class StageListener implements ApplicationListener {
 		stageBackupMap.put(scene.getName(), saveToBackup());
 		pause();
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -2184,7 +2191,13 @@ public class StageListener implements ApplicationListener {
 		}
 	}
 
-	public void finish() {
+	private void cancelRuntimeAudioScene() {
+        StageActivity a = StageActivity.activeStageActivity == null ? null : StageActivity.activeStageActivity.get();
+        if (a != null && a.runtimeAudio != null) a.runtimeAudio.cancelScene();
+    }
+    public void finish() {
+        StageActivity a = StageActivity.activeStageActivity == null ? null : StageActivity.activeStageActivity.get();
+        if (a != null && a.runtimeAudio != null) a.runtimeAudio.close();
 		finished = true;
 	}
 
