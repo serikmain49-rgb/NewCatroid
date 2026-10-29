@@ -13,6 +13,6 @@ adb shell monkey -p org.DanVexTeam.NewCatroid -c android.intent.category.LAUNCHE
 sleep 20
 adb shell pidof org.DanVexTeam.NewCatroid
 chmod +x ./gradlew
-./gradlew :catroid:connectedDanvexDebugAndroidTest -PgooseFast2D=true --no-daemon --stacktrace \
+./gradlew :catroid:connectedDanvexDebugAndroidTest -PgooseFast2D=true -PgooseDeviceTestsOnly=true --no-daemon --stacktrace \
     -Pandroid.testInstrumentationRunnerArguments.class=org.catrobat.catroid.test.goose.GooseNativeDeviceTest \
     2>&1 | tee emulator-results/instrumentation.log

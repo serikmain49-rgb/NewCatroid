@@ -149,7 +149,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 33
         applicationId appId
-        testInstrumentationRunner 'org.catrobat.catroid.runner.UiTestApplicationRunner'
+        testInstrumentationRunner project.hasProperty('gooseDeviceTestsOnly') ? 'androidx.test.runner.AndroidJUnitRunner' : 'org.catrobat.catroid.runner.UiTestApplicationRunner'
         versionCode defaultVersionCode
         versionName defaultVersionName
         println "VersionCode is $versionCode"
@@ -240,6 +240,11 @@ android {
 
     sourceSets {
         androidTest {
+            if (project.hasProperty('gooseDeviceTestsOnly')) {
+                java.setSrcDirs(['src/gooseAndroidTest/java'])
+            } else {
+                java.srcDir 'src/gooseAndroidTest/java'
+            }
             resources.srcDirs += ['src/androidTest/res', 'src/androidTest/assets']
         }
         apktemplate {
