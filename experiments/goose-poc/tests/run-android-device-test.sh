@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 mkdir -p emulator-results
-trap 'adb logcat -d -v time > emulator-results/logcat.txt || true' EXIT
+trap 'adb logcat -d -v time -s ActivityTaskManager:I LifecycleMonitor:D StageActivity:I RENDER_CRASH:E AndroidRuntime:E TestRunner:I GOOSE_SCENARIO:I GOOSE_BENCHMARK:I "*:S" > emulator-results/logcat.txt || true' EXIT
 adb logcat -c
 apk=(goose-build-results/*.apk)
 if [[ ${#apk[@]} != 1 || ! -f ${apk[0]} ]]; then

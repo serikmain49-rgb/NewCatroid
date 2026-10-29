@@ -4,6 +4,7 @@ import android.app.Instrumentation;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 import com.badlogic.gdx.Gdx;
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
@@ -26,6 +27,12 @@ import static org.junit.Assert.fail;
 /** Runs the repository's existing Change X by N visual-block project on a real stage. */
 @RunWith(AndroidJUnit4.class)
 public class GooseStageProjectTest {
+    // The StageActivity requests these at startup. Grant them only to the
+    // isolated instrumentation app so a system dialog cannot pause the scene.
+    @Rule public GrantPermissionRule permissions = GrantPermissionRule.grant(
+            android.Manifest.permission.CAMERA, android.Manifest.permission.RECORD_AUDIO,
+            android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.ACCESS_FINE_LOCATION,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE);
     @Rule public ActivityTestRule<StageActivity> stage = new ActivityTestRule<>(StageActivity.class, true, false);
 
     @Test public void runsExistingProject() throws Exception {
