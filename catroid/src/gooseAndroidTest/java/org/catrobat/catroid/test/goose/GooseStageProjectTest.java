@@ -4,8 +4,15 @@ import android.app.Instrumentation;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
+import com.badlogic.gdx.Gdx;
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.catrobat.catroid.ProjectManager;
+import org.catrobat.catroid.content.Sprite;
+import org.catrobat.catroid.content.bricks.WaitBrick;
+import org.catrobat.catroid.fast2d.GooseMovement;
 import org.catrobat.catroid.stage.StageActivity;
 import org.catrobat.catroid.stage.TestResult;
 import org.junit.Rule;
@@ -13,6 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /** Runs the repository's existing Change X by N visual-block project on a real stage. */
@@ -29,7 +37,27 @@ public class GooseStageProjectTest {
             manager.resetProjectManager();
             manager.loadProject(dir, InstrumentationRegistry.getInstrumentation().getTargetContext());
             manager.setCurrentProject(manager.getCurrentProject());
+            Sprite fixture = null;
+            for (Sprite sprite : manager.getCurrentProject().getDefaultScene().getSpriteList())
+                if ("Racoon-4".equals(sprite.getName())) fixture = sprite;
+            assertNotNull("Fixture sprite missing", fixture);
+            // Keep the scene alive briefly while checking the actual render thread.
+            fixture.getScriptList().get(0).addBrick(0, new WaitBrick(1500));
             stage.launchActivity(null);
+            long nativeDeadline = System.currentTimeMillis() + 15000;
+            while (Gdx.app == null && System.currentTimeMillis() < nativeDeadline) Thread.sleep(25);
+            assertNotNull("Game runtime did not initialize", Gdx.app);
+            CountDownLatch checked = new CountDownLatch(1);
+            AtomicInteger resultOnRenderThread = new AtomicInteger(-2);
+            Gdx.app.postRunnable(() -> {
+                try {
+                    if (GooseMovement.prepareGameThread())
+                        resultOnRenderThread.set(GooseMovement.hitTest(0, 0, 0, 0, false, 1, 1));
+                    else resultOnRenderThread.set(-1);
+                } finally { checked.countDown(); }
+            });
+            assertTrue("Render thread did not respond", checked.await(10, TimeUnit.SECONDS));
+            assertEquals("Goose unavailable on the game thread", 1, resultOnRenderThread.get());
             long deadline = System.currentTimeMillis() + 30000;
             while (!stage.getActivity().isFinishing() && System.currentTimeMillis() < deadline)
                 Thread.sleep(25);
