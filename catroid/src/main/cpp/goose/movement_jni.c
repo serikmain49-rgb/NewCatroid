@@ -4,7 +4,8 @@
 
 /* Goose exports must be used on the thread that initialized its runtime. */
 static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
-static pthread_t owner;
+/* TLS is cleared when a thread exits; thread IDs can otherwise be reused. */
+static _Thread_local int goose_owner_thread;
 static int initialized;
 
 JNIEXPORT jboolean JNICALL
@@ -16,9 +17,9 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_step(JNIEnv *env, jclass type,
     pthread_mutex_lock(&lock);
     if (!initialized) {
         goose_init(0, NULL);
-        owner = pthread_self();
+        goose_owner_thread = 1;
         initialized = 1;
-    } else if (!pthread_equal(owner, pthread_self())) {
+    } else if (!goose_owner_thread) {
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }
@@ -40,9 +41,9 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_batch(JNIEnv *env, jclass type,
     pthread_mutex_lock(&lock);
     if (!initialized) {
         goose_init(0, NULL);
-        owner = pthread_self();
+        goose_owner_thread = 1;
         initialized = 1;
-    } else if (!pthread_equal(owner, pthread_self())) {
+    } else if (!goose_owner_thread) {
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }
@@ -66,9 +67,9 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_distance3d(JNIEnv *env, jclass ty
     pthread_mutex_lock(&lock);
     if (!initialized) {
         goose_init(0, NULL);
-        owner = pthread_self();
+        goose_owner_thread = 1;
         initialized = 1;
-    } else if (!pthread_equal(owner, pthread_self())) {
+    } else if (!goose_owner_thread) {
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }
@@ -86,9 +87,9 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_visibilityBatch(JNIEnv *env, jcla
     pthread_mutex_lock(&lock);
     if (!initialized) {
         goose_init(0, NULL);
-        owner = pthread_self();
+        goose_owner_thread = 1;
         initialized = 1;
-    } else if (!pthread_equal(owner, pthread_self())) {
+    } else if (!goose_owner_thread) {
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }
@@ -112,9 +113,9 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_physicsPlanNative(JNIEnv *env, jc
     pthread_mutex_lock(&lock);
     if (!initialized) {
         goose_init(0, NULL);
-        owner = pthread_self();
+        goose_owner_thread = 1;
         initialized = 1;
-    } else if (!pthread_equal(owner, pthread_self())) {
+    } else if (!goose_owner_thread) {
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }

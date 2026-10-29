@@ -4,15 +4,16 @@
 
 /* Goose requires all exported calls on the thread that initialized it. */
 static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static pthread_t owner;
+/* TLS is cleared when a thread exits; thread IDs can otherwise be reused. */
+static _Thread_local int goose_owner_thread;
 static int initialized;
 static int enter_goose(JNIEnv *env) {
     pthread_mutex_lock(&mutex);
     if (!initialized) {
         goose_init(0, NULL);
-        owner = pthread_self();
+        goose_owner_thread = 1;
         initialized = 1;
-    } else if (!pthread_equal(owner, pthread_self())) {
+    } else if (!goose_owner_thread) {
         pthread_mutex_unlock(&mutex);
         jclass error = (*env)->FindClass(env, "java/lang/IllegalStateException");
         if (error) (*env)->ThrowNew(env, error, "Goose must be called on its initialization thread");
