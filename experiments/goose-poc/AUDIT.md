@@ -196,3 +196,8 @@ It also passed the runtime-audio host checks with Android/player doubles. This
 is not a real-device, ARM, full Fast2D scene, codec, plugin, or performance
 verification. The newer formula, sort, real Box2D and embedded-runtime changes
 need their own completed CI results.
+
+The Fast2D input path now has an optional Goose point-in-rectangle test after
+libGDX camera unprojection. The existing libGDX trigonometric lookup values,
+rotation and Java fallback are retained. Host JNI comparisons covered 100,000
+input combinations; no touchscreen/device or speed claim is made.

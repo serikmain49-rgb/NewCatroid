@@ -186,3 +186,11 @@ appends an existing NewCatroid Fast2D velocity brick, saves and reloads it in an
 isolated temporary directory, and checks sprite/script/brick structure and the
 new brick's ID. This covers one concrete XML round trip, not all project
 versions, media formats, Assistant APIs or plugins.
+
+For Fast2D touch handling, Android/libGDX still performs pointer lookup and
+camera unprojection. The optional Goose function handles the rotated local
+rectangle test using the exact sine/cosine values supplied by libGDX; other
+threads or unavailable native code use the prior Java arithmetic. The JNI
+bridge was compared with a Java reference over 100,000 host inputs, including
+boundary and NaN cases. Touch handling has not been performance-profiled or
+verified in a running Android project.

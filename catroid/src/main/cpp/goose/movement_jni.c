@@ -233,3 +233,18 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_initializeForGameThread(JNIEnv *e
     pthread_mutex_unlock(&lock);
     return result;
 }
+
+JNIEXPORT jint JNICALL
+Java_org_catrobat_catroid_fast2d_GooseMovement_hitTestNative(JNIEnv *env, jclass type,
+        jfloat dx, jfloat dy, jfloat cosine, jfloat sine, jboolean rotated, jfloat half_w, jfloat half_h) {
+    (void)env; (void)type;
+    pthread_mutex_lock(&lock);
+    /* Input can be queried off the render thread: do not claim ownership here. */
+    if (!initialized || !goose_owner_thread) {
+        pthread_mutex_unlock(&lock);
+        return -1;
+    }
+    jint result = newcatroid_hit_test_2d(dx, dy, cosine, sine, rotated ? 1 : 0, half_w, half_h);
+    pthread_mutex_unlock(&lock);
+    return result;
+}

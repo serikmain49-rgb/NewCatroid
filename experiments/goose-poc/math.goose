@@ -176,3 +176,16 @@ export "newcatroid_formula_numeric" fn formula_numeric(ops: i32[:], values: f64[
     }
     stack[0]
 }
+
+// Fast2D touch test after Android/libGDX has projected screen coordinates.
+// The caller supplies libGDX's lookup-table sine/cosine for exact compatibility.
+export "newcatroid_hit_test_2d" fn hit_test_2d(dx: f32, dy: f32, cosine: f32, sine: f32, rotated: i32, half_w: f32, half_h: f32) -> i32 {
+    var x = dx;
+    var y = dy;
+    if rotated != 0 {
+        x = dx * cosine - dy * sine;
+        y = dx * sine + dy * cosine;
+    }
+    if x >= -half_w && x <= half_w && y >= -half_h && y <= half_h { return 1; }
+    0
+}

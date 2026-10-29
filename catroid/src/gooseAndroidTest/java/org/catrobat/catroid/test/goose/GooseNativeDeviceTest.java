@@ -62,6 +62,9 @@ public class GooseNativeDeviceTest {
         expression = new FormulaElement(ElementType.OPERATOR, "PLUS", null, left, text);
         assertTrue(Double.isNaN((Double) expression.interpretRecursive(null)));
 
+        assertEquals(1, GooseMovement.hitTest(1, 0, 0, 1, true, 1, 1));
+        assertEquals(0, GooseMovement.hitTest(2, 0, 0, 1, true, 1, 1));
+
         float[] plan = new float[2];
         float step = 1f / 60f;
         assertTrue(GooseMovement.physicsPlan(.1f, step, plan));

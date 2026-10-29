@@ -365,18 +365,24 @@ public class FastTwoDManager implements Disposable {
         float dx = tempVec.x - t.x;
         float dy = tempVec.y - t.y;
 
-        if (t.rotation != 0) {
-            float cos = com.badlogic.gdx.math.MathUtils.cosDeg(-t.rotation);
-            float sin = com.badlogic.gdx.math.MathUtils.sinDeg(-t.rotation);
+        boolean rotated = t.rotation != 0;
+        float cos = 0f, sin = 0f;
+        if (rotated) {
+            cos = com.badlogic.gdx.math.MathUtils.cosDeg(-t.rotation);
+            sin = com.badlogic.gdx.math.MathUtils.sinDeg(-t.rotation);
+        }
+
+        float halfW = Math.abs(tex.width * t.scaleX) * 0.5f;
+        float halfH = Math.abs(tex.height * t.scaleY) * 0.5f;
+        int gooseHit = GooseMovement.hitTest(dx, dy, cos, sin, rotated, halfW, halfH);
+        if (gooseHit >= 0) return gooseHit == 1;
+
+        if (rotated) {
             float rx = dx * cos - dy * sin;
             float ry = dx * sin + dy * cos;
             dx = rx;
             dy = ry;
         }
-
-        float halfW = Math.abs(tex.width * t.scaleX) * 0.5f;
-        float halfH = Math.abs(tex.height * t.scaleY) * 0.5f;
-
         return dx >= -halfW && dx <= halfW && dy >= -halfH && dy <= halfH;
     }
 

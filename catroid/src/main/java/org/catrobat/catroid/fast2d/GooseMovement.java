@@ -75,6 +75,20 @@ public final class GooseMovement {
         }
     }
 
+    /** Returns -1 for Java fallback, 0 for outside, or 1 for inside. */
+    public static int hitTest(float dx, float dy, float cosine, float sine,
+                              boolean rotated, float halfWidth, float halfHeight) {
+        if (!AVAILABLE) return -1;
+        try {
+            return hitTestNative(dx, dy, cosine, sine, rotated, halfWidth, halfHeight);
+        } catch (LinkageError error) {
+            return -1;
+        }
+    }
+
+    private static native int hitTestNative(float dx, float dy, float cosine, float sine,
+                                            boolean rotated, float halfWidth, float halfHeight);
+
     /** Called by StageListener on its render thread before executing game scripts. */
     public static boolean prepareGameThread() {
         if (!AVAILABLE) return false;

@@ -4480,6 +4480,7 @@ static void visibility_batch_g(void *p0_data, int64_t p0_len, gs_f32 p1, gs_f32 
 static void physics_plan_g(gs_f32 p0, gs_f32 p1, void *p2_data, int64_t p2_len);
 static void sort_depth_g(void *p0_data, int64_t p0_len, void *p1_data, int64_t p1_len, void *p2_data, int64_t p2_len, void *p3_data, int64_t p3_len);
 static gs_f64 formula_numeric_g(void *p0_data, int64_t p0_len, void *p1_data, int64_t p1_len, void *p2_data, int64_t p2_len, gs_f64 p3);
+static gs_i32 hit_test_2d_g(gs_f32 p0, gs_f32 p1, gs_f32 p2, gs_f32 p3, gs_i32 p4, gs_f32 p5, gs_f32 p6);
 
 /* ---- code ---- */
 static gs_i32 add_g(gs_i32 a_g, gs_i32 b_g) {
@@ -5003,6 +5004,30 @@ static gs_f64 formula_numeric_g(void *ops_g_data, int64_t ops_g_len, void *value
     return t36;
 }
 
+static gs_i32 hit_test_2d_g(gs_f32 dx_g, gs_f32 dy_g, gs_f32 cosine_g, gs_f32 sine_g, gs_i32 rotated_g, gs_f32 half_w_g, gs_f32 half_h_g) {
+    gs_f32 x_g;
+    gs_f32 y_g;
+    gs_i32 t1;
+    gs_i32 t2;
+    x_g = dx_g;
+    y_g = dy_g;
+    if ((uint8_t)(!((gs_i32)((gs_i32)(rotated_g)) == (gs_i32)(0)))) {
+        x_g = ((gs_f32)((gs_f32)(((gs_f32)((gs_f32)(dx_g)) * (gs_f32)(cosine_g)))) - (gs_f32)(((gs_f32)((gs_f32)(dy_g)) * (gs_f32)(sine_g))));
+        y_g = ((gs_f32)((gs_f32)(((gs_f32)((gs_f32)(dx_g)) * (gs_f32)(sine_g)))) + (gs_f32)(((gs_f32)((gs_f32)(dy_g)) * (gs_f32)(cosine_g))));
+    }
+    if (!((uint8_t)((gs_f32)((gs_f32)(x_g)) >= (gs_f32)((-half_w_g))))) goto L0;
+    if (!((uint8_t)((gs_f32)((gs_f32)(x_g)) <= (gs_f32)(half_w_g)))) goto L0;
+    if (!((uint8_t)((gs_f32)((gs_f32)(y_g)) >= (gs_f32)((-half_h_g))))) goto L0;
+    if (!((uint8_t)((gs_f32)((gs_f32)(y_g)) <= (gs_f32)(half_h_g)))) goto L0;
+    {
+        t1 = 1;
+        return t1;
+    }
+    L0:;
+    t2 = 0;
+    return t2;
+}
+
 static void gs_init_globals(void) {
 }
 
@@ -5071,4 +5096,10 @@ gs_f64 newcatroid_formula_numeric(sl_i32 gs_export_arg0_9, sl_f64 gs_export_arg1
     if (!gs_program_initialized)
         gs_panic("goose_init must be called before exported functions");
     return formula_numeric_g(gs_export_arg0_9.data, gs_export_arg0_9.len, gs_export_arg1_9.data, gs_export_arg1_9.len, gs_export_arg2_7.data, gs_export_arg2_7.len, gs_export_arg3_4);
+}
+
+gs_i32 newcatroid_hit_test_2d(gs_f32 gs_export_arg0_10, gs_f32 gs_export_arg1_10, gs_f32 gs_export_arg2_8, gs_f32 gs_export_arg3_5, gs_i32 gs_export_arg4_3, gs_f32 gs_export_arg5_2, gs_f32 gs_export_arg6) {
+    if (!gs_program_initialized)
+        gs_panic("goose_init must be called before exported functions");
+    return hit_test_2d_g(gs_export_arg0_10, gs_export_arg1_10, gs_export_arg2_8, gs_export_arg3_5, gs_export_arg4_3, gs_export_arg5_2, gs_export_arg6);
 }

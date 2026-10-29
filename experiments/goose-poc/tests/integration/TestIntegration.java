@@ -69,6 +69,22 @@ public class TestIntegration {
         if (actualIds[i] != expectedIds[i] || Float.floatToIntBits(actualZ[i]) != Float.floatToIntBits(expectedZ[i]))
           throw new AssertionError("sort mismatch " + trial + ", " + i);
     }
+    for (int i = 0; i < 100000; i++) {
+      float dx = (random.nextFloat() - .5f) * 1000, dy = (random.nextFloat() - .5f) * 1000;
+      float cosine = random.nextFloat() * 2 - 1, sine = random.nextFloat() * 2 - 1;
+      float halfWidth = random.nextFloat() * 100, halfHeight = random.nextFloat() * 100;
+      boolean rotated = (i & 1) != 0;
+      if (i % 997 == 0) dx = Float.NaN;
+      if (i % 991 == 0) halfWidth = Float.POSITIVE_INFINITY;
+      float x = rotated ? dx * cosine - dy * sine : dx;
+      float y = rotated ? dx * sine + dy * cosine : dy;
+      int expectedHit = x >= -halfWidth && x <= halfWidth && y >= -halfHeight && y <= halfHeight ? 1 : 0;
+      if (GooseMovement.hitTest(dx, dy, cosine, sine, rotated, halfWidth, halfHeight) != expectedHit)
+        throw new AssertionError("touch hit mismatch at " + i);
+    }
+    if (GooseMovement.hitTest(1, 0, 0, 1, true, 1, 1) != 1
+        || GooseMovement.hitTest(2, 0, 0, 1, true, 1, 1) != 0)
+      throw new AssertionError("rotated touch boundary mismatch");
     double[] formulaResult = {123};
     int[] code = {0, 0, 1, 0, 3, 0, 4, 5};
     double[] operands = {1.5, 2.5, 0, 3, 0, 2, 0, 0};
