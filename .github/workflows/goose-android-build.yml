@@ -42,3 +42,40 @@ jobs:
           name: newcatroid-goose-debug
           path: goose-build-results/
           if-no-files-found: warn
+  emulator-smoke:
+    needs: apk
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: newcatroid-goose-debug
+          path: goose-build-results
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install and launch on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          disk-size: 6G
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: |
+            mkdir -p emulator-results
+            adb logcat -c
+            adb install -r goose-build-results/*.apk
+            adb shell monkey -p org.DanVexTeam.NewCatroid -c android.intent.category.LAUNCHER 1
+            sleep 20
+            adb logcat -d -v time > emulator-results/logcat.txt
+            adb shell pidof org.DanVexTeam.NewCatroid
+      - name: Upload emulator log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goose-emulator-log
+          path: emulator-results/
+          if-no-files-found: warn

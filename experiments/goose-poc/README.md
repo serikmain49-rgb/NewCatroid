@@ -89,3 +89,8 @@ double square root. This does not port the 3D renderer, physics or camera, and
 the actual 3D path still needs a full app build and Android device verification.
 The scalar JNI wrapper allocates a small Java output array per call, so no
 speed or allocation improvement is claimed.
+
+The application workflow also attempts an x86-64 API 30 emulator installation and
+launcher smoke test after a successful APK build, recording logcat. This checks
+only that the application process remains alive after startup; it does not run a
+project, measure performance, or validate ARM, rendering, physics or plugins.
