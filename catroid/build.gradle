@@ -230,7 +230,10 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
         unitTests.all {
-            jvmArgs '-Xmx2g'
+            jvmArgs '-Xmx2g', '--add-opens=java.base/java.lang=ALL-UNNAMED',
+                    '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+                    '--add-opens=java.base/java.io=ALL-UNNAMED',
+                    '--add-opens=java.base/java.util=ALL-UNNAMED'
         }
         animationsDisabled = true
     }
