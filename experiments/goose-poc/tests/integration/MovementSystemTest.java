@@ -12,7 +12,13 @@ public final class MovementSystemTest {
             mTransform = new ComponentMapper<>(t);
             mMovement = new ComponentMapper<>(m);
         }
-        void run() { begin(); process(0); end(); }
+        Harness(World world, TransformComponent[] t, MovementComponent[] m) {
+            this.world = world;
+            mTransform = new ComponentMapper<>(t);
+            mMovement = new ComponentMapper<>(m);
+        }
+        void run() { run(1); }
+        void run(int count) { begin(); for (int i = 0; i < count; i++) process(i); end(); }
     }
     static void equal(float expected, float actual) {
         if (Float.floatToIntBits(expected) != Float.floatToIntBits(actual))
@@ -33,6 +39,37 @@ public final class MovementSystemTest {
         h.run();
         equal(expectedVy, m.velocityY); equal(expectedX, t.x);
         equal(expectedY, t.y); equal(expectedRotation, t.rotation);
-        System.out.println("PASS: Fast2D movement system with Goose enabled");
+        int count = 33;
+        TransformComponent[] transforms = new TransformComponent[count];
+        MovementComponent[] movements = new MovementComponent[count];
+        float[][] values = new float[count][4];
+        for (int i = 0; i < count; i++) {
+            transforms[i] = new TransformComponent();
+            movements[i] = new MovementComponent();
+            transforms[i].x = values[i][0] = i * .7f;
+            transforms[i].y = values[i][1] = i * -.4f;
+            transforms[i].rotation = values[i][2] = i;
+            movements[i].velocityY = values[i][3] = i * .1f;
+            movements[i].velocityX = 1f - i * .3f;
+            movements[i].gravityY = -9.8f;
+            movements[i].angularVelocity = i * .05f;
+        }
+        Harness batch = new Harness(world, transforms, movements);
+        batch.run(0);
+        for (int frame = 0; frame < 120; frame++) {
+            world.delta = frame % 2 == 0 ? .016f : .033f;
+            for (int i = 0; i < count; i++) {
+                values[i][3] += movements[i].gravityY * world.delta;
+                values[i][0] += movements[i].velocityX * world.delta;
+                values[i][1] += values[i][3] * world.delta;
+                values[i][2] += movements[i].angularVelocity * world.delta;
+            }
+            batch.run(count);
+            for (int i = 0; i < count; i++) {
+                equal(values[i][0], transforms[i].x); equal(values[i][1], transforms[i].y);
+                equal(values[i][2], transforms[i].rotation); equal(values[i][3], movements[i].velocityY);
+            }
+        }
+        System.out.println("PASS: Fast2D movement system, 33 objects and 120 frames");
     }
 }
