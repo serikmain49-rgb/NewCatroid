@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 /** Load and resave one existing Pocket Code project and a NewCatroid brick. */
 final class GooseProjectRoundTrip {
-    private static void delete(File file) {
+    static void delete(File file) {
         File[] children = file.listFiles();
         if (children != null) for (File child : children) delete(child);
         file.delete();
@@ -48,22 +48,22 @@ final class GooseProjectRoundTrip {
         throw new AssertionError("fixture sprite missing");
     }
 
-    static void run() throws Exception {
+    static File unpackFixture(String assetPath) throws Exception {
         Context target = InstrumentationRegistry.getInstrumentation().getTargetContext();
         Context tests = InstrumentationRegistry.getInstrumentation().getContext();
         File dir = File.createTempFile("goose-project-", "", target.getCacheDir());
         assertTrue(dir.delete() && dir.mkdir());
         try {
             String root = dir.getCanonicalPath() + File.separator;
-            try (ZipInputStream input = new ZipInputStream(tests.getAssets().open(
-                    "catrobatTests/bricks/motion/testChangeXby.catrobat"))) {
+            try (ZipInputStream input = new ZipInputStream(tests.getAssets().open(assetPath))) {
                 ZipEntry entry;
                 byte[] buffer = new byte[8192];
                 while ((entry = input.getNextEntry()) != null) {
                     File output = new File(dir, entry.getName());
                     if (!output.getCanonicalPath().startsWith(root)) throw new AssertionError("unsafe fixture path");
-                    if (entry.isDirectory()) { if (!output.isDirectory() && !output.mkdirs()) throw new AssertionError(); }
-                    else {
+                    if (entry.isDirectory()) {
+                        if (!output.isDirectory() && !output.mkdirs()) throw new AssertionError();
+                    } else {
                         File parent = output.getParentFile();
                         if (!parent.isDirectory() && !parent.mkdirs()) throw new AssertionError();
                         try (FileOutputStream stream = new FileOutputStream(output)) {
@@ -74,6 +74,17 @@ final class GooseProjectRoundTrip {
                     input.closeEntry();
                 }
             }
+            return dir;
+        } catch (Exception | Error error) {
+            delete(dir);
+            throw error;
+        }
+    }
+
+    static void run() throws Exception {
+        Context target = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        File dir = unpackFixture("catrobatTests/bricks/motion/testChangeXby.catrobat");
+        try {
             XstreamSerializer serializer = XstreamSerializer.getInstance();
             Project project = serializer.loadProject(dir, target);
             assertTrue(project.getSceneList().size() > 0);
