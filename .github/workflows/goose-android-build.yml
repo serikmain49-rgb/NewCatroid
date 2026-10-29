@@ -79,3 +79,40 @@ jobs:
           name: goose-emulator-log
           path: emulator-results/
           if-no-files-found: warn
+  compatibility-tests:
+    needs: apk
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android build tools
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
+      - name: Run existing formula and project unit tests
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p compatibility-results
+          chmod +x ./gradlew
+          ./gradlew :catroid:testDanvexDebugUnitTest -PgooseFast2D=true --no-daemon --stacktrace \
+            --tests org.catrobat.catroid.test.formulaeditor.FormulaElementTest \
+            --tests org.catrobat.catroid.test.content.project.ProjectTest \
+            --tests org.catrobat.catroid.test.content.project.LoadProjectsTest \
+            2>&1 | tee compatibility-results/gradle-test.log
+      - name: Upload unit test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goose-compatibility-test-results
+          path: |
+            compatibility-results/
+            catroid/build/reports/tests/
+          if-no-files-found: warn

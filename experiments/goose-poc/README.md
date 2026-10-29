@@ -103,3 +103,11 @@ comparison includes finite, NaN and infinite values. A JVM test uses the real
 Fast2D renderer with graphics test doubles to check visibility and drawing
 order. These changes require CI and Android validation; no performance gain has
 been established and the fallback path stays available.
+
+On 2026-10-29, GitHub Actions run 40840973551 built the application with the
+movement, 2D visibility and 3D distance prototypes enabled and launched its
+main activity on an x86-64 API 30 Android emulator; the process remained alive
+through the smoke check. This does not establish ARM behavior or project
+compatibility. The workflow now also selects existing formula and project unit
+tests. Their results have not been observed yet and are not a substitute for
+running representative real projects and plugins.
