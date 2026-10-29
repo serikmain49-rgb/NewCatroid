@@ -30,3 +30,20 @@ export "newcatroid_distance3d" fn distance3d(ax: f32, ay: f32, az: f32, bx: f32,
     let dz = az - bz;
     nc_sqrt((dx * dx + dy * dy + dz * dz) as f64) as f32
 }
+
+// Records: x, y, half-width, half-height, output (1 = visible).
+export "newcatroid_visibility_batch" fn visibility_batch(data: f32[:], cam_x: f32, cam_y: f32, cam_half_w: f32, cam_half_h: f32) {
+    for entity in 0..data.len / 5 {
+        let i = entity * 5;
+        let x = data[i];
+        let y = data[i + 1];
+        let half_w = data[i + 2];
+        let half_h = data[i + 3];
+        if x + half_w < cam_x - cam_half_w || x - half_w > cam_x + cam_half_w ||
+           y + half_h < cam_y - cam_half_h || y - half_h > cam_y + cam_half_h {
+            data[i + 4] = 0.0;
+        } else {
+            data[i + 4] = 1.0;
+        }
+    }
+}

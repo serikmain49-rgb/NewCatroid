@@ -15,6 +15,10 @@ public class TestIntegration {
     float[] distance = new float[1];
     if (!GooseMovement.distance(1, 2, 3, 4, 6, 3, distance) || distance[0] != 5f)
         throw new AssertionError("3D distance mismatch");
+    float[] rects = {0,0,1,1,99, 100,100,1,1,99, 0,0,1,1,99};
+    if (!GooseMovement.visibility(rects, 2, 0, 0, 10, 10)) throw new AssertionError("visibility unavailable");
+    if (rects[4] != 1f || rects[9] != 0f || rects[14] != 99f) throw new AssertionError("visibility mismatch");
+    if (GooseMovement.visibility(rects, 4, 0, 0, 10, 10)) throw new AssertionError("invalid visibility count");
     Thread t = new Thread(() -> { if (GooseMovement.update(0,0,0,0,0,0,0,0,new float[4])) throw new AssertionError("cross thread accepted"); });
     final Throwable[] failure = new Throwable[1];
     t.setUncaughtExceptionHandler((thread,error) -> failure[0] = error);

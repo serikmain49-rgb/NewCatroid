@@ -94,3 +94,12 @@ The application workflow also attempts an x86-64 API 30 emulator installation an
 launcher smoke test after a successful APK build, recording logcat. This checks
 only that the application process remains alive after startup; it does not run a
 project, measure performance, or validate ARM, rendering, physics or plugins.
+
+The experimental renderer also passes packed 2D bounding rectangles to a
+Goose visibility function before drawing. SpriteBatch drawing, texture access,
+shader state and z-order sorting remain in libGDX/Java. The Goose expression
+retains the original comparisons including edge-touch behavior; the C host
+comparison includes finite, NaN and infinite values. A JVM test uses the real
+Fast2D renderer with graphics test doubles to check visibility and drawing
+order. These changes require CI and Android validation; no performance gain has
+been established and the fallback path stays available.

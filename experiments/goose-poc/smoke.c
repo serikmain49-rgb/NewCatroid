@@ -65,6 +65,30 @@ int main(int argc, char **argv) {
             }
         }
     }
-    puts("Goose scalar and batch movement cases passed");
+    float rects[5 * 257], visibility_expected[257];
+    for (int frame = 0; frame < 100; frame++) {
+        float cx = sample(), cy = sample(), hw = sample(), hh = sample();
+        for (int i = 0; i < 257; i++) {
+            int o = i * 5;
+            rects[o] = sample(); rects[o + 1] = sample();
+            rects[o + 2] = sample(); rects[o + 3] = sample();
+            if (i == 0) rects[o] = NAN;
+            if (i == 1) rects[o + 1] = INFINITY;
+            int outside = rects[o] + rects[o + 2] < cx - hw ||
+                          rects[o] - rects[o + 2] > cx + hw ||
+                          rects[o + 1] + rects[o + 3] < cy - hh ||
+                          rects[o + 1] - rects[o + 3] > cy + hh;
+            visibility_expected[i] = outside ? 0.0f : 1.0f;
+        }
+        sl_f32 rect_slice = { rects, 5 * 257 };
+        newcatroid_visibility_batch(rect_slice, cx, cy, hw, hh);
+        for (int i = 0; i < 257; i++) {
+            if (!same(rects[i * 5 + 4], visibility_expected[i])) {
+                fprintf(stderr, "Visibility mismatch at frame %d index %d\n", frame, i);
+                return 1;
+            }
+        }
+    }
+    puts("Goose movement, distance and visibility cases passed");
     return 0;
 }

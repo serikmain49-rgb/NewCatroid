@@ -29,6 +29,15 @@ public final class GooseMovement {
         }
     }
 
+    public static boolean visibility(float[] data, int count, float camX, float camY, float halfW, float halfH) {
+        if (!AVAILABLE) return false;
+        try {
+            return visibilityBatch(data, count, camX, camY, halfW, halfH);
+        } catch (LinkageError error) {
+            return false;
+        }
+    }
+
     public static boolean distance(float ax, float ay, float az, float bx, float by, float bz, float[] out) {
         if (!AVAILABLE) return false;
         try {
@@ -48,6 +57,7 @@ public final class GooseMovement {
         }
     }
 
+    private static native boolean visibilityBatch(float[] data, int count, float camX, float camY, float halfW, float halfH);
     private static native boolean distance3d(float ax, float ay, float az, float bx, float by, float bz, float[] out);
     private static native boolean batch(float[] data, int count, float delta);
 

@@ -7,6 +7,8 @@ import com.artemis.EntitySubscription;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import java.util.Arrays;
+import org.catrobat.catroid.fast2d.GooseMovement;
 
 import org.catrobat.catroid.fast2d.components.TextureComponent;
 import org.catrobat.catroid.fast2d.components.TransformComponent;
@@ -21,6 +23,7 @@ public class Fast2DRenderSystem extends BaseEntitySystem {
     private boolean needSort = false;
 
     private float camX, camY, camHalfW, camHalfH;
+    private float[] visibility = new float[0];
 
     public Fast2DRenderSystem(SpriteBatch batch) {
         super(Aspect.all(TransformComponent.class, TextureComponent.class));
@@ -64,14 +67,29 @@ public class Fast2DRenderSystem extends BaseEntitySystem {
             batch.setProjectionMatrix(camera.combined);
         }
 
+        boolean culled = false;
+        if (size > 0 && GooseMovement.isAvailable() && size <= Integer.MAX_VALUE / 5) {
+            int needed = size * 5;
+            if (visibility.length < needed) visibility = Arrays.copyOf(visibility, needed);
+            for (int i = 0; i < size; i++) {
+                TextureComponent tex = mTexture.get(ids[i]);
+                TransformComponent transform = mTransform.get(ids[i]);
+                int offset = i * 5;
+                visibility[offset] = transform.x;
+                visibility[offset + 1] = transform.y;
+                visibility[offset + 2] = (tex.width * transform.scaleX) * 0.5f;
+                visibility[offset + 3] = (tex.height * transform.scaleY) * 0.5f;
+            }
+            culled = GooseMovement.visibility(visibility, size, camX, camY, camHalfW, camHalfH);
+        }
         batch.begin();
         for (int i = 0; i < size; i++) {
-            renderEntity(ids[i]);
+            if (!culled || visibility[i * 5 + 4] != 0f) renderEntity(ids[i], culled);
         }
         batch.end();
     }
 
-    private void renderEntity(int entityId) {
+    private void renderEntity(int entityId, boolean alreadyCulled) {
         TextureComponent tex = mTexture.get(entityId);
         if (tex.region == null) return;
 
@@ -80,8 +98,8 @@ public class Fast2DRenderSystem extends BaseEntitySystem {
         float halfW = (tex.width * t.scaleX) * 0.5f;
         float halfH = (tex.height * t.scaleY) * 0.5f;
 
-        if (t.x + halfW < camX - camHalfW || t.x - halfW > camX + camHalfW ||
-                t.y + halfH < camY - camHalfH || t.y - halfH > camY + camHalfH) {
+        if (!alreadyCulled && (t.x + halfW < camX - camHalfW || t.x - halfW > camX + camHalfW ||
+                t.y + halfH < camY - camHalfH || t.y - halfH > camY + camHalfH)) {
             return;
         }
 
