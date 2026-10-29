@@ -6232,12 +6232,15 @@ public class ThreeDManager implements Disposable {
         return null;
     }
 
+    private static final ThreadLocal<float[]> GOOSE_DISTANCE_BUFFER =
+            ThreadLocal.withInitial(() -> new float[1]);
+
     public Float getDistance(String id1, String id2) {
         if (org.catrobat.catroid.fast2d.GooseMovement.isAvailable()) {
             Vector3 first = getPosition(id1);
             Vector3 second = getPosition(id2);
             if (first == null || second == null) return -1f;
-            float[] distance = new float[1];
+            float[] distance = GOOSE_DISTANCE_BUFFER.get();
             if (org.catrobat.catroid.fast2d.GooseMovement.distance(
                     first.x, first.y, first.z, second.x, second.y, second.z, distance)) {
                 return distance[0];

@@ -165,3 +165,9 @@ stable insertion algorithm because Java's `>` comparison is not transitive in
 that case. Allocator failure returns control to the Java fallback. Instrumentation
 logs a separate `GOOSE_SORT_MICRO` reverse-order benchmark; this is a deliberately
 worst-case ordering, not an in-game FPS measurement.
+
+The isolated Android test additionally constructs the production Artemis
+movement and physics systems and compares 33 moving entities and a real Box2D
+ball/floor scene against Java arithmetic and a separate Box2D world over 120
+frames. This test does not render sprites or establish project/plugin
+compatibility; results must be checked in the Android CI run.
