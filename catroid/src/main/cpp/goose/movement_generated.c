@@ -4462,6 +4462,7 @@ static gs_f32 integrate_g(gs_f32 p0, gs_f32 p1, gs_f32 p2);
 static void movement_batch_g(void *p0_data, int64_t p0_len, gs_f32 p1);
 static gs_f32 distance3d_g(gs_f32 p0, gs_f32 p1, gs_f32 p2, gs_f32 p3, gs_f32 p4, gs_f32 p5);
 static void visibility_batch_g(void *p0_data, int64_t p0_len, gs_f32 p1, gs_f32 p2, gs_f32 p3, gs_f32 p4);
+static void physics_plan_g(gs_f32 p0, gs_f32 p1, void *p2_data, int64_t p2_len);
 
 /* ---- code ---- */
 static gs_i32 add_g(gs_i32 a_g, gs_i32 b_g) {
@@ -4592,6 +4593,31 @@ static void visibility_batch_g(void *data_g_data, int64_t data_g_len, gs_f32 cam
     return;
 }
 
+static void physics_plan_g(gs_f32 accumulated_g, gs_f32 step_g, void *out_g_data, int64_t out_g_len) {
+    sl_f32 out_g; out_g.data = out_g_data; out_g.len = out_g_len;
+    gs_f32 remainder_g;
+    gs_i64 count_g;
+    remainder_g = accumulated_g;
+    count_g = 0;
+    for (;;) {
+        if (!((uint8_t)((gs_f32)((gs_f32)(remainder_g)) >= (gs_f32)(step_g)))) goto L0;
+        if (!((uint8_t)((gs_i64)((gs_i64)(count_g)) < (gs_i64)(3)))) goto L0;
+        remainder_g = (remainder_g - (step_g));
+        count_g = gs_add_i64(count_g, 1, gs_file0, 57);
+    }
+    L0:;
+    if ((uint8_t)((gs_f32)((gs_f32)(remainder_g)) >= (gs_f32)(step_g))) {
+        remainder_g = fmodf((gs_f32)((gs_f32)(remainder_g)), (gs_f32)(step_g));
+    }
+    gs_f32 *t2 = out_g.data;
+    gs_f32 *t3 = &(t2[GS_IDX((int64_t)(0), out_g.len, gs_file0, 60)]);
+    (*t3) = (float)(count_g);
+    gs_f32 *t4 = out_g.data;
+    gs_f32 *t5 = &(t4[GS_IDX((int64_t)(1), out_g.len, gs_file0, 61)]);
+    (*t5) = remainder_g;
+    return;
+}
+
 static void gs_init_globals(void) {
 }
 
@@ -4642,4 +4668,10 @@ void newcatroid_visibility_batch(sl_f32 gs_export_arg0_6, gs_f32 gs_export_arg1_
     if (!gs_program_initialized)
         gs_panic("goose_init must be called before exported functions");
     visibility_batch_g(gs_export_arg0_6.data, gs_export_arg0_6.len, gs_export_arg1_6, gs_export_arg2_4, gs_export_arg3_2, gs_export_arg4_2);
+}
+
+void newcatroid_physics_plan(gs_f32 gs_export_arg0_7, gs_f32 gs_export_arg1_7, sl_f32 gs_export_arg2_5) {
+    if (!gs_program_initialized)
+        gs_panic("goose_init must be called before exported functions");
+    physics_plan_g(gs_export_arg0_7, gs_export_arg1_7, gs_export_arg2_5.data, gs_export_arg2_5.len);
 }

@@ -22,6 +22,7 @@ float newcatroid_integrate(float gs_export_arg0_3, float gs_export_arg1_3, float
 void newcatroid_movement_batch(sl_f32 gs_export_arg0_4, float gs_export_arg1_4);
 float newcatroid_distance3d(float gs_export_arg0_5, float gs_export_arg1_5, float gs_export_arg2_3, float gs_export_arg3, float gs_export_arg4, float gs_export_arg5);
 void newcatroid_visibility_batch(sl_f32 gs_export_arg0_6, float gs_export_arg1_6, float gs_export_arg2_4, float gs_export_arg3_2, float gs_export_arg4_2);
+void newcatroid_physics_plan(float gs_export_arg0_7, float gs_export_arg1_7, sl_f32 gs_export_arg2_5);
 #ifdef __cplusplus
 }
 #endif

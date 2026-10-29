@@ -33,6 +33,15 @@ public class TestIntegration {
       throw new AssertionError("NaN distance mismatch");
     if (!GooseMovement.distance(Float.POSITIVE_INFINITY,0,0,0,0,0,distance) || !Float.isInfinite(distance[0]))
       throw new AssertionError("Infinity distance mismatch");
+    float[] physics = new float[2];
+    float step = 1f / 60f;
+    if (!GooseMovement.physicsPlan(.1f, step, physics) || physics[0] != 3f)
+      throw new AssertionError("physics plan mismatch");
+    float remain = .1f; for (int j = 0; j < 3; j++) remain -= step;
+    if (remain >= step) remain %= step;
+    if (Float.floatToIntBits(remain) != Float.floatToIntBits(physics[1]))
+      throw new AssertionError("physics remainder mismatch");
+    if (GooseMovement.physicsPlan(1f, 0f, physics)) throw new AssertionError("invalid step accepted");
     Thread t = new Thread(() -> { if (GooseMovement.update(0,0,0,0,0,0,0,0,new float[4])) throw new AssertionError("cross thread accepted"); });
     final Throwable[] failure = new Throwable[1];
     t.setUncaughtExceptionHandler((thread,error) -> failure[0] = error);

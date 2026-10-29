@@ -111,3 +111,11 @@ through the smoke check. This does not establish ARM behavior or project
 compatibility. The workflow now also selects existing formula and project unit
 tests. Their results have not been observed yet and are not a substitute for
 running representative real projects and plugins.
+
+The optional Fast2D physics system now asks Goose for its fixed-step schedule:
+up to three 1/60-second steps and the retained remainder. Box2D still performs
+all simulation and collision work, in the existing order. A host C comparison
+covers 100,000 accumulated values including NaN/infinity, and a JVM test checks
+the real Fast2D physics system with a Box2D test double over 5,000 frames.
+The new scheduler has not yet been verified on Android or real Box2D projects;
+it is not a port of Box2D and is not a measured speed improvement.

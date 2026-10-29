@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 
+import org.catrobat.catroid.fast2d.GooseMovement;
 import org.catrobat.catroid.fast2d.components.PhysicsComponent;
 import org.catrobat.catroid.fast2d.components.TransformComponent;
 
@@ -19,6 +20,7 @@ public class Fast2DPhysicsSystem extends IteratingSystem {
 
     private final World physicsWorld;
     private float accumulator = 0f;
+    private final float[] goosePlan = new float[2];
     private static final float TIME_STEP = 1f / 60f;
 
     public Fast2DPhysicsSystem(World world) {
@@ -41,6 +43,15 @@ public class Fast2DPhysicsSystem extends IteratingSystem {
         accumulator += deltaTime;
 
         int maxSteps = 3;
+        if (GooseMovement.physicsPlan(accumulator, TIME_STEP, goosePlan)) {
+            int steps = (int) goosePlan[0];
+            for (int i = 0; i < steps; i++) {
+                physicsWorld.step(TIME_STEP, 4, 1);
+                accumulator -= TIME_STEP;
+            }
+            accumulator = goosePlan[1];
+            return;
+        }
 
         while (accumulator >= TIME_STEP && maxSteps > 0) {
             physicsWorld.step(TIME_STEP, 4, 1);

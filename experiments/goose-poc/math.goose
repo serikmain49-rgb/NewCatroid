@@ -47,3 +47,16 @@ export "newcatroid_visibility_batch" fn visibility_batch(data: f32[:], cam_x: f3
         }
     }
 }
+
+// Box2D time-step scheduling; the Box2D simulation itself remains in libGDX.
+export "newcatroid_physics_plan" fn physics_plan(accumulated: f32, step: f32, out: f32[:]) {
+    var remainder = accumulated;
+    var count = 0;
+    while remainder >= step && count < 3 {
+        remainder -= step;
+        count += 1;
+    }
+    if remainder >= step { remainder = remainder % step; }
+    out[0] = count as f32;
+    out[1] = remainder;
+}

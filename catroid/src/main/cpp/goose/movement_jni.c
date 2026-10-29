@@ -103,3 +103,25 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_visibilityBatch(JNIEnv *env, jcla
     pthread_mutex_unlock(&lock);
     return JNI_TRUE;
 }
+
+JNIEXPORT jboolean JNICALL
+Java_org_catrobat_catroid_fast2d_GooseMovement_physicsPlanNative(JNIEnv *env, jclass type,
+        jfloat accumulator, jfloat time_step, jfloatArray out) {
+    (void)type;
+    if (!out || (*env)->GetArrayLength(env, out) < 2 || !(time_step > 0.0f)) return JNI_FALSE;
+    pthread_mutex_lock(&lock);
+    if (!initialized) {
+        goose_init(0, NULL);
+        owner = pthread_self();
+        initialized = 1;
+    } else if (!pthread_equal(owner, pthread_self())) {
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    jfloat values[2];
+    sl_f32 slice = { values, 2 };
+    newcatroid_physics_plan(accumulator, time_step, slice);
+    pthread_mutex_unlock(&lock);
+    (*env)->SetFloatArrayRegion(env, out, 0, 2, values);
+    return (*env)->ExceptionCheck(env) ? JNI_FALSE : JNI_TRUE;
+}

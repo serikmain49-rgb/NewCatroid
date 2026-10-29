@@ -89,6 +89,24 @@ int main(int argc, char **argv) {
             }
         }
     }
-    puts("Goose movement, distance and visibility cases passed");
+    float time_step = 1.0f / 60.0f;
+    for (int i = 0; i < 100000; i++) {
+        float accumulator = sample() / 16.0f;
+        if (i == 0) accumulator = NAN;
+        if (i == 1) accumulator = INFINITY;
+        float expected_accumulator = accumulator;
+        int steps = 0;
+        while (expected_accumulator >= time_step && steps < 3) {
+            expected_accumulator -= time_step; steps++;
+        }
+        if (expected_accumulator >= time_step) expected_accumulator = fmodf(expected_accumulator, time_step);
+        float result[2]; sl_f32 output = { result, 2 };
+        newcatroid_physics_plan(accumulator, time_step, output);
+        if (result[0] != steps || !(same(result[1], expected_accumulator) ||
+              (isnan(result[1]) && isnan(expected_accumulator)))) {
+            fprintf(stderr, "Physics scheduler mismatch at case %d\n", i); return 1;
+        }
+    }
+    puts("Goose movement, distance, visibility and physics scheduler cases passed");
     return 0;
 }
