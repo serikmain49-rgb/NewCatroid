@@ -98,3 +98,10 @@ revision used by this branch. The user also has a separate
 Until that separate change is reconciled and tested, the Goose branch cannot
 be claimed to support the plugin's runtime-audio features. Normal plugin
 behavior has not been verified on a device either.
+
+The prior `NewCatroid-Runtime-Audio-Source-0.7.0.zip` source snapshot was
+reconciled against the GitHub base using three-way merges, without changing the
+Goose feature flag. This adds the optional audio host APIs and blocks required by
+Assistant 0.7.0, alongside their earlier automated test sources. The merge has
+not yet been built or tested on a device in this branch; audio codec behavior,
+plugin compatibility, permissions and existing projects remain unverified.

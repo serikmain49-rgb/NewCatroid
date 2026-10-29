@@ -1,0 +1,22 @@
+<resources>
+    <string name="runtime_audio_title">Imported audio</string>
+    <string name="runtime_audio_argument">Argument</string>
+    <string name="runtime_audio_result">Result</string>
+    <string name="formula_audio_name">Audio title</string>
+    <string name="formula_audio_duration">Audio duration</string>
+    <string name="formula_audio_position">Audio position</string>
+    <string name="formula_audio_exists">Audio exists</string>
+    <string name="formula_audio_error">Audio error</string>
+    <string name="formula_audio_state">Audio state</string>
+    <string name="formula_audio_id_parameter">(audio ID)</string>
+    <string-array name="runtime_audio_commands">
+        <item>Choose audio</item>
+        <item>Import audio</item>
+        <item>Play audio</item>
+        <item>Pause audio</item>
+        <item>Resume audio</item>
+        <item>Stop audio</item>
+        <item>Seek audio (s)</item>
+        <item>Audio volume (%)</item>
+    </string-array>
+</resources>

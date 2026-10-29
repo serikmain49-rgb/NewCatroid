@@ -112,6 +112,15 @@ jobs:
             --tests org.catrobat.catroid.test.content.project.ProjectTest \
             --tests org.catrobat.catroid.test.content.project.LoadProjectsTest \
             2>&1 | tee compatibility-results/gradle-test.log
+      - name: Run Assistant runtime audio host checks
+        shell: bash
+        run: |
+          set -o pipefail
+          json_jar=$(find "$HOME/.gradle/caches" -name 'json-20190722.jar' -type f -print -quit)
+          gdx_jar=$(find "$HOME/.gradle/caches" -name 'gdx-1.13.1.jar' -type f -print -quit)
+          test -n "$json_jar" && test -n "$gdx_jar"
+          python3 checks/runtime-audio/run_checks.py "$ANDROID_HOME/platforms/android-34/android.jar" "$gdx_jar" "$json_jar" 2>&1 | tee compatibility-results/audio-store.log
+          python3 checks/runtime-audio/session_checks.py "$json_jar" 2>&1 | tee compatibility-results/audio-session.log
       - name: Upload unit test reports
         if: always()
         uses: actions/upload-artifact@v4

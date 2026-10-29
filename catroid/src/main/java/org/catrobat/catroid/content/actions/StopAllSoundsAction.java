@@ -32,6 +32,9 @@ public class StopAllSoundsAction extends TemporalAction {
 	@Override
 	protected void update(float percent) {
 		SoundManager.getInstance().stopAllSounds();
+        org.catrobat.catroid.stage.StageActivity a = org.catrobat.catroid.stage.StageActivity.activeStageActivity == null
+            ? null : org.catrobat.catroid.stage.StageActivity.activeStageActivity.get();
+        if (a != null && a.runtimeAudio != null) a.runtimeAudio.submit(org.catrobat.catroid.audio.RuntimeAudioSession.Command.STOP, "");
 		MidiSoundManager.getInstance().stopAllSounds();
 	}
 }

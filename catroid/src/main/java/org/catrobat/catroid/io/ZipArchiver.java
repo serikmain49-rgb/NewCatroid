@@ -57,6 +57,8 @@ public class ZipArchiver {
 
 	private void writeZipEntriesToStream(ZipOutputStream zipOutputStream, List<File> files, String parentDir) throws IOException {
 		for (File file : files) {
+            if (file.getName().startsWith(".pending-audio-") && file.getParentFile() != null
+                    && file.getParentFile().getName().equals(org.catrobat.catroid.audio.ImportedAudioStore.DIRECTORY)) continue;
 			if (!file.exists()) {
 				throw new FileNotFoundException("File: " + file.getAbsolutePath() + " does NOT exist.");
 			}

@@ -575,6 +575,9 @@ public class FormulaElement implements Serializable {
         Object arg3 = additionalChildren.size() > 1 ? tryInterpretRecursive(additionalChildren.get(1), scope) : null;
 
         switch (function) {
+            case AUDIO_NAME: case AUDIO_DURATION: case AUDIO_POSITION: case AUDIO_EXISTS:
+            case AUDIO_ERROR: case AUDIO_STATE:
+                return org.catrobat.catroid.audio.RuntimeAudioSession.query(scope.getProject(), function.name(), String.valueOf(arg0));
             case CLAMP:
                 return interpretFunctionClamp(arg0, arg1, arg2);
             case DISTAN:

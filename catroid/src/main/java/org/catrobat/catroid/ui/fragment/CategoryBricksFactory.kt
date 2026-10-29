@@ -57,6 +57,7 @@ import org.catrobat.catroid.content.bricks.ApplyShaderToImageBrick
 import org.catrobat.catroid.content.bricks.ApplyTorqueBrick
 import org.catrobat.catroid.content.bricks.ArduinoSendDigitalValueBrick
 import org.catrobat.catroid.content.bricks.ArduinoSendPWMValueBrick
+import org.catrobat.catroid.content.bricks.RuntimeAudioBrick
 import org.catrobat.catroid.content.bricks.AskBrick
 import org.catrobat.catroid.content.bricks.AskGPTBrick
 import org.catrobat.catroid.content.bricks.AskGemini2Brick
@@ -1203,7 +1204,10 @@ open class CategoryBricksFactory {
 
             if (!isGroupingEnabled) {
                 val soundBrickList: MutableList<Brick> = ArrayList()
-                soundBrickList.add(PlaySoundBrick())
+                for (command in org.catrobat.catroid.audio.RuntimeAudioSession.Command.values()) {
+            soundBrickList.add(RuntimeAudioBrick(command, ""))
+        }
+        soundBrickList.add(PlaySoundBrick())
                 soundBrickList.add(PlaySoundAndWaitBrick())
                 soundBrickList.add(PlaySoundAtBrick(BrickValues.PLAY_AT_DEFAULT_OFFSET))
                 soundBrickList.add(SoundFileBrick("my_sound.mp3"))
@@ -1244,6 +1248,9 @@ open class CategoryBricksFactory {
         val template = PlayPreparedSoundBrick()
 
         soundBrickList.add(SubCategoryHeaderBrick(context.getString(R.string.subcategory_sound_playback), template))
+        for (command in org.catrobat.catroid.audio.RuntimeAudioSession.Command.values()) {
+            soundBrickList.add(RuntimeAudioBrick(command, ""))
+        }
         soundBrickList.add(PlaySoundBrick())
         soundBrickList.add(PlaySoundAndWaitBrick())
         soundBrickList.add(PlaySoundAtBrick(BrickValues.PLAY_AT_DEFAULT_OFFSET))
@@ -3080,6 +3087,7 @@ void main() {
         }
 
         when (brick) {
+            is RuntimeAudioBrick -> category = res.getString(R.string.category_sound)
             is AskBrick -> category = res.getString(R.string.category_looks)
             is AskSpeechBrick -> category = res.getString(R.string.category_sound)
             is LookRequestBrick -> category = res.getString(R.string.category_looks)

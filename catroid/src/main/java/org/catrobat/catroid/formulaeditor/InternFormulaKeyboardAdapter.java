@@ -113,7 +113,19 @@ public class InternFormulaKeyboardAdapter {
                 return buildDoubleParameterFunction(Functions.HTTP_RESPONSE_HEADER,
                         STRING, "my_request",
                         STRING, "Content-Type");
-			case R.string.formula_editor_function_sin:
+			case R.string.formula_audio_name:
+                return buildSingleParameterFunction(Functions.AUDIO_NAME, STRING, "audio:id");
+            case R.string.formula_audio_duration:
+                return buildSingleParameterFunction(Functions.AUDIO_DURATION, STRING, "audio:id");
+            case R.string.formula_audio_position:
+                return buildSingleParameterFunction(Functions.AUDIO_POSITION, STRING, "audio:id");
+            case R.string.formula_audio_exists:
+                return buildSingleParameterFunction(Functions.AUDIO_EXISTS, STRING, "audio:id");
+            case R.string.formula_audio_error:
+                return buildFunctionWithoutParametersAndBrackets(Functions.AUDIO_ERROR);
+            case R.string.formula_audio_state:
+                return buildFunctionWithoutParametersAndBrackets(Functions.AUDIO_STATE);
+            case R.string.formula_editor_function_sin:
 				return buildSingleParameterFunction(Functions.SIN, NUMBER, "90");
 			case R.string.formula_editor_function_cos:
 				return buildSingleParameterFunction(Functions.COS, NUMBER, "360");

@@ -160,6 +160,7 @@ public final class BrickInfo {
         add(ChangeSizeByNBrick.class, "Изменяет размер спрайта");
         add(HideBrick.class, "Скрывает спрайт (он становится невидимым)");
         add(ShowBrick.class, "Показывает спрайт (он снова видимый)");
+        add(RuntimeAudioBrick.class, "Выбор, импорт и управление своей музыкой во время игры. Результат в переменную.");
         add(AskBrick.class, "Спрашивает вопрос и сохраняет введенное значение");
         add(BigAskBrick.class, "Расширенный блок \"Спросить\"");
         add(SetTransparencyBrick.class, "Задает прозрачность спрайту");
@@ -599,6 +600,7 @@ public final class BrickInfo {
         add(ChangeSizeByNBrick.class, "Changes the sprite's size.");
         add(HideBrick.class, "Hides the sprite (makes it invisible).");
         add(ShowBrick.class, "Shows the sprite (makes it visible again).");
+        add(RuntimeAudioBrick.class, "Select, import and control project music while playing. Assigns a result to a variable.");
         add(AskBrick.class, "Asks a question and saves the entered value.");
         add(BigAskBrick.class, "An advanced 'Ask' block.");
         add(SetTransparencyBrick.class, "Sets the sprite's transparency.");
@@ -1018,6 +1020,7 @@ public final class BrickInfo {
         add(ChangeSizeByNBrick.class, "Altera o tamanho do sprite.");
         add(HideBrick.class, "Esconde o sprite (torna-o invisível).");
         add(ShowBrick.class, "Mostra o sprite (torna-o visível novamente).");
+        add(RuntimeAudioBrick.class, "Seleciona, importa e controla música no jogo. Salva o resultado em uma variável.");
         add(AskBrick.class, "Faz uma pergunta e salva o valor inserido.");
         add(BigAskBrick.class, "Um bloco avançado de 'Perguntar'.");
         add(SetTransparencyBrick.class, "Define a transparência do sprite.");

@@ -1751,7 +1751,13 @@ public class ActionFactory extends Actions {
 		return action;
 	}
 
-	public Action createAskAction(Sprite sprite, SequenceAction sequence, Formula questionFormula,
+	public Action createRuntimeAudioAction(Sprite sprite, SequenceAction sequence,
+            org.catrobat.catroid.audio.RuntimeAudioSession.Command command, Formula value, UserVariable result) {
+        Scope scope = new Scope(ProjectManager.getInstance().getCurrentProject(), sprite, sequence);
+        return new RuntimeAudioAction(scope, command, value, result);
+    }
+
+    public Action createAskAction(Sprite sprite, SequenceAction sequence, Formula questionFormula,
 			UserVariable answerVariable) {
 		AskAction action = Actions.action(AskAction.class);
 		Scope scope = new Scope(ProjectManager.getInstance().getCurrentProject(), sprite, sequence);
