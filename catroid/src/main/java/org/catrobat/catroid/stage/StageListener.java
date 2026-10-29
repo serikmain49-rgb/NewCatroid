@@ -1578,6 +1578,7 @@ public class StageListener implements ApplicationListener {
         long framePhysicsTime = 0;
         long frameLogicTime = 0;
         long endLogic = 0;
+        boolean benchmarkFrameCompleted = false;
 		try {
 			Look.tickGlobalFrame();
 
@@ -1822,6 +1823,7 @@ public class StageListener implements ApplicationListener {
             if (hasAfterUpdateScripts && !paused) {
                 executeAfterUpdateScripts(Gdx.graphics.getDeltaTime());
             }
+            benchmarkFrameCompleted = true;
 		} catch (Exception e) {
 			Log.e("RENDER_CRASH", "Fatal error during render loop", e);
 		}
@@ -1834,8 +1836,11 @@ public class StageListener implements ApplicationListener {
                 endRender - endLogic
         );
         if (org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_BENCHMARK) {
+            boolean validFrame = !paused && benchmarkFrameCompleted && endLogic != 0;
+            long sectionTime = validFrame
+                    ? framePhysicsTime + frameLogicTime + Math.max(0, endRender - endLogic) : 0;
             org.catrobat.catroid.utils.FrameBenchmark.Result result = gooseBenchmark.sample(
-                    endRender, !paused, framePhysicsTime + frameLogicTime + Math.max(0, endRender - endLogic));
+                    endRender, validFrame, sectionTime);
             if (result != null) {
                 Log.i("GOOSE_BENCHMARK", String.format(java.util.Locale.US,
                         "frames=%d fps=%.2f low1=%.2f measured_sections_ms=%.3f",
