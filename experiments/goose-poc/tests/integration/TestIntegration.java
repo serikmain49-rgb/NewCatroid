@@ -46,6 +46,10 @@ public class TestIntegration {
     if (!GooseMovement.sortDepth(ids, depths, 3) || ids[0] != 7 || ids[1] != 42 || ids[2] != 19 || ids[3] != 900)
       throw new AssertionError("stable depth sort mismatch");
     if (GooseMovement.sortDepth(ids, depths, 5)) throw new AssertionError("invalid depth count");
+    int[] sortedIds = {9, 8, 7, 6}; float[] sortedDepths = {-0.0f, 0.0f, 1f, Float.POSITIVE_INFINITY};
+    if (!GooseMovement.sortDepth(sortedIds, sortedDepths, 4)
+        || sortedIds[0] != 9 || sortedIds[1] != 8 || sortedIds[2] != 7 || sortedIds[3] != 6)
+      throw new AssertionError("sorted depth fast path changed order");
     for (int trial = 0; trial < 300; trial++) {
       int count = trial % 61 == 0 ? 2000 : trial % 257;
       int[] actualIds = new int[count], expectedIds = new int[count];

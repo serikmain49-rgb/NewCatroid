@@ -66,9 +66,12 @@ export "newcatroid_physics_plan" fn physics_plan(accumulated: f32, step: f32, ou
 // The caller provides scratch arrays of at least ids.len elements.
 export "newcatroid_sort_depth" fn sort_depth(ids: i32[:], depths: f32[:], scratch_ids: i32[:], scratch_depths: f32[:]) {
     var has_nan = false;
+    var sorted = true;
     for i in 0..ids.len {
         if depths[i] != depths[i] { has_nan = true; }
+        if i > 0 && depths[i - 1] > depths[i] { sorted = false; }
     }
+    if !has_nan && sorted { return; }
     if has_nan {
         for i in 1..ids.len {
             let key = ids[i];
