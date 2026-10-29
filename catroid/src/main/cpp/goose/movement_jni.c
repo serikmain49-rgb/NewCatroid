@@ -185,11 +185,9 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_formulaNumericNative(JNIEnv *env,
     }
     if (depth != 1) return JNI_FALSE;
     pthread_mutex_lock(&lock);
-    if (!initialized) {
-        goose_init(0, NULL);
-        goose_owner_thread = 1;
-        initialized = 1;
-    } else if (!goose_owner_thread) {
+    /* Formula evaluation also occurs in editor/UI code. Never let it claim
+       the runtime before the game/render thread has initialized Goose. */
+    if (!initialized || !goose_owner_thread) {
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }
@@ -199,4 +197,18 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_formulaNumericNative(JNIEnv *env,
     pthread_mutex_unlock(&lock);
     (*env)->SetDoubleArrayRegion(env, output, 0, 1, &result);
     return (*env)->ExceptionCheck(env) ? JNI_FALSE : JNI_TRUE;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_org_catrobat_catroid_fast2d_GooseMovement_initializeForGameThread(JNIEnv *env, jclass type) {
+    (void)env; (void)type;
+    pthread_mutex_lock(&lock);
+    if (!initialized) {
+        goose_init(0, NULL);
+        goose_owner_thread = 1;
+        initialized = 1;
+    }
+    jboolean result = goose_owner_thread ? JNI_TRUE : JNI_FALSE;
+    pthread_mutex_unlock(&lock);
+    return result;
 }

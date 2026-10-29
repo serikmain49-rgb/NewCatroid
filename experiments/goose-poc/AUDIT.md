@@ -131,3 +131,10 @@ programs. The original production `FormulaElement` integration and the new
 Android test still need a successful Android CI run. This prototype is rebuilt
 on every evaluation to avoid caching stale mutable formula trees, and has no
 measured speed benefit. It is disabled by default.
+
+Formula evaluation may also happen on an editor or Android UI thread. Its JNI
+entry therefore cannot initialize or take ownership of the Goose runtime. With
+formula lowering enabled, `StageListener.render` explicitly attempts to
+initialize on the game render thread before executing scripts; calls from other
+threads or after the original owner exits fall back to Java. The pinned Goose
+runtime still does not support transferring its owner to a replacement thread.

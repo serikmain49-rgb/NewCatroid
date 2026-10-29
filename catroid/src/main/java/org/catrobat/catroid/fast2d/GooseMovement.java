@@ -75,6 +75,18 @@ public final class GooseMovement {
         }
     }
 
+    /** Called by StageListener on its render thread before executing game scripts. */
+    public static boolean prepareGameThread() {
+        if (!AVAILABLE) return false;
+        try {
+            return initializeForGameThread();
+        } catch (LinkageError error) {
+            return false;
+        }
+    }
+
+    private static native boolean initializeForGameThread();
+
     /** Evaluate a bounded numeric postfix program; false leaves the Java path authoritative. */
     public static boolean formulaNumeric(int[] ops, double[] values, int count, double[] out) {
         if (!AVAILABLE) return false;

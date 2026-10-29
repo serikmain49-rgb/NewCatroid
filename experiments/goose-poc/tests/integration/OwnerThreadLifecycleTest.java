@@ -3,10 +3,12 @@ import org.catrobat.catroid.fast2d.GooseMovement;
 
 public final class OwnerThreadLifecycleTest {
     public static void main(String[] args) throws Exception {
+        if (GooseMovement.formulaNumeric(new int[]{0}, new double[]{1}, 1, new double[1]))
+            throw new AssertionError("formula evaluation must not claim the Goose runtime");
         AtomicReference<Throwable> failure = new AtomicReference<>();
         Thread owner = new Thread(() -> {
             try {
-                if (!GooseMovement.update(0,0,0,0,0,0,0,0,new float[4]))
+                if (!GooseMovement.prepareGameThread() || !GooseMovement.update(0,0,0,0,0,0,0,0,new float[4]))
                     throw new AssertionError("initializing thread did not get Goose");
             } catch (Throwable error) { failure.set(error); }
         });

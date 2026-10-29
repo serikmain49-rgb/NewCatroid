@@ -1565,8 +1565,14 @@ public class StageListener implements ApplicationListener {
 	public int getVmWidth() { return (int) vmWidth; }
 	public int getVmHeight() { return (int) vmHeight; }
 
+    private boolean gooseGameThreadAttempted;
+
 	@Override
 	public void render() {
+        if (org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_FORMULA && !gooseGameThreadAttempted) {
+            gooseGameThreadAttempted = true;
+            org.catrobat.catroid.fast2d.GooseMovement.prepareGameThread();
+        }
         processPendingNotificationActions();
 
         long framePhysicsTime = 0;

@@ -40,6 +40,8 @@ public final class GooseNumericProgramTest {
         }
     }
     public static void main(String[] args) {
+        if (!GooseMovement.prepareGameThread())
+            throw new AssertionError("could not initialize Goose on test thread");
         GooseNumericProgram program = new GooseNumericProgram();
         for (int i = 0; i < 20000; i++) {
             FormulaElement expression = tree(5);
