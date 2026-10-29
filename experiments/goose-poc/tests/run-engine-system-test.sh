@@ -27,3 +27,6 @@ printf '%s\n' 'package org.catrobat.catroid; public final class BuildConfig { pu
   "$src/components/MovementComponent.java" "$src/components/TransformComponent.java" "$src/components/TextureComponent.java" "$src/components/PhysicsComponent.java" \
   "$src/systems/Fast2DMovementSystem.java" "$src/systems/Fast2DRenderSystem.java" "$src/systems/Fast2DPhysicsSystem.java" "$testroot/FallbackSystemTest.java"
 "$JAVA_HOME/bin/java" -cp "$OUT_DIR/fallback-classes" FallbackSystemTest
+
+"$JAVA_HOME/bin/javac" -d "$OUT_DIR/classes" "$root/catroid/src/main/java/org/catrobat/catroid/utils/FrameBenchmark.java" "$testroot/FrameBenchmarkTest.java"
+"$JAVA_HOME/bin/java" -cp "$OUT_DIR/classes" FrameBenchmarkTest

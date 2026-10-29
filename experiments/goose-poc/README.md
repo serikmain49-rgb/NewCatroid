@@ -124,3 +124,12 @@ it is not a port of Box2D and is not a measured speed improvement.
 JNI bridge (movement, visibility, 3D distance and physics scheduling). It has
 not yet been run. It must be built with `-PgooseFast2D=true`; passing a host test
 or starting the app does not prove this device test passed.
+
+For repeatable measurements on a real device, an optional frame-window logger is
+available with `-PgooseBenchmark=true` (with or without `-PgooseFast2D=true`).
+`GOOSE_BENCHMARK` logs the number of frame intervals, average FPS, FPS computed
+from the slowest 1% of intervals, and the average of the existing measured
+physics/logic/render sections. Sampling pauses while the stage is paused. The
+section time is a CPU-side approximation, not GPU time or total process CPU;
+this logger does not measure load time, memory, battery, temperature or draw
+calls. No performance results are included or implied.

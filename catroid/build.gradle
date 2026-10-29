@@ -183,6 +183,7 @@ android {
         buildConfigField "boolean", "FEATURE_POCKETENSOR_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_FAST2D_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_GOOSE_FAST2D", (project.findProperty("gooseFast2D") == "true").toString()
+        buildConfigField "boolean", "FEATURE_GOOSE_BENCHMARK", (project.findProperty("gooseBenchmark") == "true").toString()
         buildConfigField "boolean", "FEATURE_THREED_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_INTERNET_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_LEGO_NXT_ENABLED", "true"

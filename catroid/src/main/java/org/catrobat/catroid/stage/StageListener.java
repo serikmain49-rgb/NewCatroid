@@ -236,6 +236,8 @@ public class StageListener implements ApplicationListener {
 	private float cameraRotation = 0f;
 
     public FastTwoDManager fastTwoDManager;
+    private final org.catrobat.catroid.utils.FrameBenchmark gooseBenchmark = org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_BENCHMARK
+            ? new org.catrobat.catroid.utils.FrameBenchmark() : null;
 
 	public void setMaxViewPort(Resolution maxViewPort) {
 		this.maxViewPort = maxViewPort;
@@ -1824,6 +1826,15 @@ public class StageListener implements ApplicationListener {
                 frameLogicTime,
                 endRender - endLogic
         );
+        if (org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_BENCHMARK) {
+            org.catrobat.catroid.utils.FrameBenchmark.Result result = gooseBenchmark.sample(
+                    endRender, !paused, framePhysicsTime + frameLogicTime + Math.max(0, endRender - endLogic));
+            if (result != null) {
+                Log.i("GOOSE_BENCHMARK", String.format(java.util.Locale.US,
+                        "frames=%d fps=%.2f low1=%.2f measured_sections_ms=%.3f",
+                        result.frames, result.fps, result.onePercentLowFps, result.measuredSectionMs));
+            }
+        }
 	}
 
     private void printPhysicsLabelOnScreen() {
