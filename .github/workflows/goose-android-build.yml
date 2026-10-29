@@ -47,10 +47,22 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 35
     steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
       - uses: actions/download-artifact@v4
         with:
           name: newcatroid-goose-debug
           path: goose-build-results
+      - name: Install Android build tools
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
       - name: Enable KVM
         run: |
           echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
@@ -65,13 +77,16 @@ jobs:
           disk-size: 6G
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           script: |
+            set -o pipefail
             mkdir -p emulator-results
+            trap 'adb logcat -d -v time > emulator-results/logcat.txt || true' EXIT
             adb logcat -c
             adb install -r goose-build-results/*.apk
             adb shell monkey -p org.DanVexTeam.NewCatroid -c android.intent.category.LAUNCHER 1
             sleep 20
-            adb logcat -d -v time > emulator-results/logcat.txt
             adb shell pidof org.DanVexTeam.NewCatroid
+            chmod +x ./gradlew
+            ./gradlew :catroid:connectedDanvexDebugAndroidTest -PgooseFast2D=true --no-daemon --stacktrace -Pandroid.testInstrumentationRunnerArguments.class=org.catrobat.catroid.test.goose.GooseNativeDeviceTest 2>&1 | tee emulator-results/instrumentation.log
       - name: Upload emulator log
         if: always()
         uses: actions/upload-artifact@v4
