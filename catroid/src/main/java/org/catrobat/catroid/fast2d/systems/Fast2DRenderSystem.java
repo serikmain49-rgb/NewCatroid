@@ -24,6 +24,7 @@ public class Fast2DRenderSystem extends BaseEntitySystem {
 
     private float camX, camY, camHalfW, camHalfH;
     private float[] visibility = new float[0];
+    private float[] sortDepths = new float[0];
 
     public Fast2DRenderSystem(SpriteBatch batch) {
         super(Aspect.all(TransformComponent.class, TextureComponent.class));
@@ -55,7 +56,13 @@ public class Fast2DRenderSystem extends BaseEntitySystem {
         int size = activeEntities.size();
 
         if (needSort && size > 1) {
-            insertionSort(ids, size);
+            boolean sorted = false;
+            if (GooseMovement.isAvailable()) {
+                if (sortDepths.length < size) sortDepths = Arrays.copyOf(sortDepths, size);
+                for (int i = 0; i < size; i++) sortDepths[i] = mTransform.get(ids[i]).z;
+                sorted = GooseMovement.sortDepth(ids, sortDepths, size);
+            }
+            if (!sorted) insertionSort(ids, size);
             needSort = false;
         }
 

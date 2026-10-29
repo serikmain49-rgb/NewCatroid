@@ -60,3 +60,19 @@ export "newcatroid_physics_plan" fn physics_plan(accumulated: f32, step: f32, ou
     out[0] = count as f32;
     out[1] = remainder;
 }
+
+// Stable insertion sort using exactly Java's float > comparison semantics.
+export "newcatroid_sort_depth" fn sort_depth(ids: i32[:], depths: f32[:]) {
+    for i in 1..ids.len {
+        let key = ids[i];
+        let depth = depths[i];
+        var j = i;
+        while j > 0 && depths[j - 1] > depth {
+            ids[j] = ids[j - 1];
+            depths[j] = depths[j - 1];
+            j -= 1;
+        }
+        ids[j] = key;
+        depths[j] = depth;
+    }
+}

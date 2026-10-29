@@ -126,3 +126,35 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_physicsPlanNative(JNIEnv *env, jc
     (*env)->SetFloatArrayRegion(env, out, 0, 2, values);
     return (*env)->ExceptionCheck(env) ? JNI_FALSE : JNI_TRUE;
 }
+
+JNIEXPORT jboolean JNICALL
+Java_org_catrobat_catroid_fast2d_GooseMovement_sortDepthNative(JNIEnv *env, jclass type,
+        jintArray ids, jfloatArray depths, jint count) {
+    (void)type;
+    if (!ids || !depths || count < 0 || count > (*env)->GetArrayLength(env, ids) ||
+            count > (*env)->GetArrayLength(env, depths)) return JNI_FALSE;
+    pthread_mutex_lock(&lock);
+    if (!initialized) {
+        goose_init(0, NULL);
+        goose_owner_thread = 1;
+        initialized = 1;
+    } else if (!goose_owner_thread) {
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    jint *values = (*env)->GetIntArrayElements(env, ids, NULL);
+    if (!values) { pthread_mutex_unlock(&lock); return JNI_FALSE; }
+    jfloat *z = (*env)->GetFloatArrayElements(env, depths, NULL);
+    if (!z) {
+        (*env)->ReleaseIntArrayElements(env, ids, values, JNI_ABORT);
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    sl_i32 ids_slice = { values, count };
+    sl_f32 depths_slice = { z, count };
+    newcatroid_sort_depth(ids_slice, depths_slice);
+    (*env)->ReleaseFloatArrayElements(env, depths, z, 0);
+    (*env)->ReleaseIntArrayElements(env, ids, values, 0);
+    pthread_mutex_unlock(&lock);
+    return JNI_TRUE;
+}

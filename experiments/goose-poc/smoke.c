@@ -107,6 +107,28 @@ int main(int argc, char **argv) {
             fprintf(stderr, "Physics scheduler mismatch at case %d\n", i); return 1;
         }
     }
-    puts("Goose movement, distance, visibility and physics scheduler cases passed");
+    for (int trial = 0; trial < 1000; trial++) {
+        int32_t ids[33], expected_ids[33];
+        float depths[33], expected_depths[33];
+        for (int i = 0; i < 33; i++) {
+            ids[i] = expected_ids[i] = i;
+            depths[i] = expected_depths[i] = (trial % 3 == 0) ? (float)(i % 4) : sample();
+        }
+        if (trial % 7 == 0) depths[12] = expected_depths[12] = NAN;
+        if (trial % 11 == 0) depths[15] = expected_depths[15] = INFINITY;
+        for (int i = 1; i < 33; i++) {
+            int32_t key = expected_ids[i]; float z = expected_depths[i]; int j = i;
+            while (j > 0 && expected_depths[j-1] > z) {
+                expected_ids[j] = expected_ids[j-1]; expected_depths[j] = expected_depths[j-1]; j--;
+            }
+            expected_ids[j] = key; expected_depths[j] = z;
+        }
+        sl_i32 id_slice = { ids, 33 }; sl_f32 depth_slice = { depths, 33 };
+        newcatroid_sort_depth(id_slice, depth_slice);
+        for (int i = 0; i < 33; i++) if (ids[i] != expected_ids[i] || !same(depths[i], expected_depths[i])) {
+            fprintf(stderr, "Depth order mismatch at trial %d index %d\n", trial, i); return 1;
+        }
+    }
+    puts("Goose movement, visibility, distance, physics schedule and depth cases passed");
     return 0;
 }

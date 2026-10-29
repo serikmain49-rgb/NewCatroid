@@ -25,6 +25,10 @@ public class GooseNativeDeviceTest {
         assertEquals(1f, rectangles[4], 0f);
         assertEquals(0f, rectangles[9], 0f);
 
+        int[] ids = {42, 7, 19}; float[] depths = {2, -1, 2};
+        assertTrue(GooseMovement.sortDepth(ids, depths, 3));
+        assertEquals(7, ids[0]); assertEquals(42, ids[1]); assertEquals(19, ids[2]);
+
         float[] distance = new float[1];
         assertTrue(GooseMovement.distance(1, 2, 3, 4, 6, 3, distance));
         assertEquals(5f, distance[0], 0f);

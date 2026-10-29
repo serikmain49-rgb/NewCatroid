@@ -133,3 +133,9 @@ physics/logic/render sections. Sampling pauses while the stage is paused. The
 section time is a CPU-side approximation, not GPU time or total process CPU;
 this logger does not measure load time, memory, battery, temperature or draw
 calls. No performance results are included or implied.
+
+
+The opt-in Fast2D renderer also delegates stable depth sorting to Goose,
+while preserving Java's `>` comparison semantics and using the previous sort
+as fallback. Host tests include equal depths, NaN and infinity. These new
+changes require fresh CI and device verification; no performance claim is made.

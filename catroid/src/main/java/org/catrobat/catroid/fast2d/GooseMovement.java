@@ -29,6 +29,15 @@ public final class GooseMovement {
         }
     }
 
+    public static boolean sortDepth(int[] ids, float[] depths, int count) {
+        if (!AVAILABLE) return false;
+        try {
+            return sortDepthNative(ids, depths, count);
+        } catch (LinkageError error) {
+            return false;
+        }
+    }
+
     public static boolean physicsPlan(float accumulator, float timeStep, float[] out) {
         if (!AVAILABLE) return false;
         try {
@@ -66,6 +75,7 @@ public final class GooseMovement {
         }
     }
 
+    private static native boolean sortDepthNative(int[] ids, float[] depths, int count);
     private static native boolean physicsPlanNative(float accumulator, float timeStep, float[] out);
     private static native boolean visibilityBatch(float[] data, int count, float camX, float camY, float halfW, float halfH);
     private static native boolean distance3d(float ax, float ay, float az, float bx, float by, float bz, float[] out);

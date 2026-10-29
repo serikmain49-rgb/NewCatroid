@@ -42,6 +42,10 @@ public class TestIntegration {
     if (Float.floatToIntBits(remain) != Float.floatToIntBits(physics[1]))
       throw new AssertionError("physics remainder mismatch");
     if (GooseMovement.physicsPlan(1f, 0f, physics)) throw new AssertionError("invalid step accepted");
+    int[] ids = {42, 7, 19, 900}; float[] depths = {2, -1, 2, 99};
+    if (!GooseMovement.sortDepth(ids, depths, 3) || ids[0] != 7 || ids[1] != 42 || ids[2] != 19 || ids[3] != 900)
+      throw new AssertionError("stable depth sort mismatch");
+    if (GooseMovement.sortDepth(ids, depths, 5)) throw new AssertionError("invalid depth count");
     Thread t = new Thread(() -> { if (GooseMovement.update(0,0,0,0,0,0,0,0,new float[4])) throw new AssertionError("cross thread accepted"); });
     final Throwable[] failure = new Throwable[1];
     t.setUncaughtExceptionHandler((thread,error) -> failure[0] = error);

@@ -3453,6 +3453,8 @@ typedef struct { gs_rhdr *hdr; gs_stack *stk; gs_rhdr *fl; gs_stack *flstk; } gs
 
 typedef struct { gs_f32 *data; int64_t len; } sl_f32;
 
+typedef struct { gs_i32 *data; int64_t len; } sl_i32;
+
 typedef struct { uint8_t *data; int64_t len; } sl_u8;
 
 #pragma pack(pop)
@@ -4463,6 +4465,7 @@ static void movement_batch_g(void *p0_data, int64_t p0_len, gs_f32 p1);
 static gs_f32 distance3d_g(gs_f32 p0, gs_f32 p1, gs_f32 p2, gs_f32 p3, gs_f32 p4, gs_f32 p5);
 static void visibility_batch_g(void *p0_data, int64_t p0_len, gs_f32 p1, gs_f32 p2, gs_f32 p3, gs_f32 p4);
 static void physics_plan_g(gs_f32 p0, gs_f32 p1, void *p2_data, int64_t p2_len);
+static void sort_depth_g(void *p0_data, int64_t p0_len, void *p1_data, int64_t p1_len);
 
 /* ---- code ---- */
 static gs_i32 add_g(gs_i32 a_g, gs_i32 b_g) {
@@ -4618,6 +4621,65 @@ static void physics_plan_g(gs_f32 accumulated_g, gs_f32 step_g, void *out_g_data
     return;
 }
 
+static void sort_depth_g(void *ids_g_data, int64_t ids_g_len, void *depths_g_data, int64_t depths_g_len) {
+    sl_i32 ids_g; ids_g.data = ids_g_data; ids_g.len = ids_g_len;
+    sl_f32 depths_g; depths_g.data = depths_g_data; depths_g.len = depths_g_len;
+    gs_i64 t0;
+    gs_i64 t1;
+    gs_i64 t4;
+    gs_i32 key_g;
+    gs_i64 t6;
+    gs_f32 depth_g;
+    gs_i64 j_g;
+    gs_i64 t10;
+    gs_i64 t12;
+    gs_i64 t15;
+    gs_i64 t17;
+    gs_i64 t20;
+    gs_i64 t22;
+    gs_i64 t25;
+    t0 = 1;
+    t1 = (ids_g.len);
+    for (gs_i64 i_g = t0; i_g < t1; i_g++) {
+        t4 = i_g;
+        gs_i32 *t5 = ids_g.data;
+        key_g = t5[t4];
+        t6 = i_g;
+        gs_f32 *t7 = depths_g.data;
+        depth_g = t7[GS_IDX((int64_t)(t6), depths_g.len, gs_file0, 68)];
+        j_g = i_g;
+        for (;;) {
+            if (!((uint8_t)((gs_i64)((gs_i64)(j_g)) > (gs_i64)(0)))) goto L8;
+            t10 = gs_sub_i64((gs_i64)(j_g), 1, gs_file0, 70);
+            gs_f32 *t11 = depths_g.data;
+            if (!((uint8_t)((gs_f32)((gs_f32)(t11[t10])) > (gs_f32)(depth_g)))) goto L8;
+            t12 = j_g;
+            gs_i32 *t13 = ids_g.data;
+            gs_i32 *t14 = &(t13[t12]);
+            t15 = gs_sub_i64((gs_i64)(j_g), 1, gs_file0, 71);
+            gs_i32 *t16 = ids_g.data;
+            (*t14) = t16[t15];
+            t17 = j_g;
+            gs_f32 *t18 = depths_g.data;
+            gs_f32 *t19 = &(t18[t17]);
+            t20 = gs_sub_i64((gs_i64)(j_g), 1, gs_file0, 72);
+            gs_f32 *t21 = depths_g.data;
+            (*t19) = t21[t20];
+            j_g = gs_sub_i64(j_g, 1, gs_file0, 73);
+        }
+        L8:;
+        t22 = j_g;
+        gs_i32 *t23 = ids_g.data;
+        gs_i32 *t24 = &(t23[t22]);
+        (*t24) = key_g;
+        t25 = j_g;
+        gs_f32 *t26 = depths_g.data;
+        gs_f32 *t27 = &(t26[t25]);
+        (*t27) = depth_g;
+    }
+    return;
+}
+
 static void gs_init_globals(void) {
 }
 
@@ -4674,4 +4736,10 @@ void newcatroid_physics_plan(gs_f32 gs_export_arg0_7, gs_f32 gs_export_arg1_7, s
     if (!gs_program_initialized)
         gs_panic("goose_init must be called before exported functions");
     physics_plan_g(gs_export_arg0_7, gs_export_arg1_7, gs_export_arg2_5.data, gs_export_arg2_5.len);
+}
+
+void newcatroid_sort_depth(sl_i32 gs_export_arg0_8, sl_f32 gs_export_arg1_8) {
+    if (!gs_program_initialized)
+        gs_panic("goose_init must be called before exported functions");
+    sort_depth_g(gs_export_arg0_8.data, gs_export_arg0_8.len, gs_export_arg1_8.data, gs_export_arg1_8.len);
 }
