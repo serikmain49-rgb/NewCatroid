@@ -47,6 +47,7 @@ public class GooseBenchmarkSceneTest {
             manager.loadProject(dir, InstrumentationRegistry.getInstrumentation().getTargetContext());
             Project project = manager.getCurrentProject();
             manager.setCurrentProject(project);
+            manager.setStartScene(project.getDefaultScene());
             Sprite sprite = null;
             for (Sprite candidate : project.getDefaultScene().getSpriteList())
                 if ("Racoon-4".equals(candidate.getName())) sprite = candidate;

@@ -37,6 +37,7 @@ public class GooseStageProjectTest {
             manager.resetProjectManager();
             manager.loadProject(dir, InstrumentationRegistry.getInstrumentation().getTargetContext());
             manager.setCurrentProject(manager.getCurrentProject());
+            manager.setStartScene(manager.getCurrentProject().getDefaultScene());
             Sprite fixture = null;
             for (Sprite sprite : manager.getCurrentProject().getDefaultScene().getSpriteList())
                 if ("Racoon-4".equals(sprite.getName())) fixture = sprite;
