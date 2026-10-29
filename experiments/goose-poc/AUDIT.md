@@ -56,3 +56,28 @@ iterates and calls the scalar Goose functions. On Linux, 512 objects over 120
 frames matched Java bit-for-bit, with malformed input and empty-array tests;
 the newer Android test has been compiled but not run on a device. This remains
 unintegrated and unbenchmarked.
+
+## Frame ordering and compatibility observations
+
+Inspection of `StageListener.render` found a paused guard around scene update,
+2D Box2D stepping and scene2d `act`; later in the same rendering path it updates
+3D, renders 3D, calls `FastTwoDManager.updateAndRender`, then draws the stage.
+Fast2D is updated only when not paused and its main render target is enabled.
+The deltas are not all identical: scene update uses a capped delta, while Fast2D
+receives `Gdx.graphics.getDeltaTime()`. Do not unify timing or reorder those
+operations without compatibility tests. There are additional stage paths,
+including an earlier update path around `StageListener.java:530`, which require
+separate tracing.
+
+`FastTwoDManager.init` registers the movement, physics and render systems in
+that order. `Fast2DPhysicsSystem` steps Box2D in fixed 1/60-second increments
+with a maximum of three steps and overwrites transforms from awake bodies.
+Movement is not a replacement for Box2D. `Fast2DRenderSystem` already uses a
+SpriteBatch, a camera rectangle visibility check, and a dirty flag for sorting;
+any additional culling or batching needs measurement and regression tests.
+
+`ide/ProjectManager.kt` reads and writes a `project.json` for its IDE project
+configuration; this is not sufficient evidence that it is the Assistant bridge's
+exported `project.json`. The bridge format and Assistant plugin must be audited
+from their own source. Existing XStream compatibility classes remain in use and
+must not be replaced on the assumption that all projects share this IDE format.
