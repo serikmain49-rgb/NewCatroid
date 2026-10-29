@@ -112,10 +112,14 @@ public final class RuntimeAudioSession {
                 String title="Audio";
                 try(Cursor c=activity.getContentResolver().query(uri,new String[]{OpenableColumns.DISPLAY_NAME},null,null,null)){if(c!=null&&c.moveToFirst())title=c.getString(0);}
                 InputStream in=activity.getContentResolver().openInputStream(uri);if(in==null)throw new IOException("CANNOT_READ_SELECTION");
-                String id=store.importAudio(in,title,new AndroidAudioValidator(),job);finish(job,id);
-            }catch(Exception e){if(!job.get())fail(job,errorCode(e));}
-            finally{main.post(()->{if(!closed&&state.equals("importing"))state=player==null?"stopped":(wantPlay?(foreground?"playing":"paused_background"):"paused");});}
+                String id=store.importAudio(in,title,new AndroidAudioValidator(),job);
+                main.post(()->completeImport(job,id,null));
+            }catch(Exception e){String code=errorCode(e);main.post(()->completeImport(job,null,code));}
         });
+    }
+    private synchronized void completeImport(Job job,String id,String error){
+        if(!closed&&active==job&&state.equals("importing"))state=player==null?"stopped":(wantPlay?(foreground?"playing":"paused_background"):"paused");
+        if(error==null)finish(job,id);else if(!job.get())fail(job,error);
     }
     private void play(Job job,String id)throws Exception{
         File track=store.audio(id);store.metadata(id);releasePlayer();
