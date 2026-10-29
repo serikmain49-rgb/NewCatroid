@@ -151,7 +151,9 @@ int main(int argc, char **argv) {
             expected_ids[j] = key; expected_depths[j] = z;
         }
         sl_i32 id_slice = { ids, 33 }; sl_f32 depth_slice = { depths, 33 };
-        newcatroid_sort_depth(id_slice, depth_slice);
+        int32_t scratch_ids[33]; float scratch_depths[33];
+        sl_i32 id_work = { scratch_ids, 33 }; sl_f32 depth_work = { scratch_depths, 33 };
+        newcatroid_sort_depth(id_slice, depth_slice, id_work, depth_work);
         for (int i = 0; i < 33; i++) if (ids[i] != expected_ids[i] || !same(depths[i], expected_depths[i])) {
             fprintf(stderr, "Depth order mismatch at trial %d index %d\n", trial, i); return 1;
         }

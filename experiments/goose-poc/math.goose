@@ -61,19 +61,71 @@ export "newcatroid_physics_plan" fn physics_plan(accumulated: f32, step: f32, ou
     out[1] = remainder;
 }
 
-// Stable insertion sort using exactly Java's float > comparison semantics.
-export "newcatroid_sort_depth" fn sort_depth(ids: i32[:], depths: f32[:]) {
-    for i in 1..ids.len {
-        let key = ids[i];
-        let depth = depths[i];
-        var j = i;
-        while j > 0 && depths[j - 1] > depth {
-            ids[j] = ids[j - 1];
-            depths[j] = depths[j - 1];
-            j -= 1;
+// Stable merge sort for ordered float depths. Java's > comparator becomes
+// non-transitive in the presence of NaN, so preserve insertion sort there.
+// The caller provides scratch arrays of at least ids.len elements.
+export "newcatroid_sort_depth" fn sort_depth(ids: i32[:], depths: f32[:], scratch_ids: i32[:], scratch_depths: f32[:]) {
+    var has_nan = false;
+    for i in 0..ids.len {
+        if depths[i] != depths[i] { has_nan = true; }
+    }
+    if has_nan {
+        for i in 1..ids.len {
+            let key = ids[i];
+            let depth = depths[i];
+            var j = i;
+            while j > 0 && depths[j - 1] > depth {
+                ids[j] = ids[j - 1];
+                depths[j] = depths[j - 1];
+                j -= 1;
+            }
+            ids[j] = key;
+            depths[j] = depth;
         }
-        ids[j] = key;
-        depths[j] = depth;
+        return;
+    }
+    var width = 1;
+    while width < ids.len {
+        var begin = 0;
+        while begin < ids.len {
+            var mid = begin + width;
+            if mid > ids.len { mid = ids.len; }
+            var end = mid + width;
+            if end > ids.len { end = ids.len; }
+            var left = begin;
+            var right = mid;
+            var out = begin;
+            while left < mid && right < end {
+                if depths[left] > depths[right] {
+                    scratch_ids[out] = ids[right];
+                    scratch_depths[out] = depths[right];
+                    right += 1;
+                } else {
+                    scratch_ids[out] = ids[left];
+                    scratch_depths[out] = depths[left];
+                    left += 1;
+                }
+                out += 1;
+            }
+            while left < mid {
+                scratch_ids[out] = ids[left];
+                scratch_depths[out] = depths[left];
+                out += 1;
+                left += 1;
+            }
+            while right < end {
+                scratch_ids[out] = ids[right];
+                scratch_depths[out] = depths[right];
+                out += 1;
+                right += 1;
+            }
+            begin = end;
+        }
+        for i in 0..ids.len {
+            ids[i] = scratch_ids[i];
+            depths[i] = scratch_depths[i];
+        }
+        width *= 2;
     }
 }
 

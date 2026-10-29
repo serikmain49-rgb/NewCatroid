@@ -1,5 +1,6 @@
 #include <jni.h>
 #include <math.h>
+#include <stdlib.h>
 #include <pthread.h>
 #include "movement_generated.h"
 
@@ -143,19 +144,38 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_sortDepthNative(JNIEnv *env, jcla
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }
-    jint *values = (*env)->GetIntArrayElements(env, ids, NULL);
-    if (!values) { pthread_mutex_unlock(&lock); return JNI_FALSE; }
-    jfloat *z = (*env)->GetFloatArrayElements(env, depths, NULL);
-    if (!z) {
-        (*env)->ReleaseIntArrayElements(env, ids, values, JNI_ABORT);
+    /* Allocate before taking JNI arrays. Failure leaves both arrays unchanged. */
+    if ((size_t)count > SIZE_MAX / sizeof(jint) || (size_t)count > SIZE_MAX / sizeof(jfloat)) {
         pthread_mutex_unlock(&lock);
         return JNI_FALSE;
     }
-    sl_i32 ids_slice = { values, count };
-    sl_f32 depths_slice = { z, count };
-    newcatroid_sort_depth(ids_slice, depths_slice);
+    size_t capacity = count > 0 ? (size_t)count : 1;
+    jint *scratch_ids = malloc(capacity * sizeof(*scratch_ids));
+    jfloat *scratch_depths = malloc(capacity * sizeof(*scratch_depths));
+    if (!scratch_ids || !scratch_depths) {
+        free(scratch_ids); free(scratch_depths);
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    jint *values = (*env)->GetIntArrayElements(env, ids, NULL);
+    if (!values) {
+        free(scratch_ids); free(scratch_depths);
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    jfloat *z = (*env)->GetFloatArrayElements(env, depths, NULL);
+    if (!z) {
+        (*env)->ReleaseIntArrayElements(env, ids, values, JNI_ABORT);
+        free(scratch_ids); free(scratch_depths);
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    sl_i32 ids_slice = { values, count }, ids_work = { scratch_ids, count };
+    sl_f32 depths_slice = { z, count }, depths_work = { scratch_depths, count };
+    newcatroid_sort_depth(ids_slice, depths_slice, ids_work, depths_work);
     (*env)->ReleaseFloatArrayElements(env, depths, z, 0);
     (*env)->ReleaseIntArrayElements(env, ids, values, 0);
+    free(scratch_ids); free(scratch_depths);
     pthread_mutex_unlock(&lock);
     return JNI_TRUE;
 }

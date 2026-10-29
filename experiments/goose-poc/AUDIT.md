@@ -157,3 +157,20 @@ rendering, or physics. Results are sensitive to JIT and scheduling and cannot
 predict Android or FPS. In this run Goose was slower; a performance claim or a
 default-on setting is not justified. The same instrumentation workload is
 available for Android, where its separate results must be measured.
+
+Depth ordering is a separate case: for ordinary depth values the Goose path
+now uses stable merge sort, while NaN retains the exact original insertion
+comparison behavior. Randomized JNI tests compare against the original sort,
+including repeated depths, NaN, infinity and arrays up to 2,000 elements.
+A single host run of the reverse-order microbenchmark measured these average
+nanoseconds per sort (including array resets and JNI copying):
+
+| Records | Java insertion | Goose/JNI merge |
+| ---: | ---: | ---: |
+| 100 | 11,820 | 1,651 |
+| 1,000 | 292,228 | 17,838 |
+| 5,000 | 8,089,760 | 121,265 |
+
+The Java microbenchmark sorts primitive arrays, not the real ECS component
+lookups; reverse order is an insertion-sort worst case. These are host-only
+measurements, not Android, frame-time or whole-game performance results.

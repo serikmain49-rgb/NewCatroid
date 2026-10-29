@@ -27,8 +27,8 @@ void newcatroid_movement_batch(sl_f32 gs_export_arg0_4, float gs_export_arg1_4);
 float newcatroid_distance3d(float gs_export_arg0_5, float gs_export_arg1_5, float gs_export_arg2_3, float gs_export_arg3, float gs_export_arg4, float gs_export_arg5);
 void newcatroid_visibility_batch(sl_f32 gs_export_arg0_6, float gs_export_arg1_6, float gs_export_arg2_4, float gs_export_arg3_2, float gs_export_arg4_2);
 void newcatroid_physics_plan(float gs_export_arg0_7, float gs_export_arg1_7, sl_f32 gs_export_arg2_5);
-void newcatroid_sort_depth(sl_i32 gs_export_arg0_8, sl_f32 gs_export_arg1_8);
-double newcatroid_formula_numeric(sl_i32 gs_export_arg0_9, sl_f64 gs_export_arg1_9, sl_f64 gs_export_arg2_6, double gs_export_arg3_3);
+void newcatroid_sort_depth(sl_i32 gs_export_arg0_8, sl_f32 gs_export_arg1_8, sl_i32 gs_export_arg2_6, sl_f32 gs_export_arg3_3);
+double newcatroid_formula_numeric(sl_i32 gs_export_arg0_9, sl_f64 gs_export_arg1_9, sl_f64 gs_export_arg2_7, double gs_export_arg3_4);
 #ifdef __cplusplus
 }
 #endif

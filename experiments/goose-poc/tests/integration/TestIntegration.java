@@ -46,6 +46,29 @@ public class TestIntegration {
     if (!GooseMovement.sortDepth(ids, depths, 3) || ids[0] != 7 || ids[1] != 42 || ids[2] != 19 || ids[3] != 900)
       throw new AssertionError("stable depth sort mismatch");
     if (GooseMovement.sortDepth(ids, depths, 5)) throw new AssertionError("invalid depth count");
+    for (int trial = 0; trial < 300; trial++) {
+      int count = trial % 61 == 0 ? 2000 : trial % 257;
+      int[] actualIds = new int[count], expectedIds = new int[count];
+      float[] actualZ = new float[count], expectedZ = new float[count];
+      for (int i = 0; i < count; i++) {
+        actualIds[i] = expectedIds[i] = i;
+        float z = trial % 3 == 0 ? (float)(count - i) : random.nextInt(9) - 4;
+        if (trial % 7 == 0 && i == count / 2) z = Float.NaN;
+        if (trial % 13 == 0 && i == count / 3) z = Float.POSITIVE_INFINITY;
+        actualZ[i] = expectedZ[i] = z;
+      }
+      for (int i = 1; i < count; i++) {
+        int id = expectedIds[i], j = i; float z = expectedZ[i];
+        while (j > 0 && expectedZ[j - 1] > z) {
+          expectedIds[j] = expectedIds[j - 1]; expectedZ[j] = expectedZ[j - 1]; j--;
+        }
+        expectedIds[j] = id; expectedZ[j] = z;
+      }
+      if (!GooseMovement.sortDepth(actualIds, actualZ, count)) throw new AssertionError("sort failed");
+      for (int i = 0; i < count; i++)
+        if (actualIds[i] != expectedIds[i] || Float.floatToIntBits(actualZ[i]) != Float.floatToIntBits(expectedZ[i]))
+          throw new AssertionError("sort mismatch " + trial + ", " + i);
+    }
     double[] formulaResult = {123};
     int[] code = {0, 0, 1, 0, 3, 0, 4, 5};
     double[] operands = {1.5, 2.5, 0, 3, 0, 2, 0, 0};

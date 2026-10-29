@@ -71,5 +71,6 @@ public class GooseNativeDeviceTest {
         if (remainder >= step) remainder %= step;
         assertEquals(remainder, plan[1], 0f);
         GooseMovementBenchmark.run();
+        GooseSortBenchmark.run();
     }
 }

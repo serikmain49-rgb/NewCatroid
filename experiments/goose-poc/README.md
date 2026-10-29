@@ -158,3 +158,10 @@ timings are observations, not pass/fail thresholds. The test excludes real
 entity packing, scenes, graphics, physics, CPU/GPU frame times, thermal state
 and battery use, so it cannot establish an in-game FPS gain. Run the same APK
 and workloads on the target phones before drawing device-specific conclusions.
+
+For depth sorting, the Goose backend now uses a stable bottom-up merge sort
+with temporary buffers for ordinary float values. A NaN triggers the original
+stable insertion algorithm because Java's `>` comparison is not transitive in
+that case. Allocator failure returns control to the Java fallback. Instrumentation
+logs a separate `GOOSE_SORT_MICRO` reverse-order benchmark; this is a deliberately
+worst-case ordering, not an in-game FPS measurement.
