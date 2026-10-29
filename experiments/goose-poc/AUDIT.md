@@ -105,3 +105,12 @@ Goose feature flag. This adds the optional audio host APIs and blocks required b
 Assistant 0.7.0, alongside their earlier automated test sources. The merge has
 not yet been built or tested on a device in this branch; audio codec behavior,
 plugin compatibility, permissions and existing projects remain unverified.
+
+Compatibility test finding: run 40842553281 failed two legacy PowerMock checks
+because Java 17 did not open `java.lang`, and `FormulaElementTest.testCorrectDecimals`
+expected 1.2 exactly while the interpreter returned 1.2000000000000002. The
+arithmetic branch in `FormulaElement` is unchanged from the GitHub base; this
+suggests a pre-existing exact-floating-point expectation, but a clean baseline
+run has been configured and is still needed to confirm it. Java 17 unit-test
+module opens were added without changing formula results. These failures must
+not be reported as passing or silently excluded.

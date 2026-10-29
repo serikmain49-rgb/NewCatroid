@@ -131,3 +131,38 @@ jobs:
             compatibility-results/
             catroid/build/reports/tests/
           if-no-files-found: warn
+  baseline-formula:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 39db5865d04ee74b08503f0b7ef35158436e6b98
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android build tools
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
+      - name: Run original decimal formula test
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p baseline-results
+          chmod +x ./gradlew
+          ./gradlew :catroid:testDanvexDebugUnitTest --no-daemon --stacktrace \
+            --tests org.catrobat.catroid.test.formulaeditor.FormulaElementTest.testCorrectDecimals \
+            2>&1 | tee baseline-results/gradle-test.log
+      - name: Upload baseline report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-formula-baseline
+          path: |
+            baseline-results/
+            catroid/build/reports/tests/
+          if-no-files-found: warn
