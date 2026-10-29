@@ -35,7 +35,7 @@ Build Goose, then run `build.sh` with `GOOSE`, `CC`, and `OUT_DIR` set. Run
 `$OUT_DIR/smoke` and `tests/run-jvm-test.sh` with `JAVA_HOME` and `OUT_DIR` set
 on Linux. The latter builds and exercises the JNI bridge with a host JVM.
 The workflow cross-compiles both Android ABIs, tests the host and builds a
-standalone APK; GitHub Actions execution itself has not been confirmed.
+standalone APK. GitHub Actions run 40830529372 completed successfully.
 
 For the test APK, set `ANDROID_HOME` to an SDK containing platform 34 and
 build-tools 34.0.0, and `GOOSE_RESULTS` to a directory containing the output
@@ -64,6 +64,11 @@ ownership, float edge cases, project loading, interactions with Box2D and app
 build compatibility need validation before it can be enabled by default.
 
 The application JNI bridge passed a Linux JVM smoke test and both native ABIs
-cross-compiled. The full Gradle build was attempted in the development environment
-but failed before configuration because the Gradle 8.7 distribution could not
-be downloaded (`Network is unreachable`). No application APK was produced.
+cross-compiled. The local Gradle attempt failed before configuration because the distribution
+could not be downloaded. GitHub Actions run 40829976442 subsequently built
+the full `danvexDebug` APK successfully with `-PgooseFast2D=true` and uploaded
+its log and APK as `newcatroid-goose-debug`. The APK contains the native Goose
+library for ARM64 and ARMv7; it has not been launched or verified on a device.
+It uses the original application ID and must be treated as an experimental
+debug build; installation may replace the existing app if Android accepts its
+signature. APK creation does not certify project or plugin compatibility.
