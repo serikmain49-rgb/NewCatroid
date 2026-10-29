@@ -76,3 +76,9 @@ target_link_libraries(
         EGL
         GLESv2
 )
+
+# Experimental Goose Fast2D movement backend, selected through a Gradle flag.
+add_library(goose_movement SHARED goose/movement_generated.c goose/movement_jni.c)
+target_compile_options(goose_movement PRIVATE -ffp-contract=off)
+target_compile_definitions(goose_movement PRIVATE NC_GOOSE_PURE_EMBED=1)
+target_link_libraries(goose_movement m dl)

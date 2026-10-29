@@ -1,0 +1,73 @@
+name: Goose isolated proof of concept
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'experiments/goose-poc/**'
+      - '.github/workflows/goose-poc.yml'
+  pull_request:
+    paths:
+      - 'experiments/goose-poc/**'
+      - '.github/workflows/goose-poc.yml'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check out pinned Goose compiler
+        uses: actions/checkout@v4
+        with:
+          repository: aardappel/goose
+          ref: cce94b919d27458856ae2685974049eac78debcf
+          path: goose-compiler
+      - name: Build Goose
+        run: |
+          cmake -S goose-compiler -B goose-compiler/build -DCMAKE_BUILD_TYPE=Release
+          cmake --build goose-compiler/build --parallel 2
+      - name: Compile and run host test
+        env:
+          GOOSE: ${{ github.workspace }}/goose-compiler/build/goose
+          CC: gcc
+          OUT_DIR: ${{ github.workspace }}/goose-results/host
+        run: |
+          experiments/goose-poc/generate-engine-c.sh
+          git diff --exit-code -- catroid/src/main/cpp/goose/movement_generated.c catroid/src/main/cpp/goose/movement_generated.h
+          experiments/goose-poc/build.sh
+          "$OUT_DIR/smoke"
+          experiments/goose-poc/tests/run-jvm-test.sh
+          experiments/goose-poc/tests/run-engine-bridge-test.sh
+          experiments/goose-poc/tests/run-engine-system-test.sh
+      - name: Install Android NDK
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'ndk;27.2.12479018' 'platforms;android-34' 'build-tools;34.0.0'
+      - name: Cross compile Android probes
+        env:
+          GOOSE: ${{ github.workspace }}/goose-compiler/build/goose
+        run: |
+          for target in aarch64-linux-android26 armv7a-linux-androideabi26; do
+            export CC="$ANDROID_HOME/ndk/27.2.12479018/toolchains/llvm/prebuilt/linux-x86_64/bin/${target}-clang"
+            export OUT_DIR="$GITHUB_WORKSPACE/goose-results/$target"
+            export BUILD_JNI=1
+            experiments/goose-poc/build.sh
+            "$CC" -std=c11 -O2 -ffp-contract=off -DNC_GOOSE_PURE_EMBED=1 -fPIC -shared catroid/src/main/cpp/goose/movement_generated.c catroid/src/main/cpp/goose/movement_jni.c -o "$OUT_DIR/libgoose_movement.so" -lm -ldl
+          done
+      - name: Build standalone Android JNI test APK
+        env:
+          GOOSE_RESULTS: ${{ github.workspace }}/goose-results
+          APK_OUT_DIR: ${{ github.workspace }}/goose-apk
+        run: experiments/goose-poc/android/build-apk.sh
+      - name: Upload generated C and binaries
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goose-poc-results
+          path: |
+            goose-results/
+            goose-apk/goose-jni-test.apk
+          if-no-files-found: warn

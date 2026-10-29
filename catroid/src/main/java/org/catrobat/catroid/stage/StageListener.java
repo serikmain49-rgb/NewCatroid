@@ -236,6 +236,8 @@ public class StageListener implements ApplicationListener {
 	private float cameraRotation = 0f;
 
     public FastTwoDManager fastTwoDManager;
+    private final org.catrobat.catroid.utils.FrameBenchmark gooseBenchmark = org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_BENCHMARK
+            ? new org.catrobat.catroid.utils.FrameBenchmark() : null;
 
 	public void setMaxViewPort(Resolution maxViewPort) {
 		this.maxViewPort = maxViewPort;
@@ -1107,6 +1109,7 @@ public class StageListener implements ApplicationListener {
 		stageBackupMap.put(scene.getName(), saveToBackup());
 		pause();
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1135,6 +1138,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1165,6 +1169,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1197,6 +1202,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1238,6 +1244,7 @@ public class StageListener implements ApplicationListener {
 			pause();
 		}
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1275,6 +1282,7 @@ public class StageListener implements ApplicationListener {
 		stageBackupMap.put(scene.getName(), saveToBackup());
 		pause();
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1311,6 +1319,7 @@ public class StageListener implements ApplicationListener {
 		stageBackupMap.put(scene.getName(), saveToBackup());
 		pause();
 
+		cancelRuntimeAudioScene();
 		scene = newScene;
 		ProjectManager.getInstance().setCurrentlyPlayingScene(scene);
 
@@ -1490,6 +1499,7 @@ public class StageListener implements ApplicationListener {
 
 	@Override
 	public void pause() {
+        if (gooseBenchmark != null) gooseBenchmark.reset();
         if (finished) {
             return;
         }
@@ -1555,13 +1565,20 @@ public class StageListener implements ApplicationListener {
 	public int getVmWidth() { return (int) vmWidth; }
 	public int getVmHeight() { return (int) vmHeight; }
 
+    private boolean gooseGameThreadAttempted;
+
 	@Override
 	public void render() {
+        if (org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_FORMULA && !gooseGameThreadAttempted) {
+            gooseGameThreadAttempted = true;
+            org.catrobat.catroid.fast2d.GooseMovement.prepareGameThread();
+        }
         processPendingNotificationActions();
 
         long framePhysicsTime = 0;
         long frameLogicTime = 0;
         long endLogic = 0;
+        boolean benchmarkFrameCompleted = false;
 		try {
 			Look.tickGlobalFrame();
 
@@ -1806,6 +1823,7 @@ public class StageListener implements ApplicationListener {
             if (hasAfterUpdateScripts && !paused) {
                 executeAfterUpdateScripts(Gdx.graphics.getDeltaTime());
             }
+            benchmarkFrameCompleted = true;
 		} catch (Exception e) {
 			Log.e("RENDER_CRASH", "Fatal error during render loop", e);
 		}
@@ -1817,6 +1835,18 @@ public class StageListener implements ApplicationListener {
                 frameLogicTime,
                 endRender - endLogic
         );
+        if (org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_BENCHMARK) {
+            boolean validFrame = !paused && benchmarkFrameCompleted && endLogic != 0;
+            long sectionTime = validFrame
+                    ? framePhysicsTime + frameLogicTime + Math.max(0, endRender - endLogic) : 0;
+            org.catrobat.catroid.utils.FrameBenchmark.Result result = gooseBenchmark.sample(
+                    endRender, validFrame, sectionTime);
+            if (result != null) {
+                Log.i("GOOSE_BENCHMARK", String.format(java.util.Locale.US,
+                        "frames=%d fps=%.2f low1=%.2f measured_sections_ms=%.3f",
+                        result.frames, result.fps, result.onePercentLowFps, result.measuredSectionMs));
+            }
+        }
 	}
 
     private void printPhysicsLabelOnScreen() {
@@ -2184,7 +2214,17 @@ public class StageListener implements ApplicationListener {
 		}
 	}
 
-	public void finish() {
+	private org.catrobat.catroid.audio.RuntimeAudioSession runtimeAudioSession;
+
+    void setRuntimeAudioSession(org.catrobat.catroid.audio.RuntimeAudioSession session) {
+        runtimeAudioSession = session;
+    }
+
+    private void cancelRuntimeAudioScene() {
+        if (runtimeAudioSession != null) runtimeAudioSession.cancelScene();
+    }
+    public void finish() {
+        if (runtimeAudioSession != null) runtimeAudioSession.close();
 		finished = true;
 	}
 

@@ -1,0 +1,22 @@
+<resources>
+    <string name="runtime_audio_title">Своя музыка</string>
+    <string name="runtime_audio_argument">Аргумент</string>
+    <string name="runtime_audio_result">Результат</string>
+    <string name="formula_audio_name">Название аудио</string>
+    <string name="formula_audio_duration">Длительность аудио</string>
+    <string name="formula_audio_position">Позиция аудио</string>
+    <string name="formula_audio_exists">Аудио существует</string>
+    <string name="formula_audio_error">Ошибка аудио</string>
+    <string name="formula_audio_state">Состояние аудио</string>
+    <string name="formula_audio_id_parameter">(ID аудио)</string>
+    <string-array name="runtime_audio_commands">
+        <item>Выбрать аудио</item>
+        <item>Импортировать аудио</item>
+        <item>Играть аудио</item>
+        <item>Пауза аудио</item>
+        <item>Продолжить аудио</item>
+        <item>Стоп аудио</item>
+        <item>Позиция аудио (с)</item>
+        <item>Громкость аудио (%)</item>
+    </string-array>
+</resources>

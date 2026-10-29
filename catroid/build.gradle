@@ -149,7 +149,7 @@ android {
         minSdkVersion 26
         targetSdkVersion 33
         applicationId appId
-        testInstrumentationRunner 'org.catrobat.catroid.runner.UiTestApplicationRunner'
+        testInstrumentationRunner project.hasProperty('gooseDeviceTestsOnly') ? 'androidx.test.runner.AndroidJUnitRunner' : 'org.catrobat.catroid.runner.UiTestApplicationRunner'
         versionCode defaultVersionCode
         versionName defaultVersionName
         println "VersionCode is $versionCode"
@@ -182,6 +182,9 @@ android {
         buildConfigField "boolean", "FEATURE_NEURAL_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_POCKETENSOR_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_FAST2D_ENABLED", "true"
+        buildConfigField "boolean", "FEATURE_GOOSE_FAST2D", (project.findProperty("gooseFast2D") == "true").toString()
+        buildConfigField "boolean", "FEATURE_GOOSE_FORMULA", (project.findProperty("gooseFormula") == "true").toString()
+        buildConfigField "boolean", "FEATURE_GOOSE_BENCHMARK", (project.findProperty("gooseBenchmark") == "true").toString()
         buildConfigField "boolean", "FEATURE_THREED_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_INTERNET_ENABLED", "true"
         buildConfigField "boolean", "FEATURE_LEGO_NXT_ENABLED", "true"
@@ -228,13 +231,19 @@ android {
         unitTests.returnDefaultValues = true
         unitTests.includeAndroidResources = true
         unitTests.all {
-            jvmArgs '-Xmx2g'
+            jvmArgs '-Xmx2g', '--add-opens=java.base/java.lang=ALL-UNNAMED',
+                    '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED',
+                    '--add-opens=java.base/java.io=ALL-UNNAMED',
+                    '--add-opens=java.base/java.util=ALL-UNNAMED'
         }
         animationsDisabled = true
     }
 
     sourceSets {
         androidTest {
+            if (project.hasProperty('gooseDeviceTestsOnly')) {
+                java.setSrcDirs(['src/gooseAndroidTest/java'])
+            }
             resources.srcDirs += ['src/androidTest/res', 'src/androidTest/assets']
         }
         apktemplate {

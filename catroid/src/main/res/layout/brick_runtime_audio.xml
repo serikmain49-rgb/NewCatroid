@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+    <CheckBox android:id="@+id/brick_checkbox" android:layout_width="wrap_content" android:layout_height="wrap_content" android:visibility="gone" />
+    <org.catrobat.catroid.ui.BrickLayout android:id="@+id/brick_runtime_audio_layout" style="@style/BrickContainer.Sound.Medium">
+        <include layout="@layout/icon_brick_category_sound" />
+        <Spinner android:id="@+id/runtime_audio_command" android:layout_width="match_parent" android:layout_height="wrap_content" android:textDirection="locale" />
+        <TextView style="@style/BrickText.SingleLine" android:text="@string/runtime_audio_argument" app:layout_newLine="true" />
+        <TextView android:id="@+id/runtime_audio_value" style="@style/BrickEditText" />
+        <TextView style="@style/BrickText.SingleLine" android:text="@string/runtime_audio_result" app:layout_newLine="true" />
+        <Spinner android:id="@+id/runtime_audio_result" android:layout_width="match_parent" android:layout_height="wrap_content" android:textDirection="locale" />
+    </org.catrobat.catroid.ui.BrickLayout>
+</LinearLayout>

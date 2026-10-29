@@ -52,7 +52,13 @@ public class InternToExternGenerator {
         INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Operators.STRING_CONCAT.name(), R.string.formula_editor_operator_concat);
 
 		INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(".", R.string.formula_editor_decimal_mark);
-		INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.SIN.name(), R.string.formula_editor_function_sin);
+		INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.AUDIO_NAME.name(), R.string.formula_audio_name);
+        INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.AUDIO_DURATION.name(), R.string.formula_audio_duration);
+        INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.AUDIO_POSITION.name(), R.string.formula_audio_position);
+        INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.AUDIO_EXISTS.name(), R.string.formula_audio_exists);
+        INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.AUDIO_ERROR.name(), R.string.formula_audio_error);
+        INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.AUDIO_STATE.name(), R.string.formula_audio_state);
+        INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.SIN.name(), R.string.formula_editor_function_sin);
 		INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.COS.name(), R.string.formula_editor_function_cos);
 		INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.TAN.name(), R.string.formula_editor_function_tan);
 		INTERN_EXTERN_LANGUAGE_CONVERTER_MAP.put(Functions.LN.name(), R.string.formula_editor_function_ln);

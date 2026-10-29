@@ -166,6 +166,7 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 
 	public static final String TAG = StageActivity.class.getSimpleName();
 	public StageListener stageListener;
+    public volatile org.catrobat.catroid.audio.RuntimeAudioSession runtimeAudio;
 
 	public static final int REQUEST_START_STAGE = 101;
 
@@ -323,8 +324,12 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 		foregroundLayout = new FrameLayout(this);
 
 
-		StageLifeCycleController.stageCreate(this);
 		activeStageActivity = new WeakReference<>(this);
+        if (ProjectManager.getInstance().getCurrentProject() != null) {
+            try { runtimeAudio = new org.catrobat.catroid.audio.RuntimeAudioSession(this, ProjectManager.getInstance().getCurrentProject()); }
+            catch (java.io.IOException e) { Log.e(TAG, "Imported audio storage unavailable", e); }
+        }
+        StageLifeCycleController.stageCreate(this);
 		MyActivityManager.Companion.setStage_activity(this);
 
         boolean isFreeStageEnabled = this instanceof StageWorkspaceActivity;
@@ -1599,6 +1604,7 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 
 	@Override
 	public void onPause() {
+        if (runtimeAudio != null) runtimeAudio.background();
         isAppPaused = true;
 		StageLifeCycleController.stagePause(this);
 		super.onPause();
@@ -1640,6 +1646,7 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 
 	@Override
 	public void onResume() {
+        if (runtimeAudio != null) runtimeAudio.foreground();
         isAppPaused = false;
 		StageLifeCycleController.stageResume(this);
 		super.onResume();
@@ -1653,12 +1660,14 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 
     @Override
     public void finish() {
+        if (runtimeAudio != null) runtimeAudio.close();
         ProjectManager.popProjectHistory();
         super.finish();
     }
 
 	@Override
 	protected void onDestroy() {
+        if (runtimeAudio != null) runtimeAudio.close();
 		super.onDestroy();
 
 		if (NativeBridge.INSTANCE.isWorking()) NativeBridge.INSTANCE.cleanupAllInstances();
@@ -2020,7 +2029,7 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 		int newIdentId;
 		do {
 			newIdentId = StageActivity.randomGenerator.nextInt(Integer.MAX_VALUE);
-		} while (intentListeners.indexOfKey(newIdentId) >= 0);
+		} while (newIdentId == org.catrobat.catroid.audio.RuntimeAudioSession.PICK_REQUEST || intentListeners.indexOfKey(newIdentId) >= 0);
 
 		intentListeners.put(newIdentId, asker);
 		ArrayList<Object> params = new ArrayList<>();
@@ -2050,6 +2059,7 @@ public class StageActivity extends AndroidApplication implements ContextProvider
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (runtimeAudio != null && runtimeAudio.onActivityResult(requestCode,resultCode,data)) return;
 
 		if (requestCode == EXPORT_FILE_REQUEST_CODE) {
 

@@ -1,0 +1,171 @@
+name: NewCatroid Goose Android build
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'catroid/**'
+      - 'experiments/goose-poc/**'
+      - '.github/workflows/goose-android-build.yml'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+jobs:
+  apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android SDK and NDK
+        shell: bash
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
+      - name: Build Goose-enabled debug APK
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p goose-build-results
+          chmod +x ./gradlew
+          ./gradlew :catroid:assembleDanvexDebug -PgooseFast2D=true --no-daemon --stacktrace 2>&1 | tee goose-build-results/gradle.log
+          find catroid/build/outputs/apk/danvex/debug -name '*.apk' -type f -print -exec cp {} goose-build-results/ \;
+          compgen -G 'goose-build-results/*.apk' >/dev/null
+      - name: Upload APK and build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: newcatroid-goose-debug
+          path: goose-build-results/
+          if-no-files-found: warn
+  emulator-smoke:
+    needs: apk
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: newcatroid-goose-debug
+          path: goose-build-results
+      - name: Install Android build tools
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Install and launch on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          disk-size: 6G
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash experiments/goose-poc/tests/run-android-device-test.sh
+      - name: Upload emulator log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goose-emulator-log
+          path: emulator-results/
+          if-no-files-found: warn
+  compatibility-tests:
+    needs: apk
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android build tools
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
+      - name: Run existing formula and project unit tests
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p compatibility-results
+          chmod +x ./gradlew
+          ./gradlew :catroid:testDanvexDebugUnitTest -PgooseFast2D=true --no-daemon --stacktrace \
+            --tests org.catrobat.catroid.test.formulaeditor.FormulaElementTest \
+            --tests org.catrobat.catroid.test.content.project.ProjectTest \
+            --tests org.catrobat.catroid.test.content.project.LoadProjectsTest \
+            2>&1 | tee compatibility-results/gradle-test.log
+      - name: Run Assistant runtime audio host checks
+        if: ${{ !cancelled() }}
+        shell: bash
+        run: |
+          set -o pipefail
+          json_jar=$(find "$HOME/.gradle/caches" -name 'json-20190722.jar' -type f -print -quit)
+          gdx_jar=$(find "$HOME/.gradle/caches" -name 'gdx-1.13.1.jar' -type f -print -quit)
+          test -n "$json_jar" && test -n "$gdx_jar"
+          python3 checks/runtime-audio/run_checks.py "$ANDROID_HOME/platforms/android-34/android.jar" "$gdx_jar" "$json_jar" 2>&1 | tee compatibility-results/audio-store.log
+          python3 checks/runtime-audio/session_checks.py "$json_jar" 2>&1 | tee compatibility-results/audio-session.log
+      - name: Upload unit test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goose-compatibility-test-results
+          path: |
+            compatibility-results/
+            catroid/build/reports/tests/
+          if-no-files-found: warn
+  baseline-formula:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 39db5865d04ee74b08503f0b7ef35158436e6b98
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android build tools
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
+      - name: Run original decimal formula test
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p baseline-results
+          chmod +x ./gradlew
+          ./gradlew :catroid:testDanvexDebugUnitTest --no-daemon --stacktrace \
+            --tests org.catrobat.catroid.test.formulaeditor.FormulaElementTest.testCorrectDecimals \
+            2>&1 | tee baseline-results/gradle-test.log
+      - name: Upload baseline report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: original-formula-baseline
+          path: |
+            baseline-results/
+            catroid/build/reports/tests/
+          if-no-files-found: warn
