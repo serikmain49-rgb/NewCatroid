@@ -119,3 +119,8 @@ covers 100,000 accumulated values including NaN/infinity, and a JVM test checks
 the real Fast2D physics system with a Box2D test double over 5,000 frames.
 The new scheduler has not yet been verified on Android or real Box2D projects;
 it is not a port of Box2D and is not a measured speed improvement.
+
+`GooseNativeDeviceTest` is an Android instrumentation test for the production
+JNI bridge (movement, visibility, 3D distance and physics scheduling). It has
+not yet been run. It must be built with `-PgooseFast2D=true`; passing a host test
+or starting the app does not prove this device test passed.
