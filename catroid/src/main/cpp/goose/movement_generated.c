@@ -3451,6 +3451,8 @@ typedef struct { uint8_t *base; int64_t len; } gs_rhdr;
 typedef struct { gs_rhdr *hdr; gs_stack *stk; } gs_rref;
 typedef struct { gs_rhdr *hdr; gs_stack *stk; gs_rhdr *fl; gs_stack *flstk; } gs_pref;
 
+typedef struct { gs_f32 *data; int64_t len; } sl_f32;
+
 typedef struct { uint8_t *data; int64_t len; } sl_u8;
 
 #pragma pack(pop)
@@ -4457,6 +4459,7 @@ GS_API uint64_t gs_os_random_u64(void) {
 static gs_i32 add_g(gs_i32 p0, gs_i32 p1);
 static gs_f32 velocity_y_g(gs_f32 p0, gs_f32 p1, gs_f32 p2);
 static gs_f32 integrate_g(gs_f32 p0, gs_f32 p1, gs_f32 p2);
+static void movement_batch_g(void *p0_data, int64_t p0_len, gs_f32 p1);
 
 /* ---- code ---- */
 static gs_i32 add_g(gs_i32 a_g, gs_i32 b_g) {
@@ -4475,6 +4478,51 @@ static gs_f32 integrate_g(gs_f32 value_g, gs_f32 speed_g, gs_f32 dt_g) {
     gs_f32 t0;
     t0 = ((gs_f32)((gs_f32)(value_g)) + (gs_f32)(((gs_f32)((gs_f32)(speed_g)) * (gs_f32)(dt_g))));
     return t0;
+}
+
+static void movement_batch_g(void *data_g_data, int64_t data_g_len, gs_f32 dt_g) {
+    sl_f32 data_g; data_g.data = data_g_data; data_g.len = data_g_len;
+    gs_i64 t0;
+    gs_i64 t1;
+    gs_i64 i_g;
+    gs_i64 t4;
+    gs_i64 t7;
+    gs_i64 t9;
+    gs_i64 t12;
+    gs_i64 t14;
+    gs_i64 t17;
+    gs_i64 t19;
+    gs_i64 t22;
+    t0 = 0;
+    t1 = (gs_i64)((uint64_t)((gs_i64)((gs_i64)((data_g.len)))) / (uint64_t)((gs_i64)(7)));
+    for (gs_i64 entity_g = t0; entity_g < t1; entity_g++) {
+        i_g = gs_mul_i64((gs_i64)(entity_g), 7, gs_file0, 16);
+        t4 = gs_add_i64((gs_i64)(i_g), 4, gs_file0, 17);
+        gs_f32 *t5 = data_g.data;
+        gs_f32 *t6 = &(t5[GS_IDX((int64_t)(t4), data_g.len, gs_file0, 17)]);
+        t7 = gs_add_i64((gs_i64)(i_g), 5, gs_file0, 17);
+        gs_f32 *t8 = data_g.data;
+        (*t6) = ((*t6) + (((gs_f32)((gs_f32)(t8[GS_IDX((int64_t)(t7), data_g.len, gs_file0, 17)])) * (gs_f32)(dt_g))));
+        t9 = i_g;
+        gs_f32 *t10 = data_g.data;
+        gs_f32 *t11 = &(t10[t9]);
+        t12 = gs_add_i64((gs_i64)(i_g), 3, gs_file0, 18);
+        gs_f32 *t13 = data_g.data;
+        (*t11) = ((*t11) + (((gs_f32)((gs_f32)(t13[t12])) * (gs_f32)(dt_g))));
+        t14 = gs_add_i64((gs_i64)(i_g), 1, gs_file0, 19);
+        gs_f32 *t15 = data_g.data;
+        gs_f32 *t16 = &(t15[t14]);
+        t17 = gs_add_i64((gs_i64)(i_g), 4, gs_file0, 19);
+        gs_f32 *t18 = data_g.data;
+        (*t16) = ((*t16) + (((gs_f32)((gs_f32)(t18[t17])) * (gs_f32)(dt_g))));
+        t19 = gs_add_i64((gs_i64)(i_g), 2, gs_file0, 20);
+        gs_f32 *t20 = data_g.data;
+        gs_f32 *t21 = &(t20[t19]);
+        t22 = gs_add_i64((gs_i64)(i_g), 6, gs_file0, 20);
+        gs_f32 *t23 = data_g.data;
+        (*t21) = ((*t21) + (((gs_f32)((gs_f32)(t23[GS_IDX((int64_t)(t22), data_g.len, gs_file0, 20)])) * (gs_f32)(dt_g))));
+    }
+    return;
 }
 
 static void gs_init_globals(void) {
@@ -4509,4 +4557,10 @@ gs_f32 newcatroid_integrate(gs_f32 gs_export_arg0_3, gs_f32 gs_export_arg1_3, gs
     if (!gs_program_initialized)
         gs_panic("goose_init must be called before exported functions");
     return integrate_g(gs_export_arg0_3, gs_export_arg1_3, gs_export_arg2_2);
+}
+
+void newcatroid_movement_batch(sl_f32 gs_export_arg0_4, gs_f32 gs_export_arg1_4) {
+    if (!gs_program_initialized)
+        gs_panic("goose_init must be called before exported functions");
+    movement_batch_g(gs_export_arg0_4.data, gs_export_arg0_4.len, gs_export_arg1_4);
 }

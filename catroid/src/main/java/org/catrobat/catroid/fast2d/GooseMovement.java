@@ -18,6 +18,17 @@ public final class GooseMovement {
         }
     }
 
+    public static boolean isAvailable() { return AVAILABLE; }
+
+    public static boolean updateBatch(float[] data, int count, float delta) {
+        if (!AVAILABLE) return false;
+        try {
+            return batch(data, count, delta);
+        } catch (LinkageError error) {
+            return false;
+        }
+    }
+
     public static boolean update(float x, float y, float rotation, float vx, float vy,
                                  float gravity, float angularVelocity, float delta, float[] result) {
         if (!AVAILABLE) return false;
@@ -27,6 +38,8 @@ public final class GooseMovement {
             return false;
         }
     }
+
+    private static native boolean batch(float[] data, int count, float delta);
 
     private static native boolean step(float x, float y, float rotation, float vx, float vy,
                                        float gravity, float angularVelocity, float delta, float[] result);

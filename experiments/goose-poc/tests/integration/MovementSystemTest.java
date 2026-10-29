@@ -12,7 +12,7 @@ public final class MovementSystemTest {
             mTransform = new ComponentMapper<>(t);
             mMovement = new ComponentMapper<>(m);
         }
-        void run() { process(0); }
+        void run() { begin(); process(0); end(); }
     }
     static void equal(float expected, float actual) {
         if (Float.floatToIntBits(expected) != Float.floatToIntBits(actual))

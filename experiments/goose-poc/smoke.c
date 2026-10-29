@@ -35,6 +35,25 @@ int main(int argc, char **argv) {
             return 1;
         }
     }
-    puts("Goose ABI and 100000 movement cases passed");
+    float actual[7 * 257], expected[7 * 257];
+    for (int i = 0; i < 7 * 257; i++) actual[i] = expected[i] = sample();
+    for (int frame = 0; frame < 120; frame++) {
+        float dt = frame % 2 ? 0.016f : 0.033f;
+        for (int i = 0; i < 7 * 257; i += 7) {
+            expected[i + 4] += expected[i + 5] * dt;
+            expected[i] += expected[i + 3] * dt;
+            expected[i + 1] += expected[i + 4] * dt;
+            expected[i + 2] += expected[i + 6] * dt;
+        }
+        sl_f32 slice = { actual, 7 * 257 };
+        newcatroid_movement_batch(slice, dt);
+        for (int i = 0; i < 7 * 257; i++) {
+            if (!same(expected[i], actual[i])) {
+                fprintf(stderr, "Goose batch mismatch at frame %d index %d\n", frame, i);
+                return 1;
+            }
+        }
+    }
+    puts("Goose scalar and batch movement cases passed");
     return 0;
 }

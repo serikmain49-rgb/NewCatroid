@@ -67,12 +67,8 @@ Java_org_catrobat_catroid_goosepoc_GooseProbe_movementBatch(JNIEnv *env, jclass 
         pthread_mutex_unlock(&mutex);
         return;
     }
-    for (jsize i = 0; i < length; i += 7) {
-        values[i + 4] = newcatroid_velocity_y(values[i + 4], values[i + 5], dt);
-        values[i] = newcatroid_integrate(values[i], values[i + 3], dt);
-        values[i + 1] = newcatroid_integrate(values[i + 1], values[i + 4], dt);
-        values[i + 2] = newcatroid_integrate(values[i + 2], values[i + 6], dt);
-    }
+    sl_f32 slice = { values, length };
+    newcatroid_movement_batch(slice, dt);
     (*env)->ReleaseFloatArrayElements(env, data, values, 0);
     pthread_mutex_unlock(&mutex);
 }

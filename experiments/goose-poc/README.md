@@ -11,9 +11,9 @@ compatibility. Goose is pinned to cce94b919d27458856ae2685974049eac78debcf.
 `Fast2DMovementSystem.process`. The scalar test passed 100,000 finite cases on
 Linux. A JVM test checks 512 objects over 120 frames, bit-for-bit against the
 Java arithmetic, plus null, invalid-length and empty-array cases. The same batch
-check is included in the Android test APK. JNI receives an array once per frame;
-C iterates over the array and invokes the scalar Goose functions. This is not a
-Goose batch kernel, an engine integration, or a performance measurement.
+check is included in the Android test APK. The experimental engine passes one packed array per movement-system update
+to a Goose batch function. This is an integration experiment, not a performance
+measurement.
 Floating-point contraction is disabled for the experiment.
 
 Two screenshots supplied by the user on 2026-10-29 show the first Android test
@@ -57,8 +57,8 @@ system can use it with `./gradlew :catroid:assembleDanvexDebug
 -PgooseFast2D=true`; without that property, Java remains active. If the native
 library cannot load or a call occurs on a different thread, the Java path is
 used. The generated file is reproducible with `generate-engine-c.sh` using the
-pinned compiler; the source is `math.goose`. This first integration makes one
-JNI call per entity, and is not claimed to be faster. It has not been tested in
+pinned compiler; the source is `math.goose`. The integration now makes one JNI call per non-empty system update, and is
+not claimed to be faster. It has not been tested in
 the actual app or on a device. In particular, Android lifecycle and thread
 ownership, float edge cases, project loading, interactions with Box2D and app
 build compatibility need validation before it can be enabled by default.
@@ -72,3 +72,10 @@ library for ARM64 and ARMv7; it has not been launched or verified on a device.
 It uses the original application ID and must be treated as an experimental
 debug build; installation may replace the existing app if Android accepts its
 signature. APK creation does not certify project or plugin compatibility.
+
+
+The Goose batch kernel was checked on Linux against 257 entities for 120
+frames in addition to the existing scalar tests. The changed Android build and
+actual Fast2D integration require CI and device validation; the earlier APK
+predates this batch change. Existing API fallback, frame ordering, and Box2D
+behavior must be verified before enabling it by default.
