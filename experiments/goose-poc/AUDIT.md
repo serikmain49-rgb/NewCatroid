@@ -81,3 +81,20 @@ configuration; this is not sufficient evidence that it is the Assistant bridge's
 exported `project.json`. The bridge format and Assistant plugin must be audited
 from their own source. Existing XStream compatibility classes remain in use and
 must not be replaced on the assumption that all projects share this IDE format.
+
+## Assistant 0.7.0 compatibility boundary
+
+The user's `NewCatroid-Assistant-0.7.0.nplug` archive was inspected (not
+installed or modified). Its `Main` and `Bridge` use reflection to access the
+Java project model, `ProjectManager`, `SceneController` and
+`io.XstreamSerializer`, and export `project.json` alongside `code.xml` and the
+block catalogue. The Goose branch still keeps these existing classes; this is
+not a complete compatibility test.
+
+The plugin's optional audio integration refers to `audio.RuntimeAudioSession`
+and `audio.ImportedAudioStore`. These classes are absent from the GitHub base
+revision used by this branch. The user also has a separate
+`NewCatroid-Runtime-Audio-Source-0.7.0.zip` with a candidate implementation.
+Until that separate change is reconciled and tested, the Goose branch cannot
+be claimed to support the plugin's runtime-audio features. Normal plugin
+behavior has not been verified on a device either.
