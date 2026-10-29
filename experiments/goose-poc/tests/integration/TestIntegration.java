@@ -19,6 +19,20 @@ public class TestIntegration {
     if (!GooseMovement.visibility(rects, 2, 0, 0, 10, 10)) throw new AssertionError("visibility unavailable");
     if (rects[4] != 1f || rects[9] != 0f || rects[14] != 99f) throw new AssertionError("visibility mismatch");
     if (GooseMovement.visibility(rects, 4, 0, 0, 10, 10)) throw new AssertionError("invalid visibility count");
+    java.util.Random random = new java.util.Random(87213);
+    for (int i = 0; i < 20000; i++) {
+      float ax = (random.nextFloat() - .5f) * 1000f, ay = (random.nextFloat() - .5f) * 1000f, az = (random.nextFloat() - .5f) * 1000f;
+      float bx = (random.nextFloat() - .5f) * 1000f, by = (random.nextFloat() - .5f) * 1000f, bz = (random.nextFloat() - .5f) * 1000f;
+      float dx = ax - bx, dy = ay - by, dz = az - bz;
+      float expectedDistance = (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
+      if (!GooseMovement.distance(ax, ay, az, bx, by, bz, distance) ||
+          Float.floatToIntBits(expectedDistance) != Float.floatToIntBits(distance[0]))
+        throw new AssertionError("3D distance mismatch " + i);
+    }
+    if (!GooseMovement.distance(Float.NaN,0,0,0,0,0,distance) || !Float.isNaN(distance[0]))
+      throw new AssertionError("NaN distance mismatch");
+    if (!GooseMovement.distance(Float.POSITIVE_INFINITY,0,0,0,0,0,distance) || !Float.isInfinite(distance[0]))
+      throw new AssertionError("Infinity distance mismatch");
     Thread t = new Thread(() -> { if (GooseMovement.update(0,0,0,0,0,0,0,0,new float[4])) throw new AssertionError("cross thread accepted"); });
     final Throwable[] failure = new Throwable[1];
     t.setUncaughtExceptionHandler((thread,error) -> failure[0] = error);
