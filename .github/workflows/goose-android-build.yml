@@ -76,17 +76,7 @@ jobs:
           target: google_apis
           disk-size: 6G
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: |
-            set -o pipefail
-            mkdir -p emulator-results
-            trap 'adb logcat -d -v time > emulator-results/logcat.txt || true' EXIT
-            adb logcat -c
-            adb install -r goose-build-results/*.apk
-            adb shell monkey -p org.DanVexTeam.NewCatroid -c android.intent.category.LAUNCHER 1
-            sleep 20
-            adb shell pidof org.DanVexTeam.NewCatroid
-            chmod +x ./gradlew
-            ./gradlew :catroid:connectedDanvexDebugAndroidTest -PgooseFast2D=true --no-daemon --stacktrace -Pandroid.testInstrumentationRunnerArguments.class=org.catrobat.catroid.test.goose.GooseNativeDeviceTest 2>&1 | tee emulator-results/instrumentation.log
+          script: bash experiments/goose-poc/tests/run-android-device-test.sh
       - name: Upload emulator log
         if: always()
         uses: actions/upload-artifact@v4
