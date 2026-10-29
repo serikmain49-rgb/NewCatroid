@@ -201,7 +201,8 @@ same existing project through `ProjectManager` and launch its real
 Using a fresh process allows the game/render thread to initialize Goose itself.
 This test has not yet been observed passing on the newer branch.
 
-`Goose Fast2D emulator benchmark` is a manually dispatched workflow with a
+`Goose Fast2D emulator benchmark` can be manually dispatched and also runs when
+its scenario or workflow files change in the pull request. It uses a
 Java/Goose build matrix. It generates rendered scenes with 10, 100 and 1000
 objects from a known project fixture, uses the same viewport, texture and
 motion in both builds, and logs frame windows and process memory to artifacts.

@@ -1,6 +1,14 @@
 name: Goose Fast2D emulator benchmark
 on:
   workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/workflows/goose-benchmark.yml'
+      - 'catroid/src/gooseAndroidTest/java/org/catrobat/catroid/test/goose/GooseBenchmarkSceneTest.java'
+      - 'experiments/goose-poc/tests/run-benchmark-scenes.sh'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
