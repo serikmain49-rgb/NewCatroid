@@ -10,6 +10,13 @@ mkdir -p "$OUT_DIR/classes"
   -I "$native" "$native/movement_generated.c" "$root/experiments/goose-poc/tests/embedded_signal_test.c" \
   -o "$OUT_DIR/embedded-signal-test" -lm -ldl -pthread
 "$OUT_DIR/embedded-signal-test"
+# Fail closed if the pure embed is ever compiled with Goose workers enabled.
+if "${CC:-gcc}" -std=c11 -DNC_GOOSE_PURE_EMBED=1 -DGS_NEED_THREADS=1 \
+    -c "$native/movement_generated.c" -o "$OUT_DIR/unsupported-workers.o" 2>"$OUT_DIR/unsupported-workers.log"; then
+  echo 'Expected Goose worker configuration to be rejected' >&2
+  exit 1
+fi
+grep -q 'pure Goose adapter does not support worker threads' "$OUT_DIR/unsupported-workers.log"
 "$JAVA_HOME/bin/javac" -d "$OUT_DIR/classes" "$root/experiments/goose-poc/tests/integration/org/catrobat/catroid/BuildConfig.java" "$root/catroid/src/main/java/org/catrobat/catroid/fast2d/GooseMovement.java" "$root/experiments/goose-poc/tests/integration/TestIntegration.java" "$root/experiments/goose-poc/tests/integration/OwnerThreadLifecycleTest.java"
 "$JAVA_HOME/bin/java" -Djava.library.path="$OUT_DIR" -cp "$OUT_DIR/classes" TestIntegration
 

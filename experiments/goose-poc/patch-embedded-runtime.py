@@ -6,12 +6,20 @@ stacks. A compiler update or a module requiring stacks fails generation rather
 than silently removing its required fault handlers.
 """
 from pathlib import Path
+import re
 import sys
 
 path = Path(sys.argv[1])
 code = path.read_text()
 if code.count('gs_rt_init(argc, argv, 0, 0, 0);') != 1:
     raise SystemExit('Embedded Goose adapter requires exactly zero main/worker data stacks')
+if re.search(r'^\s*#\s*define\s+GS_NEED_THREADS\s+1\b', code, re.MULTILINE):
+    raise SystemExit('Embedded Goose adapter does not support Goose worker threads')
+thread_config = '#ifndef GS_NEED_THREADS\n#define GS_NEED_THREADS 0\n#endif'
+if code.count(thread_config) != 1:
+    raise SystemExit('Pinned Goose threading configuration changed; review adapter')
+code = code.replace(thread_config, thread_config + '\n#if defined(NC_GOOSE_PURE_EMBED) && GS_NEED_THREADS\n'
+                    '#error "pure Goose adapter does not support worker threads"\n#endif')
 start = '''    gs_regions_init();
     gs_regions_begin(mainregions);
     gs_native_stack_init();

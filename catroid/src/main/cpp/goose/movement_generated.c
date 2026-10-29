@@ -111,6 +111,9 @@ typedef double gs_f64 GS_ALIGN1;
 #ifndef GS_NEED_THREADS
 #define GS_NEED_THREADS 0
 #endif
+#if defined(NC_GOOSE_PURE_EMBED) && GS_NEED_THREADS
+#error "pure Goose adapter does not support worker threads"
+#endif
 #ifndef GS_DEBUG
 #define GS_DEBUG 0          /* 1: overflow, `as` range, and tag checks (§9.3). */
 #endif
