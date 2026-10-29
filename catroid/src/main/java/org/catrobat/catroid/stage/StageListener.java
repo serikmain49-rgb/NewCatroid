@@ -1499,6 +1499,7 @@ public class StageListener implements ApplicationListener {
 
 	@Override
 	public void pause() {
+        if (gooseBenchmark != null) gooseBenchmark.reset();
         if (finished) {
             return;
         }
