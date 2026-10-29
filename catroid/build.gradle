@@ -243,8 +243,6 @@ android {
         androidTest {
             if (project.hasProperty('gooseDeviceTestsOnly')) {
                 java.setSrcDirs(['src/gooseAndroidTest/java'])
-            } else {
-                java.srcDir 'src/gooseAndroidTest/java'
             }
             resources.srcDirs += ['src/androidTest/res', 'src/androidTest/assets']
         }

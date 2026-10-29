@@ -138,3 +138,22 @@ formula lowering enabled, `StageListener.render` explicitly attempts to
 initialize on the game render thread before executing scripts; calls from other
 threads or after the original owner exits fall back to Java. The pinned Goose
 runtime still does not support transferring its owner to a replacement thread.
+
+## Preliminary movement microbenchmark
+
+On this Linux x86-64 host with OpenJDK 17, running the Android benchmark class
+with minimal `Log` and JUnit stubs, one run used 3,000 warmup and 10,000 timed
+iterations per case. Average nanoseconds per packed batch were:
+
+| Records | Java | Goose through JNI |
+| ---: | ---: | ---: |
+| 1 | 35 | 73 |
+| 10 | 34 | 103 |
+| 100 | 223 | 531 |
+| 1000 | 1300 | 2894 |
+
+This is a single host microbenchmark with simplified arrays, no ECS packing,
+rendering, or physics. Results are sensitive to JIT and scheduling and cannot
+predict Android or FPS. In this run Goose was slower; a performance claim or a
+default-on setting is not justified. The same instrumentation workload is
+available for Android, where its separate results must be measured.

@@ -150,3 +150,11 @@ each evaluation because formula trees are mutable; no speedup is claimed.
 Native host tests cover arithmetic and IEEE edge cases, and the Android test is
 configured to exercise the production bridge and formula path. Device behavior,
 full block compatibility and performance still require confirmation.
+
+The Android instrumentation smoke test also logs `GOOSE_MICRO` timings for
+1, 10, 100 and 1000 packed movement records, comparing the Java loop with a
+Goose JNI batch after warmup. Both paths must produce bit-identical results;
+timings are observations, not pass/fail thresholds. The test excludes real
+entity packing, scenes, graphics, physics, CPU/GPU frame times, thermal state
+and battery use, so it cannot establish an in-game FPS gain. Run the same APK
+and workloads on the target phones before drawing device-specific conclusions.
