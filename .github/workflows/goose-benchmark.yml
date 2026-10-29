@@ -6,6 +6,7 @@ on:
       - '.github/workflows/goose-benchmark.yml'
       - 'catroid/src/gooseAndroidTest/java/org/catrobat/catroid/test/goose/GooseBenchmarkSceneTest.java'
       - 'experiments/goose-poc/tests/run-benchmark-scenes.sh'
+      - 'experiments/goose-poc/tests/run-benchmark-comparison.sh'
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
@@ -15,10 +16,6 @@ jobs:
   scenes:
     runs-on: ubuntu-24.04
     timeout-minutes: 45
-    strategy:
-      fail-fast: false
-      matrix:
-        backend: ['false', 'true']
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,21 +36,19 @@ jobs:
           sudo udevadm trigger --name-match=kvm
       - name: Run rendered 2D scenarios
         uses: reactivecircus/android-emulator-runner@v2
-        env:
-          BENCH_BACKEND: ${{ matrix.backend }}
         with:
           api-level: 30
           arch: x86_64
           target: google_apis
           disk-size: 6G
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          script: bash experiments/goose-poc/tests/run-benchmark-scenes.sh
+          script: bash experiments/goose-poc/tests/run-benchmark-comparison.sh
       - name: Print benchmark measurements
         if: always()
         shell: bash
         run: |
           shopt -s nullglob
-          for file in benchmark-results/metrics-*.log; do
+          for file in benchmark-results/*/metrics-*.log; do
             printf 'Scenario file: %s\n' "$file"
             cat "$file"
           done
@@ -61,6 +56,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: goose-scenarios-backend-${{ matrix.backend }}
+          name: goose-scenarios-java-and-goose
           path: benchmark-results/
           if-no-files-found: warn
