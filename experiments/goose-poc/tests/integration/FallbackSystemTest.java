@@ -9,6 +9,7 @@ import org.catrobat.catroid.fast2d.components.TransformComponent;
 import org.catrobat.catroid.fast2d.components.TextureComponent;
 import org.catrobat.catroid.fast2d.systems.Fast2DMovementSystem;
 import org.catrobat.catroid.fast2d.systems.Fast2DRenderSystem;
+import org.catrobat.catroid.fast2d.systems.Fast2DPhysicsSystem;
 
 public final class FallbackSystemTest {
     static final class Movement extends Fast2DMovementSystem {
@@ -17,6 +18,10 @@ public final class FallbackSystemTest {
             mTransform = new ComponentMapper<>(t); mMovement = new ComponentMapper<>(m);
         }
         void run() { begin(); process(0); end(); }
+    }
+    static final class Physics extends Fast2DPhysicsSystem {
+        Physics(com.badlogic.gdx.physics.box2d.World physics, World world) { super(physics); this.world = world; }
+        void run() { begin(); }
     }
     static final class Render extends Fast2DRenderSystem {
         Render(SpriteBatch batch, TransformComponent[] ts, TextureComponent[] textures) {
@@ -41,6 +46,16 @@ public final class FallbackSystemTest {
         OrthographicCamera camera = new OrthographicCamera(); camera.viewportWidth = camera.viewportHeight = 20;
         render.setCamera(camera); render.run();
         if (!batch.drawn.toString().equals("[0]")) throw new AssertionError("Java visibility fallback failed: " + batch.drawn);
-        System.out.println("PASS: original Java movement and visibility fallback");
+        com.badlogic.gdx.physics.box2d.World box = new com.badlogic.gdx.physics.box2d.World();
+        Physics physics = new Physics(box, world);
+        float acc = 0, timeStep = 1f/60f; int total = 0;
+        for (int i = 0; i < 100; i++) {
+            world.delta = i % 2 == 0 ? .016f : .033f; acc += world.delta; int steps = 0;
+            while (acc >= timeStep && steps < 3) { acc -= timeStep; steps++; }
+            if (acc >= timeStep) acc %= timeStep;
+            total += steps; physics.run();
+            if (box.calls != total) throw new AssertionError("Java physics fallback failed");
+        }
+        System.out.println("PASS: original Java movement, visibility and physics fallback");
     }
 }

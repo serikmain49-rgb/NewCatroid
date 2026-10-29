@@ -25,5 +25,5 @@ printf '%s\n' 'package org.catrobat.catroid; public final class BuildConfig { pu
   "$testroot"/com/badlogic/gdx/graphics/*.java "$testroot"/com/badlogic/gdx/graphics/g2d/*.java \
   "$testroot"/com/badlogic/gdx/math/*.java "$testroot"/com/badlogic/gdx/physics/box2d/*.java \
   "$src/components/MovementComponent.java" "$src/components/TransformComponent.java" "$src/components/TextureComponent.java" "$src/components/PhysicsComponent.java" \
-  "$src/systems/Fast2DMovementSystem.java" "$src/systems/Fast2DRenderSystem.java" "$testroot/FallbackSystemTest.java"
+  "$src/systems/Fast2DMovementSystem.java" "$src/systems/Fast2DRenderSystem.java" "$src/systems/Fast2DPhysicsSystem.java" "$testroot/FallbackSystemTest.java"
 "$JAVA_HOME/bin/java" -cp "$OUT_DIR/fallback-classes" FallbackSystemTest
