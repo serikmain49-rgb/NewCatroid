@@ -1,0 +1,49 @@
+name: Goose Fast2D emulator benchmark
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  scenes:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        backend: ['false', 'true']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android tools
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses >/dev/null || true
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" 'platforms;android-34' 'build-tools;34.0.0' 'cmake;3.22.1' 'ndk;26.1.10909125'
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+      - name: Run rendered 2D scenarios
+        uses: reactivecircus/android-emulator-runner@v2
+        env:
+          BENCH_BACKEND: ${{ matrix.backend }}
+        with:
+          api-level: 30
+          arch: x86_64
+          target: google_apis
+          disk-size: 6G
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: bash experiments/goose-poc/tests/run-benchmark-scenes.sh
+      - name: Upload benchmark logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: goose-scenarios-backend-${{ matrix.backend }}
+          path: benchmark-results/
+          if-no-files-found: warn

@@ -200,3 +200,13 @@ same existing project through `ProjectManager` and launch its real
 `StageActivity`, requiring the project's own block assertion to report success.
 Using a fresh process allows the game/render thread to initialize Goose itself.
 This test has not yet been observed passing on the newer branch.
+
+`Goose Fast2D emulator benchmark` is a manually dispatched workflow with a
+Java/Goose build matrix. It generates rendered scenes with 10, 100 and 1000
+objects from a known project fixture, uses the same viewport, texture and
+motion in both builds, and logs frame windows and process memory to artifacts.
+Each scene runs in a fresh instrumentation process because Goose owns one game
+thread. Discard the first frame window after `GOOSE_SCENARIO phase=start` as
+warmup. Emulator results cannot represent either Redmi phone and do not provide
+GPU timestamps, draw calls, battery or thermal measurements. No results have
+been obtained until the workflow is actually run and inspected.
