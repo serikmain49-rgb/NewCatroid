@@ -171,3 +171,12 @@ movement and physics systems and compares 33 moving entities and a real Box2D
 ball/floor scene against Java arithmetic and a separate Box2D world over 120
 frames. This test does not render sprites or establish project/plugin
 compatibility; results must be checked in the Android CI run.
+
+The production Goose module currently uses no compiler-managed data stacks or
+Goose workers. Its generated C is adapted by `patch-embedded-runtime.py` to
+preserve host signal handlers and stdout buffering when compiled with
+`NC_GOOSE_PURE_EMBED`. The generator fails if the pinned compiler reports any
+Goose stacks or its runtime init block changes. Do not reuse this adapter for a
+module that allocates Goose stacks or starts Goose workers; those need a safe
+Android-aware runtime implementation. A host test checks signal-handler and
+alternate-stack preservation, not full Android/ART compatibility.

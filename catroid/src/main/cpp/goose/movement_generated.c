@@ -2701,7 +2701,9 @@ GS_API void gs_rt_start(int argc, char **argv, uint64_t reserve, uint64_t gap,
     // Unbuffered stdout: output is never lost to an abort or a killed run,
     // and interleaves correctly with stderr diagnostics. Revisit if print
     // throughput ever matters.
+#ifndef NC_GOOSE_PURE_EMBED
     setvbuf(stdout, NULL, _IONBF, 0);
+#endif
     #ifdef _WIN32
         // The bytes a program writes are the bytes that come out, '\n' one
         // byte as on every other platform, rather than a "\r\n" the CRT's
@@ -2712,9 +2714,18 @@ GS_API void gs_rt_start(int argc, char **argv, uint64_t reserve, uint64_t gap,
         _setmode(_fileno(stdout), _O_BINARY);
         _setmode(_fileno(stderr), _O_BINARY);
     #endif
+#ifdef NC_GOOSE_PURE_EMBED
+    /* The generated module declares no data stacks or Goose worker stacks.
+       Do not replace the host JVM's process-wide SIGSEGV/SIGBUS handlers. */
+    if (mainregions || workerregions) gs_panic("pure Goose adapter cannot own data stacks");
+    gs_page_size = gs_os_page_size();
+#else
     gs_regions_init();
+#endif
     gs_regions_begin(mainregions);
+#ifndef NC_GOOSE_PURE_EMBED
     gs_native_stack_init();
+#endif
     gs_scan_init();
 }
 

@@ -174,3 +174,25 @@ nanoseconds per sort (including array resets and JNI copying):
 The Java microbenchmark sorts primitive arrays, not the real ECS component
 lookups; reverse order is an insertion-sort worst case. These are host-only
 measurements, not Android, frame-time or whole-game performance results.
+
+## Goose runtime embedding and Android checks
+
+The pinned Goose runtime normally installs process-wide SIGSEGV/SIGBUS handlers,
+sets up an alternate signal stack and changes stdout buffering during init.
+That is intrusive when embedded in an Android/JVM process. For this specific
+numeric-only module, the compiler reports zero main and worker Goose data
+stacks. A deterministic generation-time adapter and `NC_GOOSE_PURE_EMBED`
+compile flag preserve the host's signal handlers, alternate stack and stdout
+buffering. The adapter refuses generation if that zero-stack property or the
+runtime initialization pattern changes; using it for an allocating Goose module
+requires a new runtime design. A host native test confirms signal handlers and
+the alternate stack remain unchanged. This does not by itself prove all ART,
+crash-handler and Android ABI interactions.
+
+GitHub Actions run 40862940083 successfully built the pre-formula APK, launched
+it on an x86_64 Android 11 emulator, and ran one production JNI instrumentation
+test successfully (movement, visibility, distance, physics plan and depth).
+It also passed the runtime-audio host checks with Android/player doubles. This
+is not a real-device, ARM, full Fast2D scene, codec, plugin, or performance
+verification. The newer formula, sort, real Box2D and embedded-runtime changes
+need their own completed CI results.

@@ -6,6 +6,8 @@ cd "$root"
 out="catroid/src/main/cpp/goose"
 "$GOOSE" --standalone --header "$out/movement_generated.h" -o "$out/movement_generated.c" experiments/goose-poc/math.goose
 sed -i -e 's/\bgs_i32\b/int32_t/g' -e 's/\bgs_f32\b/float/g' -e 's/\bgs_f64\b/double/g' "$out/movement_generated.h"
+# The Android app embeds a pure numeric module; preserve JVM signal handlers.
+python3 experiments/goose-poc/patch-embedded-runtime.py "$out/movement_generated.c"
 # Keep generated files free of trailing blank lines.
 python3 - "$out/movement_generated.c" <<'PY'
 import pathlib, sys

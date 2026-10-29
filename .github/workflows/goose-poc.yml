@@ -32,6 +32,8 @@ jobs:
           CC: gcc
           OUT_DIR: ${{ github.workspace }}/goose-results/host
         run: |
+          experiments/goose-poc/generate-engine-c.sh
+          git diff --exit-code -- catroid/src/main/cpp/goose/movement_generated.c catroid/src/main/cpp/goose/movement_generated.h
           experiments/goose-poc/build.sh
           "$OUT_DIR/smoke"
           experiments/goose-poc/tests/run-jvm-test.sh
@@ -50,7 +52,7 @@ jobs:
             export OUT_DIR="$GITHUB_WORKSPACE/goose-results/$target"
             export BUILD_JNI=1
             experiments/goose-poc/build.sh
-            "$CC" -std=c11 -O2 -ffp-contract=off -fPIC -shared catroid/src/main/cpp/goose/movement_generated.c catroid/src/main/cpp/goose/movement_jni.c -o "$OUT_DIR/libgoose_movement.so" -lm -ldl
+            "$CC" -std=c11 -O2 -ffp-contract=off -DNC_GOOSE_PURE_EMBED=1 -fPIC -shared catroid/src/main/cpp/goose/movement_generated.c catroid/src/main/cpp/goose/movement_jni.c -o "$OUT_DIR/libgoose_movement.so" -lm -ldl
           done
       - name: Build standalone Android JNI test APK
         env:
