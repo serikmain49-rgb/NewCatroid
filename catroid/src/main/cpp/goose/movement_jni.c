@@ -1,4 +1,5 @@
 #include <jni.h>
+#include <math.h>
 #include <pthread.h>
 #include "movement_generated.h"
 
@@ -157,4 +158,45 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_sortDepthNative(JNIEnv *env, jcla
     (*env)->ReleaseIntArrayElements(env, ids, values, 0);
     pthread_mutex_unlock(&lock);
     return JNI_TRUE;
+}
+
+/* A bounded program keeps JNI calls and Goose bounds checks safe for malformed inputs. */
+JNIEXPORT jboolean JNICALL
+Java_org_catrobat_catroid_fast2d_GooseMovement_formulaNumericNative(JNIEnv *env, jclass type,
+        jintArray operations, jdoubleArray values, jint count, jdoubleArray output) {
+    (void)type;
+    enum { LIMIT = 256 };
+    if (!operations || !values || !output || count <= 0 || count > LIMIT ||
+            count > (*env)->GetArrayLength(env, operations) ||
+            count > (*env)->GetArrayLength(env, values) || (*env)->GetArrayLength(env, output) < 1)
+        return JNI_FALSE;
+    jint op[LIMIT];
+    jdouble input[LIMIT], stack[LIMIT];
+    (*env)->GetIntArrayRegion(env, operations, 0, count, op);
+    if ((*env)->ExceptionCheck(env)) return JNI_FALSE;
+    (*env)->GetDoubleArrayRegion(env, values, 0, count, input);
+    if ((*env)->ExceptionCheck(env)) return JNI_FALSE;
+    int depth = 0;
+    for (int i = 0; i < count; i++) {
+        if (op[i] == 0) depth++;
+        else if (op[i] == 5) { if (depth < 1) return JNI_FALSE; }
+        else if (op[i] >= 1 && op[i] <= 4) { if (depth < 2) return JNI_FALSE; depth--; }
+        else return JNI_FALSE;
+    }
+    if (depth != 1) return JNI_FALSE;
+    pthread_mutex_lock(&lock);
+    if (!initialized) {
+        goose_init(0, NULL);
+        goose_owner_thread = 1;
+        initialized = 1;
+    } else if (!goose_owner_thread) {
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    sl_i32 code = { op, count };
+    sl_f64 operands = { input, count }, scratch = { stack, count };
+    jdouble result = newcatroid_formula_numeric(code, operands, scratch, NAN);
+    pthread_mutex_unlock(&lock);
+    (*env)->SetDoubleArrayRegion(env, output, 0, 1, &result);
+    return (*env)->ExceptionCheck(env) ? JNI_FALSE : JNI_TRUE;
 }

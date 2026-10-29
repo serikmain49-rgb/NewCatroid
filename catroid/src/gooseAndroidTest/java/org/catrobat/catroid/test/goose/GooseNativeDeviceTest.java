@@ -2,6 +2,8 @@ package org.catrobat.catroid.test.goose;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import org.catrobat.catroid.fast2d.GooseMovement;
+import org.catrobat.catroid.formulaeditor.FormulaElement;
+import org.catrobat.catroid.formulaeditor.FormulaElement.ElementType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.junit.Assert.assertEquals;
@@ -32,6 +34,26 @@ public class GooseNativeDeviceTest {
         float[] distance = new float[1];
         assertTrue(GooseMovement.distance(1, 2, 3, 4, 6, 3, distance));
         assertEquals(5f, distance[0], 0f);
+
+        // This runs on the same test thread as the native calls above.
+        assertTrue("Formula prototype flag must be enabled", org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_FORMULA);
+        double[] formulaResult = new double[1];
+        assertTrue(GooseMovement.formulaNumeric(new int[] {0, 0, 1},
+                new double[] {2, 3, 0}, 3, formulaResult));
+        assertEquals(5d, formulaResult[0], 0d);
+        FormulaElement left = new FormulaElement(ElementType.NUMBER, "4", null);
+        FormulaElement right = new FormulaElement(ElementType.NUMBER, "2", null);
+        FormulaElement expression = new FormulaElement(ElementType.OPERATOR, "DIVIDE", null, left, right);
+        assertEquals(2d, (Double) expression.interpretRecursive(null), 0d);
+        FormulaElement zero = new FormulaElement(ElementType.NUMBER, "0", null);
+        expression = new FormulaElement(ElementType.OPERATOR, "DIVIDE", null, left, zero);
+        assertTrue(Double.isNaN((Double) expression.interpretRecursive(null)));
+        FormulaElement max = new FormulaElement(ElementType.NUMBER, Double.toString(Double.MAX_VALUE), null);
+        expression = new FormulaElement(ElementType.OPERATOR, "PLUS", null, max, max);
+        assertEquals(Double.MAX_VALUE, (Double) expression.interpretRecursive(null), 0d);
+        FormulaElement text = new FormulaElement(ElementType.STRING, "not a number", null);
+        expression = new FormulaElement(ElementType.OPERATOR, "PLUS", null, left, text);
+        assertTrue(Double.isNaN((Double) expression.interpretRecursive(null)));
 
         float[] plan = new float[2];
         float step = 1f / 60f;

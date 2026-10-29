@@ -75,6 +75,17 @@ public final class GooseMovement {
         }
     }
 
+    /** Evaluate a bounded numeric postfix program; false leaves the Java path authoritative. */
+    public static boolean formulaNumeric(int[] ops, double[] values, int count, double[] out) {
+        if (!AVAILABLE) return false;
+        try {
+            return formulaNumericNative(ops, values, count, out);
+        } catch (LinkageError error) {
+            return false;
+        }
+    }
+
+    private static native boolean formulaNumericNative(int[] ops, double[] values, int count, double[] out);
     private static native boolean sortDepthNative(int[] ids, float[] depths, int count);
     private static native boolean physicsPlanNative(float accumulator, float timeStep, float[] out);
     private static native boolean visibilityBatch(float[] data, int count, float camX, float camY, float halfW, float halfH);

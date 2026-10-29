@@ -427,8 +427,34 @@ public class FormulaElement implements Serializable {
     }
 
     public Object interpretRecursive(Scope scope) {
+        if (org.catrobat.catroid.BuildConfig.FEATURE_GOOSE_FORMULA
+                && type == ElementType.OPERATOR
+                && org.catrobat.catroid.fast2d.GooseMovement.isAvailable()) {
+            GooseNumericProgram program = NUMERIC_PROGRAM.get();
+            program.reset();
+            if (program.append(this)
+                    && org.catrobat.catroid.fast2d.GooseMovement.formulaNumeric(
+                            program.ops, program.values, program.size, program.result)) {
+                org.catrobat.catroid.utils.PerformanceTracker.formulaEvaluations += program.nodes;
+                return program.result[0];
+            }
+        }
         Object rawReturnValue = rawInterpretRecursive(scope);
         return normalizeDegeneratedDoubleValues(rawReturnValue);
+    }
+
+    /* Numeric programs are ephemeral; project files and public model APIs are unchanged. */
+    private static final ThreadLocal<GooseNumericProgram> NUMERIC_PROGRAM =
+            ThreadLocal.withInitial(GooseNumericProgram::new);
+
+    String gooseRawValue() { return value; }
+
+    Double gooseNumericLiteral() {
+        if (cachedDoubleValue != null) return cachedDoubleValue;
+        if (value == null) return null;
+        try { cachedDoubleValue = Double.valueOf(value); }
+        catch (NumberFormatException invalid) { return null; }
+        return cachedDoubleValue;
     }
 
     private Object rawInterpretRecursive(Scope scope) {

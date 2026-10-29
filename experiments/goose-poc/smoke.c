@@ -1,6 +1,7 @@
 #include "goose_poc.h"
 #include <stdint.h>
 #include <math.h>
+#include <float.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -20,6 +21,32 @@ int main(int argc, char **argv) {
     if (newcatroid_goose_add(20, 22) != 42 || newcatroid_goose_add(-2, 3) != 1) {
         fputs("Goose C ABI smoke test failed\n", stderr);
         return 1;
+    }
+    /* Match the formula interpreter's double arithmetic, including overflow,
+       NaN and division by either sign of zero. Compare signed zeros too. */
+    {
+        int32_t code[] = {0, 0, 1, 0, 3, 0, 4, 5};
+        double input[8] = {0}, stack[8];
+        sl_i32 ops = {code, 8}; sl_f64 values = {input, 8}, scratch = {stack, 8};
+        const double edges[] = {0.0, -0.0, 1.0, -1.0, DBL_MAX, -DBL_MAX, 1e-300, NAN};
+        for (int i = 0; i < 40000; i++) {
+            input[0] = i < 8 ? edges[i] : (double)sample();
+            input[1] = i < 64 ? edges[(i / 8) % 8] : (double)sample();
+            input[3] = i % 3 == 0 ? DBL_MAX : (double)sample();
+            input[5] = i % 11 == 0 ? -0.0 : (double)sample();
+            double expected = input[0] + input[1];
+            if (isinf(expected)) expected = signbit(expected) ? -DBL_MAX : DBL_MAX;
+            expected *= input[3];
+            if (isinf(expected)) expected = signbit(expected) ? -DBL_MAX : DBL_MAX;
+            expected = input[5] == 0.0 ? NAN : expected / input[5];
+            if (isinf(expected)) expected = signbit(expected) ? -DBL_MAX : DBL_MAX;
+            expected = -expected;
+            double actual = newcatroid_formula_numeric(ops, values, scratch, NAN);
+            if (!(isnan(expected) && isnan(actual)) && memcmp(&expected, &actual, sizeof actual) != 0) {
+                fprintf(stderr, "Numeric expression mismatch at case %d\n", i);
+                return 1;
+            }
+        }
     }
     /* Match Fast2DMovementSystem's gravity-first update and float arithmetic. */
     for (int i = 0; i < 100000; i++) {

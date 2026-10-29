@@ -10,3 +10,11 @@ mkdir -p "$OUT_DIR/classes"
 "$JAVA_HOME/bin/java" -Djava.library.path="$OUT_DIR" -cp "$OUT_DIR/classes" TestIntegration
 
 "$JAVA_HOME/bin/java" -Djava.library.path="$OUT_DIR" -cp "$OUT_DIR/classes" OwnerThreadLifecycleTest
+
+# Compile the production numeric lowering with a minimal mutable model fixture.
+formula="$root/experiments/goose-poc/tests/formula/org/catrobat/catroid/formulaeditor"
+"$JAVA_HOME/bin/javac" -cp "$OUT_DIR/classes" -d "$OUT_DIR/classes" \
+  "$formula/FormulaElement.java" \
+  "$root/catroid/src/main/java/org/catrobat/catroid/formulaeditor/GooseNumericProgram.java" \
+  "$formula/GooseNumericProgramTest.java"
+"$JAVA_HOME/bin/java" -Djava.library.path="$OUT_DIR" -cp "$OUT_DIR/classes" org.catrobat.catroid.formulaeditor.GooseNumericProgramTest

@@ -46,6 +46,34 @@ public class TestIntegration {
     if (!GooseMovement.sortDepth(ids, depths, 3) || ids[0] != 7 || ids[1] != 42 || ids[2] != 19 || ids[3] != 900)
       throw new AssertionError("stable depth sort mismatch");
     if (GooseMovement.sortDepth(ids, depths, 5)) throw new AssertionError("invalid depth count");
+    double[] formulaResult = {123};
+    int[] code = {0, 0, 1, 0, 3, 0, 4, 5};
+    double[] operands = {1.5, 2.5, 0, 3, 0, 2, 0, 0};
+    if (!GooseMovement.formulaNumeric(code, operands, code.length, formulaResult) || formulaResult[0] != -6.0)
+      throw new AssertionError("numeric formula mismatch");
+    double[] edges = {0.0, -0.0, 1.0, -1.0, Double.MAX_VALUE, -Double.MAX_VALUE, 1e-300, Double.NaN};
+    for (int i = 0; i < 40000; i++) {
+      double left = i < 64 ? edges[i % 8] : random.nextGaussian() * 1e100;
+      double right = i < 64 ? edges[(i / 8) % 8] : random.nextGaussian() * 1e100;
+      int op = 1 + i % 4;
+      double expectedFormula;
+      if (op == 1) expectedFormula = left + right;
+      else if (op == 2) expectedFormula = left - right;
+      else if (op == 3) expectedFormula = left * right;
+      else expectedFormula = right == 0.0 ? Double.NaN : left / right;
+      if (expectedFormula == Double.POSITIVE_INFINITY) expectedFormula = Double.MAX_VALUE;
+      if (expectedFormula == Double.NEGATIVE_INFINITY) expectedFormula = -Double.MAX_VALUE;
+      if (!GooseMovement.formulaNumeric(new int[]{0, 0, op}, new double[]{left, right, 0}, 3, formulaResult)
+          || Double.doubleToLongBits(expectedFormula) != Double.doubleToLongBits(formulaResult[0]))
+        throw new AssertionError("numeric formula mismatch at " + i);
+    }
+    formulaResult[0] = -6.0;
+    if (GooseMovement.formulaNumeric(new int[]{1}, new double[1], 1, formulaResult)
+        || GooseMovement.formulaNumeric(new int[]{0, 99}, new double[2], 2, formulaResult)
+        || GooseMovement.formulaNumeric(new int[]{0, 0}, new double[2], 2, formulaResult)
+        || GooseMovement.formulaNumeric(code, operands, 257, formulaResult))
+      throw new AssertionError("invalid numeric formula accepted");
+    if (formulaResult[0] != -6.0) throw new AssertionError("invalid program changed result");
     Thread t = new Thread(() -> { if (GooseMovement.update(0,0,0,0,0,0,0,0,new float[4])) throw new AssertionError("cross thread accepted"); });
     final Throwable[] failure = new Throwable[1];
     t.setUncaughtExceptionHandler((thread,error) -> failure[0] = error);

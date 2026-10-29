@@ -3455,6 +3455,8 @@ typedef struct { gs_f32 *data; int64_t len; } sl_f32;
 
 typedef struct { gs_i32 *data; int64_t len; } sl_i32;
 
+typedef struct { gs_f64 *data; int64_t len; } sl_f64;
+
 typedef struct { uint8_t *data; int64_t len; } sl_u8;
 
 #pragma pack(pop)
@@ -4466,6 +4468,7 @@ static gs_f32 distance3d_g(gs_f32 p0, gs_f32 p1, gs_f32 p2, gs_f32 p3, gs_f32 p4
 static void visibility_batch_g(void *p0_data, int64_t p0_len, gs_f32 p1, gs_f32 p2, gs_f32 p3, gs_f32 p4);
 static void physics_plan_g(gs_f32 p0, gs_f32 p1, void *p2_data, int64_t p2_len);
 static void sort_depth_g(void *p0_data, int64_t p0_len, void *p1_data, int64_t p1_len);
+static gs_f64 formula_numeric_g(void *p0_data, int64_t p0_len, void *p1_data, int64_t p1_len, void *p2_data, int64_t p2_len, gs_f64 p3);
 
 /* ---- code ---- */
 static gs_i32 add_g(gs_i32 a_g, gs_i32 b_g) {
@@ -4680,6 +4683,89 @@ static void sort_depth_g(void *ids_g_data, int64_t ids_g_len, void *depths_g_dat
     return;
 }
 
+static gs_f64 formula_numeric_g(void *ops_g_data, int64_t ops_g_len, void *values_g_data, int64_t values_g_len, void *stack_g_data, int64_t stack_g_len, gs_f64 nan_value_g) {
+    sl_i32 ops_g; ops_g.data = ops_g_data; ops_g.len = ops_g_len;
+    sl_f64 values_g; values_g.data = values_g_data; values_g.len = values_g_len;
+    sl_f64 stack_g; stack_g.data = stack_g_data; stack_g.len = stack_g_len;
+    gs_i64 top_g;
+    gs_i64 t0;
+    gs_i64 t1;
+    gs_i64 t4;
+    gs_i32 op_g;
+    gs_i64 t6;
+    gs_i64 t9;
+    gs_i64 t11;
+    gs_i64 t14;
+    gs_i64 t16;
+    gs_f64 right_g;
+    gs_i64 t18;
+    gs_f64 left_g;
+    gs_f64 result_g;
+    gs_i64 t21;
+    gs_f64 t24;
+    top_g = 0;
+    t0 = 0;
+    t1 = (ops_g.len);
+    for (gs_i64 i_g = t0; i_g < t1; i_g++) {
+        t4 = i_g;
+        gs_i32 *t5 = ops_g.data;
+        op_g = t5[t4];
+        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(0))) {
+            t6 = top_g;
+            gs_f64 *t7 = stack_g.data;
+            gs_f64 *t8 = &(t7[GS_IDX((int64_t)(t6), stack_g.len, gs_file0, 88)]);
+            t9 = i_g;
+            gs_f64 *t10 = values_g.data;
+            (*t8) = t10[GS_IDX((int64_t)(t9), values_g.len, gs_file0, 88)];
+            top_g = gs_add_i64(top_g, 1, gs_file0, 89);
+        } else {
+            if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(5))) {
+                t11 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 91);
+                gs_f64 *t12 = stack_g.data;
+                gs_f64 *t13 = &(t12[GS_IDX((int64_t)(t11), stack_g.len, gs_file0, 91)]);
+                t14 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 91);
+                gs_f64 *t15 = stack_g.data;
+                (*t13) = (-t15[t14]);
+            } else {
+                t16 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 93);
+                gs_f64 *t17 = stack_g.data;
+                right_g = t17[GS_IDX((int64_t)(t16), stack_g.len, gs_file0, 93)];
+                t18 = gs_sub_i64((gs_i64)(top_g), 2, gs_file0, 94);
+                gs_f64 *t19 = stack_g.data;
+                left_g = t19[GS_IDX((int64_t)(t18), stack_g.len, gs_file0, 94)];
+                top_g = gs_sub_i64(top_g, 1, gs_file0, 95);
+                result_g = nan_value_g;
+                if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(1))) {
+                    result_g = ((gs_f64)((gs_f64)(left_g)) + (gs_f64)(right_g));
+                }
+                if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(2))) {
+                    result_g = ((gs_f64)((gs_f64)(left_g)) - (gs_f64)(right_g));
+                }
+                if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(3))) {
+                    result_g = ((gs_f64)((gs_f64)(left_g)) * (gs_f64)(right_g));
+                }
+                uint8_t t20 = (uint8_t)((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(4)) != 0);
+                if ((uint8_t)(t20 & (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(right_g)) == (gs_f64)(0.0))) != 0))) {
+                    result_g = ((gs_f64)((gs_f64)(left_g)) / (gs_f64)(right_g));
+                }
+                if ((uint8_t)((gs_f64)((gs_f64)(result_g)) > (gs_f64)(1.7976931348623157e+308))) {
+                    result_g = 1.7976931348623157e+308;
+                }
+                if ((uint8_t)((gs_f64)((gs_f64)(result_g)) < (gs_f64)(-1.7976931348623157e+308))) {
+                    result_g = -1.7976931348623157e+308;
+                }
+                t21 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 104);
+                gs_f64 *t22 = stack_g.data;
+                gs_f64 *t23 = &(t22[t21]);
+                (*t23) = result_g;
+            }
+        }
+    }
+    gs_f64 *t25 = stack_g.data;
+    t24 = t25[GS_IDX((int64_t)(0), stack_g.len, gs_file0, 107)];
+    return t24;
+}
+
 static void gs_init_globals(void) {
 }
 
@@ -4742,4 +4828,10 @@ void newcatroid_sort_depth(sl_i32 gs_export_arg0_8, sl_f32 gs_export_arg1_8) {
     if (!gs_program_initialized)
         gs_panic("goose_init must be called before exported functions");
     sort_depth_g(gs_export_arg0_8.data, gs_export_arg0_8.len, gs_export_arg1_8.data, gs_export_arg1_8.len);
+}
+
+gs_f64 newcatroid_formula_numeric(sl_i32 gs_export_arg0_9, sl_f64 gs_export_arg1_9, sl_f64 gs_export_arg2_6, gs_f64 gs_export_arg3_3) {
+    if (!gs_program_initialized)
+        gs_panic("goose_init must be called before exported functions");
+    return formula_numeric_g(gs_export_arg0_9.data, gs_export_arg0_9.len, gs_export_arg1_9.data, gs_export_arg1_9.len, gs_export_arg2_6.data, gs_export_arg2_6.len, gs_export_arg3_3);
 }

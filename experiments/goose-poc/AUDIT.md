@@ -114,3 +114,20 @@ suggests a pre-existing exact-floating-point expectation, but a clean baseline
 run has been configured and is still needed to confirm it. Java 17 unit-test
 module opens were added without changing formula results. These failures must
 not be reported as passing or silently excluded.
+
+## Status update: numeric formula prototype
+
+The original decimal formula test also failed against the unmodified baseline
+in CI run 40844845793. This confirms that particular failing expectation is
+not evidence of a Goose regression; the test itself has not been changed.
+
+An experimental flag, `-PgooseFormula=true`, enables a Goose numeric postfix
+interpreter for pure literal trees with addition, subtraction, multiplication,
+division, unary minus, and brackets. Other nodes are executed by the unchanged
+Java interpreter. Project XML and plugin model classes are retained. Host tests
+compare 20,000 randomly generated trees and 40,000 binary operations with a
+Java reference, with NaNs, signed zero and overflow, and reject invalid native
+programs. The original production `FormulaElement` integration and the new
+Android test still need a successful Android CI run. This prototype is rebuilt
+on every evaluation to avoid caching stale mutable formula trees, and has no
+measured speed benefit. It is disabled by default.

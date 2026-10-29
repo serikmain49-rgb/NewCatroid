@@ -76,3 +76,33 @@ export "newcatroid_sort_depth" fn sort_depth(ids: i32[:], depths: f32[:]) {
         depths[j] = depth;
     }
 }
+
+// Numeric expression bytecode. The bridge validates stack effects and lengths.
+// 0 = literal, 1 = add, 2 = subtract, 3 = multiply, 4 = divide, 5 = negate.
+// Every instruction reproduces FormulaElement's intermediate infinity normalization.
+export "newcatroid_formula_numeric" fn formula_numeric(ops: i32[:], values: f64[:], stack: f64[:], nan_value: f64) -> f64 {
+    var top = 0;
+    for i in 0..ops.len {
+        let op = ops[i];
+        if op == 0 {
+            stack[top] = values[i];
+            top += 1;
+        } else if op == 5 {
+            stack[top - 1] = -stack[top - 1];
+        } else {
+            let right = stack[top - 1];
+            let left = stack[top - 2];
+            top -= 1;
+            var result = nan_value;
+            if op == 1 { result = left + right; }
+            if op == 2 { result = left - right; }
+            if op == 3 { result = left * right; }
+            if op == 4 && right != 0.0 { result = left / right; }
+            let max = 1.7976931348623157e308;
+            if result > max { result = max; }
+            if result < -max { result = -max; }
+            stack[top - 1] = result;
+        }
+    }
+    stack[0]
+}

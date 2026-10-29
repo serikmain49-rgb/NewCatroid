@@ -139,3 +139,14 @@ The opt-in Fast2D renderer also delegates stable depth sorting to Goose,
 while preserving Java's `>` comparison semantics and using the previous sort
 as fallback. Host tests include equal depths, NaN and infinity. These new
 changes require fresh CI and device verification; no performance claim is made.
+
+An additional experimental `-PgooseFormula=true` flag lowers pure numeric
+literal arithmetic (`+`, `-`, `*`, `/`, unary minus and brackets) to a bounded
+postfix program evaluated by Goose. It requires `-PgooseFast2D=true` to load the
+native library and otherwise falls back to Java. Variables, sensors, strings,
+functions, other operators and malformed or oversized trees stay in the existing
+interpreter. No project format changes are required. The program is rebuilt on
+each evaluation because formula trees are mutable; no speedup is claimed.
+Native host tests cover arithmetic and IEEE edge cases, and the Android test is
+configured to exercise the production bridge and formula path. Device behavior,
+full block compatibility and performance still require confirmation.
