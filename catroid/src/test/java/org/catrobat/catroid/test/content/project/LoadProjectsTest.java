@@ -28,6 +28,7 @@ import android.content.Context;
 import org.catrobat.catroid.BuildConfig;
 import org.catrobat.catroid.ProjectManager;
 import org.catrobat.catroid.content.Project;
+import org.catrobat.catroid.content.XmlHeader;
 import org.catrobat.catroid.content.bricks.Brick;
 import org.catrobat.catroid.exceptions.CompatibilityProjectException;
 import org.catrobat.catroid.exceptions.OutdatedVersionProjectException;
@@ -62,12 +63,15 @@ public class LoadProjectsTest {
 	private File fileMock;
 	private Context contextMock;
 	private Project projectMock;
+	private XmlHeader headerMock;
 
 	@Before
 	public void setUp() throws Exception {
 		fileMock = Mockito.mock(File.class);
 		contextMock = Mockito.mock(Context.class);
 		projectMock = Mockito.mock(Project.class);
+		headerMock = Mockito.mock(XmlHeader.class);
+		when(projectMock.getXmlHeader()).thenReturn(headerMock);
 		StaticSingletonInitializer.initializeStaticSingletonMethods();
 		projectManagerSpy = PowerMockito.spy(ProjectManager.getInstance());
 		XstreamSerializer xstreamSerializerMock = PowerMockito.mock(XstreamSerializer.class);
@@ -111,6 +115,10 @@ public class LoadProjectsTest {
 		projectManagerSpy.loadProject(fileMock, contextMock);
 
 		verify(projectMock, times(1)).setScreenMode(any());
+		verify(headerMock).setCustomResolution(false);
+		verify(headerMock).setPhysicsWidthArea(3.0f);
+		verify(headerMock).setPhysicsHeightArea(2.0f);
+		verify(headerMock).setGitRemoteUrl("");
 
 		PowerMockito.verifyStatic(ProjectManager.class, times(1));
 		ProjectManager.updateCollisionFormulasTo993(projectMock);
