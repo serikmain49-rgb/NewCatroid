@@ -12,7 +12,7 @@ import static org.junit.Assert.assertTrue;
 /** Verifies the production JNI bridge on Android, not just the host JVM. */
 @RunWith(AndroidJUnit4.class)
 public class GooseNativeDeviceTest {
-    @Test public void movementVisibilityDistanceAndPhysics() {
+    @Test public void movementVisibilityDistanceAndPhysics() throws Exception {
         float[] movement = {10f, -4f, 2f, 3f, -5f, -9.8f, .75f};
         float dt = .125f;
         float vy = movement[4] + movement[5] * dt;
@@ -71,6 +71,7 @@ public class GooseNativeDeviceTest {
         if (remainder >= step) remainder %= step;
         assertEquals(remainder, plan[1], 0f);
         GooseFast2DIntegration.run();
+        GooseProjectRoundTrip.run();
         GooseMovementBenchmark.run();
         GooseSortBenchmark.run();
     }

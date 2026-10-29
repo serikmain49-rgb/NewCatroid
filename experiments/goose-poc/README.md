@@ -180,3 +180,9 @@ Goose stacks or its runtime init block changes. Do not reuse this adapter for a
 module that allocates Goose stacks or starts Goose workers; those need a safe
 Android-aware runtime implementation. A host test checks signal-handler and
 alternate-stack preservation, not full Android/ART compatibility.
+
+The device test also loads a repository-provided Pocket Code project fixture,
+appends an existing NewCatroid Fast2D velocity brick, saves and reloads it in an
+isolated temporary directory, and checks sprite/script/brick structure and the
+new brick's ID. This covers one concrete XML round trip, not all project
+versions, media formats, Assistant APIs or plugins.
