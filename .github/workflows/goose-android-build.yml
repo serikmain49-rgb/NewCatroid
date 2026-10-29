@@ -6,6 +6,9 @@ on:
       - 'catroid/**'
       - 'experiments/goose-poc/**'
       - '.github/workflows/goose-android-build.yml'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
