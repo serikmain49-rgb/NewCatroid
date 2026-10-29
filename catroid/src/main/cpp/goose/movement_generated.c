@@ -4697,12 +4697,15 @@ static gs_f64 formula_numeric_g(void *ops_g_data, int64_t ops_g_len, void *value
     gs_i64 t11;
     gs_i64 t14;
     gs_i64 t16;
-    gs_f64 right_g;
     gs_i64 t18;
+    gs_i64 t21;
+    gs_i64 t24;
+    gs_f64 right_g;
+    gs_i64 t26;
     gs_f64 left_g;
     gs_f64 result_g;
-    gs_i64 t21;
-    gs_f64 t24;
+    gs_i64 t33;
+    gs_f64 t36;
     top_g = 0;
     t0 = 0;
     t1 = (ops_g.len);
@@ -4713,57 +4716,110 @@ static gs_f64 formula_numeric_g(void *ops_g_data, int64_t ops_g_len, void *value
         if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(0))) {
             t6 = top_g;
             gs_f64 *t7 = stack_g.data;
-            gs_f64 *t8 = &(t7[GS_IDX((int64_t)(t6), stack_g.len, gs_file0, 88)]);
+            gs_f64 *t8 = &(t7[GS_IDX((int64_t)(t6), stack_g.len, gs_file0, 89)]);
             t9 = i_g;
             gs_f64 *t10 = values_g.data;
-            (*t8) = t10[GS_IDX((int64_t)(t9), values_g.len, gs_file0, 88)];
-            top_g = gs_add_i64(top_g, 1, gs_file0, 89);
+            (*t8) = t10[GS_IDX((int64_t)(t9), values_g.len, gs_file0, 89)];
+            top_g = gs_add_i64(top_g, 1, gs_file0, 90);
         } else {
             if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(5))) {
-                t11 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 91);
+                t11 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 92);
                 gs_f64 *t12 = stack_g.data;
-                gs_f64 *t13 = &(t12[GS_IDX((int64_t)(t11), stack_g.len, gs_file0, 91)]);
-                t14 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 91);
+                gs_f64 *t13 = &(t12[GS_IDX((int64_t)(t11), stack_g.len, gs_file0, 92)]);
+                t14 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 92);
                 gs_f64 *t15 = stack_g.data;
                 (*t13) = (-t15[t14]);
             } else {
-                t16 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 93);
-                gs_f64 *t17 = stack_g.data;
-                right_g = t17[GS_IDX((int64_t)(t16), stack_g.len, gs_file0, 93)];
-                t18 = gs_sub_i64((gs_i64)(top_g), 2, gs_file0, 94);
-                gs_f64 *t19 = stack_g.data;
-                left_g = t19[GS_IDX((int64_t)(t18), stack_g.len, gs_file0, 94)];
-                top_g = gs_sub_i64(top_g, 1, gs_file0, 95);
-                result_g = nan_value_g;
-                if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(1))) {
-                    result_g = ((gs_f64)((gs_f64)(left_g)) + (gs_f64)(right_g));
+                if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(12))) {
+                    t16 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 94);
+                    gs_f64 *t17 = stack_g.data;
+                    if ((uint8_t)((gs_f64)((gs_f64)(t17[GS_IDX((int64_t)(t16), stack_g.len, gs_file0, 94)])) == (gs_f64)(0.0))) {
+                        t18 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 94);
+                        gs_f64 *t19 = stack_g.data;
+                        gs_f64 *t20 = &(t19[t18]);
+                        (*t20) = 1.0;
+                    } else {
+                        t21 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 95);
+                        gs_f64 *t22 = stack_g.data;
+                        gs_f64 *t23 = &(t22[t21]);
+                        (*t23) = 0.0;
+                    }
+                } else {
+                    t24 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 97);
+                    gs_f64 *t25 = stack_g.data;
+                    right_g = t25[GS_IDX((int64_t)(t24), stack_g.len, gs_file0, 97)];
+                    t26 = gs_sub_i64((gs_i64)(top_g), 2, gs_file0, 98);
+                    gs_f64 *t27 = stack_g.data;
+                    left_g = t27[GS_IDX((int64_t)(t26), stack_g.len, gs_file0, 98)];
+                    top_g = gs_sub_i64(top_g, 1, gs_file0, 99);
+                    result_g = nan_value_g;
+                    if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(1))) {
+                        result_g = ((gs_f64)((gs_f64)(left_g)) + (gs_f64)(right_g));
+                    }
+                    if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(2))) {
+                        result_g = ((gs_f64)((gs_f64)(left_g)) - (gs_f64)(right_g));
+                    }
+                    if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(3))) {
+                        result_g = ((gs_f64)((gs_f64)(left_g)) * (gs_f64)(right_g));
+                    }
+                    uint8_t t28 = (uint8_t)((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(4)) != 0);
+                    if ((uint8_t)(t28 & (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(right_g)) == (gs_f64)(0.0))) != 0))) {
+                        result_g = ((gs_f64)((gs_f64)(left_g)) / (gs_f64)(right_g));
+                    }
+                    if ((uint8_t)((gs_i32)((gs_i32)(op_g)) >= (gs_i32)(6))) {
+                        uint8_t truth_g = 0;
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(6))) {
+                            truth_g = (uint8_t)((gs_f64)((gs_f64)(left_g)) > (gs_f64)(right_g));
+                        }
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(7))) {
+                            truth_g = (uint8_t)((gs_f64)((gs_f64)(left_g)) >= (gs_f64)(right_g));
+                        }
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(8))) {
+                            truth_g = (uint8_t)((gs_f64)((gs_f64)(left_g)) < (gs_f64)(right_g));
+                        }
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(9))) {
+                            truth_g = (uint8_t)((gs_f64)((gs_f64)(left_g)) <= (gs_f64)(right_g));
+                        }
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(10))) {
+                            uint8_t t29 = (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(left_g)) == (gs_f64)(0.0))) != 0);
+                            truth_g = (uint8_t)(t29 & (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(right_g)) == (gs_f64)(0.0))) != 0));
+                        }
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(11))) {
+                            uint8_t t30 = (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(left_g)) == (gs_f64)(0.0))) != 0);
+                            truth_g = (uint8_t)(t30 | (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(right_g)) == (gs_f64)(0.0))) != 0));
+                        }
+                        uint8_t t31 = (uint8_t)((uint8_t)((gs_f64)((gs_f64)(left_g)) == (gs_f64)(right_g)) != 0);
+                        uint8_t t32 = (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(left_g)) == (gs_f64)(left_g))) != 0);
+                        uint8_t equal_g = (uint8_t)(t31 | (uint8_t)((uint8_t)(t32 & (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(right_g)) == (gs_f64)(right_g))) != 0)) != 0));
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(13))) {
+                            truth_g = equal_g;
+                        }
+                        if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(14))) {
+                            truth_g = (uint8_t)(!equal_g);
+                        }
+                        if (truth_g) {
+                            result_g = 1.0;
+                        } else {
+                            result_g = 0.0;
+                        }
+                    }
+                    if ((uint8_t)((gs_f64)((gs_f64)(result_g)) > (gs_f64)(1.7976931348623157e+308))) {
+                        result_g = 1.7976931348623157e+308;
+                    }
+                    if ((uint8_t)((gs_f64)((gs_f64)(result_g)) < (gs_f64)(-1.7976931348623157e+308))) {
+                        result_g = -1.7976931348623157e+308;
+                    }
+                    t33 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 122);
+                    gs_f64 *t34 = stack_g.data;
+                    gs_f64 *t35 = &(t34[t33]);
+                    (*t35) = result_g;
                 }
-                if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(2))) {
-                    result_g = ((gs_f64)((gs_f64)(left_g)) - (gs_f64)(right_g));
-                }
-                if ((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(3))) {
-                    result_g = ((gs_f64)((gs_f64)(left_g)) * (gs_f64)(right_g));
-                }
-                uint8_t t20 = (uint8_t)((uint8_t)((gs_i32)((gs_i32)(op_g)) == (gs_i32)(4)) != 0);
-                if ((uint8_t)(t20 & (uint8_t)((uint8_t)(!((gs_f64)((gs_f64)(right_g)) == (gs_f64)(0.0))) != 0))) {
-                    result_g = ((gs_f64)((gs_f64)(left_g)) / (gs_f64)(right_g));
-                }
-                if ((uint8_t)((gs_f64)((gs_f64)(result_g)) > (gs_f64)(1.7976931348623157e+308))) {
-                    result_g = 1.7976931348623157e+308;
-                }
-                if ((uint8_t)((gs_f64)((gs_f64)(result_g)) < (gs_f64)(-1.7976931348623157e+308))) {
-                    result_g = -1.7976931348623157e+308;
-                }
-                t21 = gs_sub_i64((gs_i64)(top_g), 1, gs_file0, 104);
-                gs_f64 *t22 = stack_g.data;
-                gs_f64 *t23 = &(t22[t21]);
-                (*t23) = result_g;
             }
         }
     }
-    gs_f64 *t25 = stack_g.data;
-    t24 = t25[GS_IDX((int64_t)(0), stack_g.len, gs_file0, 107)];
-    return t24;
+    gs_f64 *t37 = stack_g.data;
+    t36 = t37[GS_IDX((int64_t)(0), stack_g.len, gs_file0, 125)];
+    return t36;
 }
 
 static void gs_init_globals(void) {

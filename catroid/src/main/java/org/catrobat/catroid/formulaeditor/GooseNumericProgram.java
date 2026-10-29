@@ -34,9 +34,20 @@ final class GooseNumericProgram {
             case "MINUS": op = element.leftChild == null ? 5 : 2; break;
             case "MULT": op = 3; break;
             case "DIVIDE": op = 4; break;
+            case "GREATER_THAN": op = 6; break;
+            case "GREATER_OR_EQUAL": op = 7; break;
+            case "SMALLER_THAN": op = 8; break;
+            case "SMALLER_OR_EQUAL": op = 9; break;
+            case "LOGICAL_AND": op = 10; break;
+            case "LOGICAL_OR": op = 11; break;
+            case "LOGICAL_NOT":
+                if (element.leftChild != null) return false;
+                op = 12; break;
+            case "EQUAL": op = 13; break;
+            case "NOT_EQUAL": op = 14; break;
             default: return false;
         }
-        if (op != 5 && !append(element.leftChild)) return false;
+        if (op != 5 && op != 12 && !append(element.leftChild)) return false;
         if (!append(element.rightChild)) return false;
         if (size >= LIMIT) return false;
         ops[size++] = op;

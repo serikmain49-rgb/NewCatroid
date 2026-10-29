@@ -123,7 +123,7 @@ not evidence of a Goose regression; the test itself has not been changed.
 
 An experimental flag, `-PgooseFormula=true`, enables a Goose numeric postfix
 interpreter for pure literal trees with addition, subtraction, multiplication,
-division, unary minus, and brackets. Other nodes are executed by the unchanged
+division, unary minus, comparisons, Boolean operators and brackets. Other nodes are executed by the unchanged
 Java interpreter. Project XML and plugin model classes are retained. Host tests
 compare 20,000 randomly generated trees and 40,000 binary operations with a
 Java reference, with NaNs, signed zero and overflow, and reject invalid native

@@ -78,7 +78,8 @@ export "newcatroid_sort_depth" fn sort_depth(ids: i32[:], depths: f32[:]) {
 }
 
 // Numeric expression bytecode. The bridge validates stack effects and lengths.
-// 0 = literal, 1 = add, 2 = subtract, 3 = multiply, 4 = divide, 5 = negate.
+// 0 = literal, 1..4 = arithmetic, 5 = negate, 6..11 = comparisons/logic,
+// 12 = logical not, 13 = numeric equal, 14 = numeric not equal.
 // Every instruction reproduces FormulaElement's intermediate infinity normalization.
 export "newcatroid_formula_numeric" fn formula_numeric(ops: i32[:], values: f64[:], stack: f64[:], nan_value: f64) -> f64 {
     var top = 0;
@@ -89,6 +90,9 @@ export "newcatroid_formula_numeric" fn formula_numeric(ops: i32[:], values: f64[
             top += 1;
         } else if op == 5 {
             stack[top - 1] = -stack[top - 1];
+        } else if op == 12 {
+            if stack[top - 1] == 0.0 { stack[top - 1] = 1.0; }
+            else { stack[top - 1] = 0.0; }
         } else {
             let right = stack[top - 1];
             let left = stack[top - 2];
@@ -98,6 +102,20 @@ export "newcatroid_formula_numeric" fn formula_numeric(ops: i32[:], values: f64[
             if op == 2 { result = left - right; }
             if op == 3 { result = left * right; }
             if op == 4 && right != 0.0 { result = left / right; }
+            if op >= 6 {
+                var truth = false;
+                if op == 6 { truth = left > right; }
+                if op == 7 { truth = left >= right; }
+                if op == 8 { truth = left < right; }
+                if op == 9 { truth = left <= right; }
+                if op == 10 { truth = left != 0.0 && right != 0.0; }
+                if op == 11 { truth = left != 0.0 || right != 0.0; }
+                // FormulaElement treats two NaN values as equal.
+                let equal = left == right || (left != left && right != right);
+                if op == 13 { truth = equal; }
+                if op == 14 { truth = !equal; }
+                if truth { result = 1.0; } else { result = 0.0; }
+            }
             let max = 1.7976931348623157e308;
             if result > max { result = max; }
             if result < -max { result = -max; }

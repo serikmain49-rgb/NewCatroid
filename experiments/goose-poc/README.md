@@ -141,7 +141,7 @@ as fallback. Host tests include equal depths, NaN and infinity. These new
 changes require fresh CI and device verification; no performance claim is made.
 
 An additional experimental `-PgooseFormula=true` flag lowers pure numeric
-literal arithmetic (`+`, `-`, `*`, `/`, unary minus and brackets) to a bounded
+literal arithmetic, comparisons and logical operations to a bounded
 postfix program evaluated by Goose. It requires `-PgooseFast2D=true` to load the
 native library and otherwise falls back to Java. Variables, sensors, strings,
 functions, other operators and malformed or oversized trees stay in the existing

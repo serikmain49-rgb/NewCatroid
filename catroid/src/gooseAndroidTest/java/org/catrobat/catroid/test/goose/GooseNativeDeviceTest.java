@@ -51,6 +51,13 @@ public class GooseNativeDeviceTest {
         FormulaElement max = new FormulaElement(ElementType.NUMBER, Double.toString(Double.MAX_VALUE), null);
         expression = new FormulaElement(ElementType.OPERATOR, "PLUS", null, max, max);
         assertEquals(Double.MAX_VALUE, (Double) expression.interpretRecursive(null), 0d);
+        expression = new FormulaElement(ElementType.OPERATOR, "GREATER_THAN", null, left, right);
+        assertEquals(1d, (Double) expression.interpretRecursive(null), 0d);
+        FormulaElement not = new FormulaElement(ElementType.OPERATOR, "LOGICAL_NOT", null, null, zero);
+        assertEquals(1d, (Double) not.interpretRecursive(null), 0d);
+        FormulaElement nan = new FormulaElement(ElementType.NUMBER, "NaN", null);
+        expression = new FormulaElement(ElementType.OPERATOR, "EQUAL", null, nan, nan);
+        assertEquals(1d, (Double) expression.interpretRecursive(null), 0d);
         FormulaElement text = new FormulaElement(ElementType.STRING, "not a number", null);
         expression = new FormulaElement(ElementType.OPERATOR, "PLUS", null, left, text);
         assertTrue(Double.isNaN((Double) expression.interpretRecursive(null)));

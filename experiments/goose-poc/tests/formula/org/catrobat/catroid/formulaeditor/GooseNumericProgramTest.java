@@ -5,7 +5,9 @@ import static org.catrobat.catroid.formulaeditor.FormulaElement.ElementType.*;
 
 public final class GooseNumericProgramTest {
     private static final Random random = new Random(151492);
-    private static final String[] OPS = {"PLUS", "MINUS", "MULT", "DIVIDE"};
+    private static final String[] OPS = {"PLUS", "MINUS", "MULT", "DIVIDE", "GREATER_THAN",
+            "GREATER_OR_EQUAL", "SMALLER_THAN", "SMALLER_OR_EQUAL", "LOGICAL_AND", "LOGICAL_OR",
+            "EQUAL", "NOT_EQUAL", "LOGICAL_NOT"};
     private static final String[] EDGES = {"0.0", "-0.0", "NaN", "Infinity", "-Infinity", "1e-300", "1e300"};
     private static FormulaElement literal() {
         String value = random.nextInt(4) == 0 ? EDGES[random.nextInt(EDGES.length)]
@@ -16,7 +18,8 @@ public final class GooseNumericProgramTest {
         if (depth == 0 || random.nextInt(6) == 0) return literal();
         if (random.nextInt(8) == 0) return new FormulaElement(BRACKET, null, null, tree(depth - 1));
         String op = OPS[random.nextInt(OPS.length)];
-        FormulaElement left = op.equals("MINUS") && random.nextInt(5) == 0 ? null : tree(depth - 1);
+        FormulaElement left = op.equals("LOGICAL_NOT") || op.equals("MINUS") && random.nextInt(5) == 0
+                ? null : tree(depth - 1);
         return new FormulaElement(OPERATOR, op, left, tree(depth - 1));
     }
     private static double normal(double d) {
@@ -28,7 +31,10 @@ public final class GooseNumericProgramTest {
         if (e.type == NUMBER) return normal(e.gooseNumericLiteral());
         if (e.type == BRACKET) return javaValue(e.rightChild);
         double right;
-        if (e.leftChild == null) return normal(-javaValue(e.rightChild));
+        if (e.leftChild == null) {
+            double v = javaValue(e.rightChild);
+            return e.value.equals("LOGICAL_NOT") ? (v == 0 ? 1.0 : 0.0) : normal(-v);
+        }
         double left = javaValue(e.leftChild);
         right = javaValue(e.rightChild);
         switch (e.value) {
@@ -36,6 +42,14 @@ public final class GooseNumericProgramTest {
             case "MINUS": return normal(left - right);
             case "MULT": return normal(left * right);
             case "DIVIDE": return normal(right == 0 ? Double.NaN : left / right);
+            case "GREATER_THAN": return left > right ? 1 : 0;
+            case "GREATER_OR_EQUAL": return left >= right ? 1 : 0;
+            case "SMALLER_THAN": return left < right ? 1 : 0;
+            case "SMALLER_OR_EQUAL": return left <= right ? 1 : 0;
+            case "LOGICAL_AND": return left != 0 && right != 0 ? 1 : 0;
+            case "LOGICAL_OR": return left != 0 || right != 0 ? 1 : 0;
+            case "EQUAL": return left == right || Double.isNaN(left) && Double.isNaN(right) ? 1 : 0;
+            case "NOT_EQUAL": return left == right || Double.isNaN(left) && Double.isNaN(right) ? 0 : 1;
             default: throw new AssertionError(e.value);
         }
     }

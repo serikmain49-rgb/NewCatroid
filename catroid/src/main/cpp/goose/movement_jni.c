@@ -179,8 +179,9 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_formulaNumericNative(JNIEnv *env,
     int depth = 0;
     for (int i = 0; i < count; i++) {
         if (op[i] == 0) depth++;
-        else if (op[i] == 5) { if (depth < 1) return JNI_FALSE; }
-        else if (op[i] >= 1 && op[i] <= 4) { if (depth < 2) return JNI_FALSE; depth--; }
+        else if (op[i] == 5 || op[i] == 12) { if (depth < 1) return JNI_FALSE; }
+        else if ((op[i] >= 1 && op[i] <= 4) || (op[i] >= 6 && op[i] <= 11)
+                || op[i] == 13 || op[i] == 14) { if (depth < 2) return JNI_FALSE; depth--; }
         else return JNI_FALSE;
     }
     if (depth != 1) return JNI_FALSE;
