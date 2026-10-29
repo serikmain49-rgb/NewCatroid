@@ -12,6 +12,9 @@ public class TestIntegration {
     for (int i = 0; i < first.length; i++) if (Float.floatToIntBits(batch[i]) != Float.floatToIntBits(first[i])) throw new AssertionError("batch " + i);
     if (batch[7] != 7 || batch[13] != 13) throw new AssertionError("batch crossed count boundary");
     if (GooseMovement.updateBatch(batch, 3, .125f)) throw new AssertionError("invalid count accepted");
+    float[] distance = new float[1];
+    if (!GooseMovement.distance(1, 2, 3, 4, 6, 3, distance) || distance[0] != 5f)
+        throw new AssertionError("3D distance mismatch");
     Thread t = new Thread(() -> { if (GooseMovement.update(0,0,0,0,0,0,0,0,new float[4])) throw new AssertionError("cross thread accepted"); });
     final Throwable[] failure = new Throwable[1];
     t.setUncaughtExceptionHandler((thread,error) -> failure[0] = error);

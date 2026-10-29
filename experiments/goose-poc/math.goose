@@ -1,3 +1,5 @@
+extern fn nc_sqrt(x: f64) -> f64 = "sqrt";
+
 // Isolated C ABI smoke test. This is not yet part of the game engine.
 export "newcatroid_goose_add" fn add(a: i32, b: i32) -> i32 { a + b }
 
@@ -19,4 +21,12 @@ export "newcatroid_movement_batch" fn movement_batch(data: f32[:], dt: f32) {
         data[i + 1] += data[i + 4] * dt;
         data[i + 2] += data[i + 6] * dt;
     }
+}
+
+// Matches libGDX Vector3.dst: float arithmetic followed by double sqrt and float cast.
+export "newcatroid_distance3d" fn distance3d(ax: f32, ay: f32, az: f32, bx: f32, by: f32, bz: f32) -> f32 {
+    let dx = ax - bx;
+    let dy = ay - by;
+    let dz = az - bz;
+    nc_sqrt((dx * dx + dy * dy + dz * dz) as f64) as f32
 }

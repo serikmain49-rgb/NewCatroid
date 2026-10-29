@@ -1,5 +1,6 @@
 #include "goose_poc.h"
 #include <stdint.h>
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -32,6 +33,16 @@ int main(int argc, char **argv) {
             !same(y + expected_vy * dt, newcatroid_integrate(y, actual_vy, dt)) ||
             !same(rot + angular * dt, newcatroid_integrate(rot, angular, dt))) {
             fprintf(stderr, "Movement mismatch at case %d\n", i);
+            return 1;
+        }
+    }
+    for (int i = 0; i < 100000; i++) {
+        float ax = sample(), ay = sample(), az = sample();
+        float bx = sample(), by = sample(), bz = sample();
+        float dx = ax - bx, dy = ay - by, dz = az - bz;
+        float expected = (float)sqrt((double)(dx * dx + dy * dy + dz * dz));
+        if (!same(expected, newcatroid_distance3d(ax, ay, az, bx, by, bz))) {
+            fprintf(stderr, "Distance mismatch at case %d\n", i);
             return 1;
         }
     }

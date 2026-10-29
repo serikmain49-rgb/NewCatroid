@@ -20,6 +20,7 @@ int32_t newcatroid_goose_add(int32_t gs_export_arg0, int32_t gs_export_arg1);
 float newcatroid_velocity_y(float gs_export_arg0_2, float gs_export_arg1_2, float gs_export_arg2);
 float newcatroid_integrate(float gs_export_arg0_3, float gs_export_arg1_3, float gs_export_arg2_2);
 void newcatroid_movement_batch(sl_f32 gs_export_arg0_4, float gs_export_arg1_4);
+float newcatroid_distance3d(float gs_export_arg0_5, float gs_export_arg1_5, float gs_export_arg2_3, float gs_export_arg3, float gs_export_arg4, float gs_export_arg5);
 #ifdef __cplusplus
 }
 #endif

@@ -79,3 +79,13 @@ frames in addition to the existing scalar tests. The changed Android build and
 actual Fast2D integration require CI and device validation; the earlier APK
 predates this batch change. Existing API fallback, frame ordering, and Box2D
 behavior must be verified before enabling it by default.
+
+
+The experimental flag also routes `ThreeDManager.getDistance` through the Goose
+3D distance function when the bridge is usable. A null object retains the
+existing -1 result, and otherwise the original libGDX method is the fallback.
+The C host compares 100,000 finite distance cases with float arithmetic and a
+double square root. This does not port the 3D renderer, physics or camera, and
+the actual 3D path still needs a full app build and Android device verification.
+The scalar JNI wrapper allocates a small Java output array per call, so no
+speed or allocation improvement is claimed.

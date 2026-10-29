@@ -29,6 +29,15 @@ public final class GooseMovement {
         }
     }
 
+    public static boolean distance(float ax, float ay, float az, float bx, float by, float bz, float[] out) {
+        if (!AVAILABLE) return false;
+        try {
+            return distance3d(ax, ay, az, bx, by, bz, out);
+        } catch (LinkageError error) {
+            return false;
+        }
+    }
+
     public static boolean update(float x, float y, float rotation, float vx, float vy,
                                  float gravity, float angularVelocity, float delta, float[] result) {
         if (!AVAILABLE) return false;
@@ -39,6 +48,7 @@ public final class GooseMovement {
         }
     }
 
+    private static native boolean distance3d(float ax, float ay, float az, float bx, float by, float bz, float[] out);
     private static native boolean batch(float[] data, int count, float delta);
 
     private static native boolean step(float x, float y, float rotation, float vx, float vy,

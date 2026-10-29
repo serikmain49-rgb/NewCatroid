@@ -57,3 +57,23 @@ Java_org_catrobat_catroid_fast2d_GooseMovement_batch(JNIEnv *env, jclass type,
     pthread_mutex_unlock(&lock);
     return JNI_TRUE;
 }
+
+JNIEXPORT jboolean JNICALL
+Java_org_catrobat_catroid_fast2d_GooseMovement_distance3d(JNIEnv *env, jclass type,
+        jfloat ax, jfloat ay, jfloat az, jfloat bx, jfloat by, jfloat bz, jfloatArray out) {
+    (void)type;
+    if (!out || (*env)->GetArrayLength(env, out) < 1) return JNI_FALSE;
+    pthread_mutex_lock(&lock);
+    if (!initialized) {
+        goose_init(0, NULL);
+        owner = pthread_self();
+        initialized = 1;
+    } else if (!pthread_equal(owner, pthread_self())) {
+        pthread_mutex_unlock(&lock);
+        return JNI_FALSE;
+    }
+    jfloat result = newcatroid_distance3d(ax, ay, az, bx, by, bz);
+    pthread_mutex_unlock(&lock);
+    (*env)->SetFloatArrayRegion(env, out, 0, 1, &result);
+    return (*env)->ExceptionCheck(env) ? JNI_FALSE : JNI_TRUE;
+}
